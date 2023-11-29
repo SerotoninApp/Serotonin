@@ -7,9 +7,15 @@
 #import <objc/runtime.h>
 #import "TSUtil.h"
 #import <sys/utsname.h>
-
 #import <SpringBoardServices/SpringBoardServices.h>
 #import <Security/Security.h>
+
+#import "codesign.h"
+#import "coretrust_bug.h"
+#import <choma/FAT.h>
+#import <choma/MachO.h>
+#import <choma/FileStream.h>
+#import <choma/Host.h>
 
 NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 {
