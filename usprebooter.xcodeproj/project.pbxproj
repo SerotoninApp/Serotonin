@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C805CA422B16ECFC005157BA /* roothelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA412B16ECFC005157BA /* roothelper.m */; };
+		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C811229E2B15E7BB00AD077B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C811229D2B15E7BB00AD077B /* AppDelegate.swift */; };
 		C81122A02B15E7BB00AD077B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C811229F2B15E7BB00AD077B /* SceneDelegate.swift */; };
 		C81122A22B15E7BB00AD077B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81122A12B15E7BB00AD077B /* ViewController.swift */; };
@@ -16,6 +18,7 @@
 		C81122B52B15E7BD00AD077B /* usprebooterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81122B42B15E7BD00AD077B /* usprebooterTests.swift */; };
 		C81122BF2B15E7BD00AD077B /* usprebooterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81122BE2B15E7BD00AD077B /* usprebooterUITests.swift */; };
 		C81122C12B15E7BD00AD077B /* usprebooterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81122C02B15E7BD00AD077B /* usprebooterUITestsLaunchTests.swift */; };
+		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C805CA412B16ECFC005157BA /* roothelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = roothelper.m; sourceTree = "<group>"; };
+		C805CA432B16ED33005157BA /* roothelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = roothelper.h; sourceTree = "<group>"; };
+		C805CA442B1719C1005157BA /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
+		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* usprebooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = usprebooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C811229D2B15E7BB00AD077B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C811229F2B15E7BB00AD077B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +56,10 @@
 		C81122BA2B15E7BD00AD077B /* usprebooterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = usprebooterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C81122BE2B15E7BD00AD077B /* usprebooterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = usprebooterUITests.swift; sourceTree = "<group>"; };
 		C81122C02B15E7BD00AD077B /* usprebooterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = usprebooterUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C81122CE2B15E82800AD077B /* usprebooter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = usprebooter.entitlements; sourceTree = "<group>"; };
+		C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "usprebooter-Bridging-Header.h"; sourceTree = "<group>"; };
+		C81122DD2B16C9CB00AD077B /* troller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = troller.h; sourceTree = "<group>"; };
+		C81122DE2B16C9CC00AD077B /* troller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = troller.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +110,7 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+				C81122CE2B15E82800AD077B /* usprebooter.entitlements */,
 				C811229D2B15E7BB00AD077B /* AppDelegate.swift */,
 				C811229F2B15E7BB00AD077B /* SceneDelegate.swift */,
 				C81122A12B15E7BB00AD077B /* ViewController.swift */,
@@ -106,6 +118,13 @@
 				C81122A62B15E7BD00AD077B /* Assets.xcassets */,
 				C81122A82B15E7BD00AD077B /* LaunchScreen.storyboard */,
 				C81122AB2B15E7BD00AD077B /* Info.plist */,
+				C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */,
+				C81122DD2B16C9CB00AD077B /* troller.h */,
+				C81122DE2B16C9CC00AD077B /* troller.m */,
+				C805CA412B16ECFC005157BA /* roothelper.m */,
+				C805CA432B16ED33005157BA /* roothelper.h */,
+				C805CA442B1719C1005157BA /* util.m */,
+				C805CA462B1719D5005157BA /* util.h */,
 			);
 			path = usprebooter;
 			sourceTree = "<group>";
@@ -195,6 +214,7 @@
 				TargetAttributes = {
 					C81122992B15E7BB00AD077B = {
 						CreatedOnToolsVersion = 15.0.1;
+						LastSwiftMigration = 1500;
 					};
 					C81122AF2B15E7BD00AD077B = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -259,8 +279,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C81122A22B15E7BB00AD077B /* ViewController.swift in Sources */,
+				C805CA452B1719C1005157BA /* util.m in Sources */,
 				C811229E2B15E7BB00AD077B /* AppDelegate.swift in Sources */,
+				C81122DF2B16C9CC00AD077B /* troller.m in Sources */,
 				C81122A02B15E7BB00AD077B /* SceneDelegate.swift in Sources */,
+				C805CA422B16ECFC005157BA /* roothelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,6 +463,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = usprebooter/usprebooter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F6N37NLTF9;
@@ -450,6 +475,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -458,6 +484,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "usprebooter/usprebooter-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -468,6 +496,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = usprebooter/usprebooter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F6N37NLTF9;
@@ -478,6 +508,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -486,6 +517,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "usprebooter/usprebooter-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
