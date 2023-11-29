@@ -9,6 +9,7 @@
 #define util_h
 #import <Foundation/Foundation.h>
 void respring(void);
-int respawnSelf(NSArray* args);
+//int respawnSelf(NSArray* args);
+int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdErr);
 
 #endif /* util_h */

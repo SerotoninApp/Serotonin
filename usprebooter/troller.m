@@ -14,15 +14,18 @@
 #include <os/object.h>
 #include <time.h>
 #include <sys/errno.h>
-#include <copyfile.h>
+//#include <copyfile.h>
 #include "util.h"
 
 int copyLaunchd(void) {
     kern_return_t ret = 0;
-    respawnSelf(@[@""]);
+    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
+    NSLog(@"usprebooter: path is %@", mainBundlePath);
+    spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", @"/private/preboot/originallaunchd"], nil, nil);
 //    copyfile("/sbin/launchd", "/var/originallaunchd", NULL, COPYFILE_ALL);
     return ret;
 }
+
 int userspaceReboot(void) {
     kern_return_t ret = 0;
     xpc_object_t xdict = xpc_dictionary_create(NULL, NULL, 0);

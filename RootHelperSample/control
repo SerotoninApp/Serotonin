@@ -1,0 +1,9 @@
+Package: net.sourceloc.trolltoolsroothelper
+Name: trolltoolsroothelper
+Version: 1.0
+Architecture: iphoneos-arm
+Description: TrollToolsRootHelper
+Maintainer: sourcelocation
+Author: sourcelocation
+Section: System
+Tag: role::hacker

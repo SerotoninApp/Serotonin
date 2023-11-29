@@ -7,7 +7,6 @@
 
 #ifndef troller_h
 #define troller_h
-
-#include <stdio.h>
-//int userspaceReboot(void)
+int copyLaunchd(void);
+int userspaceReboot(void);
 #endif /* troller_h */

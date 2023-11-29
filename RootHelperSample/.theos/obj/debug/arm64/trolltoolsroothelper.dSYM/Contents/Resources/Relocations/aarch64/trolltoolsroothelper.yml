@@ -1,0 +1,53 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/ibarahime/usprebooter/RootHelperSample/.theos/obj/debug/arm64/trolltoolsroothelper'
+relocations:
+  - { offsetInCU: 0x1E, offset: 0x1E, size: 0x8, addend: 0x0, symName: _chineseWifiFixup, symObjAddr: 0x0, symBinAddr: 0x100004000, symSize: 0xE0 }
+  - { offsetInCU: 0x2B, offset: 0x2B, size: 0x8, addend: 0x0, symName: _loadMCMFramework, symObjAddr: 0xE0, symBinAddr: 0x1000040E0, symSize: 0x70 }
+  - { offsetInCU: 0x4C, offset: 0x4C, size: 0x8, addend: 0x0, symName: _loadMCMFramework.onceToken, symObjAddr: 0xCEB8, symBinAddr: 0x100010320, symSize: 0x0 }
+  - { offsetInCU: 0xBD, offset: 0xBD, size: 0x8, addend: 0x0, symName: _enumerateProcessesUsingBlock, symObjAddr: 0xAD0, symBinAddr: 0x100004AD0, symSize: 0x378 }
+  - { offsetInCU: 0xDE, offset: 0xDE, size: 0x8, addend: 0x0, symName: _enumerateProcessesUsingBlock.maxArgumentSize, symObjAddr: 0xCEC0, symBinAddr: 0x100010328, symSize: 0x0 }
+  - { offsetInCU: 0x2E6, offset: 0x2E6, size: 0x8, addend: 0x0, symName: _chineseWifiFixup, symObjAddr: 0x0, symBinAddr: 0x100004000, symSize: 0xE0 }
+  - { offsetInCU: 0x39A, offset: 0x39A, size: 0x8, addend: 0x0, symName: ___loadMCMFramework_block_invoke, symObjAddr: 0x150, symBinAddr: 0x100004150, symSize: 0x64 }
+  - { offsetInCU: 0x3DE, offset: 0x3DE, size: 0x8, addend: 0x0, symName: _safe_getExecutablePath, symObjAddr: 0x1B4, symBinAddr: 0x1000041B4, symSize: 0x3C }
+  - { offsetInCU: 0x406, offset: 0x406, size: 0x8, addend: 0x0, symName: _rootHelperPath, symObjAddr: 0x1F0, symBinAddr: 0x1000041F0, symSize: 0x78 }
+  - { offsetInCU: 0x41F, offset: 0x41F, size: 0x8, addend: 0x0, symName: _getNSStringFromFile, symObjAddr: 0x268, symBinAddr: 0x100004268, symSize: 0xD8 }
+  - { offsetInCU: 0x471, offset: 0x471, size: 0x8, addend: 0x0, symName: _printMultilineNSString, symObjAddr: 0x340, symBinAddr: 0x100004340, symSize: 0x1FC }
+  - { offsetInCU: 0x4D1, offset: 0x4D1, size: 0x8, addend: 0x0, symName: _spawnRoot, symObjAddr: 0x53C, symBinAddr: 0x10000453C, symSize: 0x594 }
+  - { offsetInCU: 0x61D, offset: 0x61D, size: 0x8, addend: 0x0, symName: _killall, symObjAddr: 0xE48, symBinAddr: 0x100004E48, symSize: 0xA4 }
+  - { offsetInCU: 0x641, offset: 0x641, size: 0x8, addend: 0x0, symName: ___killall_block_invoke, symObjAddr: 0xEEC, symBinAddr: 0x100004EEC, symSize: 0xAC }
+  - { offsetInCU: 0x6A4, offset: 0x6A4, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s, symObjAddr: 0xF98, symBinAddr: 0x100004F98, symSize: 0x38 }
+  - { offsetInCU: 0x6C8, offset: 0x6C8, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s, symObjAddr: 0xFD0, symBinAddr: 0x100004FD0, symSize: 0x2C }
+  - { offsetInCU: 0x6E4, offset: 0x6E4, size: 0x8, addend: 0x0, symName: _respring, symObjAddr: 0xFFC, symBinAddr: 0x100004FFC, symSize: 0x1C }
+  - { offsetInCU: 0x6F9, offset: 0x6F9, size: 0x8, addend: 0x0, symName: _fetchLatestTrollStoreVersion, symObjAddr: 0x1018, symBinAddr: 0x100005018, symSize: 0x144 }
+  - { offsetInCU: 0x739, offset: 0x739, size: 0x8, addend: 0x0, symName: ___fetchLatestTrollStoreVersion_block_invoke, symObjAddr: 0x115C, symBinAddr: 0x10000515C, symSize: 0x194 }
+  - { offsetInCU: 0x7BE, offset: 0x7BE, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32b, symObjAddr: 0x12F0, symBinAddr: 0x1000052F0, symSize: 0x38 }
+  - { offsetInCU: 0x7E2, offset: 0x7E2, size: 0x8, addend: 0x0, symName: _trollStoreInstalledAppContainerPaths, symObjAddr: 0x1328, symBinAddr: 0x100005328, symSize: 0x444 }
+  - { offsetInCU: 0x8B8, offset: 0x8B8, size: 0x8, addend: 0x0, symName: _trollStoreInstalledAppBundlePaths, symObjAddr: 0x176C, symBinAddr: 0x10000576C, symSize: 0x404 }
+  - { offsetInCU: 0x92D, offset: 0x92D, size: 0x8, addend: 0x0, symName: _trollStorePath, symObjAddr: 0x1B70, symBinAddr: 0x100005B70, symSize: 0x110 }
+  - { offsetInCU: 0x966, offset: 0x966, size: 0x8, addend: 0x0, symName: _trollStoreAppPath, symObjAddr: 0x1C80, symBinAddr: 0x100005C80, symSize: 0x54 }
+  - { offsetInCU: 0x980, offset: 0x980, size: 0x8, addend: 0x0, symName: _findPersistenceHelperApp, symObjAddr: 0x1CD4, symBinAddr: 0x100005CD4, symSize: 0x1BC }
+  - { offsetInCU: 0x9CD, offset: 0x9CD, size: 0x8, addend: 0x0, symName: ___Block_byref_object_copy_, symObjAddr: 0x1E90, symBinAddr: 0x100005E90, symSize: 0x54 }
+  - { offsetInCU: 0x9F1, offset: 0x9F1, size: 0x8, addend: 0x0, symName: ___Block_byref_object_dispose_, symObjAddr: 0x1EE4, symBinAddr: 0x100005EE4, symSize: 0x2C }
+  - { offsetInCU: 0xA0D, offset: 0xA0D, size: 0x8, addend: 0x0, symName: ___findPersistenceHelperApp_block_invoke, symObjAddr: 0x1F10, symBinAddr: 0x100005F10, symSize: 0x150 }
+  - { offsetInCU: 0xA73, offset: 0xA73, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32r, symObjAddr: 0x2060, symBinAddr: 0x100006060, symSize: 0x38 }
+  - { offsetInCU: 0xA97, offset: 0xA97, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32r, symObjAddr: 0x2098, symBinAddr: 0x100006098, symSize: 0x2C }
+  - { offsetInCU: 0xAB3, offset: 0xAB3, size: 0x8, addend: 0x0, symName: _getStaticCodeRef, symObjAddr: 0x20C4, symBinAddr: 0x1000060C4, symSize: 0x12C }
+  - { offsetInCU: 0xB0A, offset: 0xB0A, size: 0x8, addend: 0x0, symName: _dumpEntitlements, symObjAddr: 0x21F0, symBinAddr: 0x1000061F0, symSize: 0x15C }
+  - { offsetInCU: 0xB70, offset: 0xB70, size: 0x8, addend: 0x0, symName: _dumpEntitlementsFromBinaryAtPath, symObjAddr: 0x234C, symBinAddr: 0x10000634C, symSize: 0xD8 }
+  - { offsetInCU: 0xBB8, offset: 0xBB8, size: 0x8, addend: 0x0, symName: _dumpEntitlementsFromBinaryData, symObjAddr: 0x2424, symBinAddr: 0x100006424, symSize: 0x190 }
+  - { offsetInCU: 0x1E, offset: 0x2353, size: 0x8, addend: 0x0, symName: _immutableAppBundleIdentifiers, symObjAddr: 0x0, symBinAddr: 0x1000065B4, symSize: 0x1A4 }
+  - { offsetInCU: 0xA5, offset: 0x23DA, size: 0x8, addend: 0x0, symName: _immutableAppBundleIdentifiers, symObjAddr: 0x0, symBinAddr: 0x1000065B4, symSize: 0x1A4 }
+  - { offsetInCU: 0xE9, offset: 0x241E, size: 0x8, addend: 0x0, symName: _refreshAppRegistrations, symObjAddr: 0x1A4, symBinAddr: 0x100006758, symSize: 0x1D0 }
+  - { offsetInCU: 0x114, offset: 0x2449, size: 0x8, addend: 0x0, symName: _cleanRestrictions, symObjAddr: 0x374, symBinAddr: 0x100006928, symSize: 0x538 }
+  - { offsetInCU: 0x1E1, offset: 0x2516, size: 0x8, addend: 0x0, symName: ___cleanRestrictions_block_invoke, symObjAddr: 0x8AC, symBinAddr: 0x100006E60, symSize: 0xA0 }
+  - { offsetInCU: 0x25B, offset: 0x2590, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s40r, symObjAddr: 0x94C, symBinAddr: 0x100006F00, symSize: 0x58 }
+  - { offsetInCU: 0x27F, offset: 0x25B4, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s40r, symObjAddr: 0x9A4, symBinAddr: 0x100006F58, symSize: 0x40 }
+  - { offsetInCU: 0x29B, offset: 0x25D0, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x9E4, symBinAddr: 0x100006F98, symSize: 0x410 }
+  - { offsetInCU: 0x1E, offset: 0x2C71, size: 0x8, addend: 0x0, symName: _constructGroupsContainersForEntitlements, symObjAddr: 0x0, symBinAddr: 0x1000073A8, symSize: 0x3D0 }
+  - { offsetInCU: 0x2B, offset: 0x2C7E, size: 0x8, addend: 0x0, symName: _constructGroupsContainersForEntitlements, symObjAddr: 0x0, symBinAddr: 0x1000073A8, symSize: 0x3D0 }
+  - { offsetInCU: 0xDF, offset: 0x2D32, size: 0x8, addend: 0x0, symName: _constructContainerizationForEntitlements, symObjAddr: 0x3D0, symBinAddr: 0x100007778, symSize: 0x198 }
+  - { offsetInCU: 0x123, offset: 0x2D76, size: 0x8, addend: 0x0, symName: _constructTeamIdentifierForEntitlements, symObjAddr: 0x568, symBinAddr: 0x100007910, symSize: 0xCC }
+  - { offsetInCU: 0x159, offset: 0x2DAC, size: 0x8, addend: 0x0, symName: _constructEnvironmentVariablesForContainerPath, symObjAddr: 0x634, symBinAddr: 0x1000079DC, symSize: 0x114 }
+  - { offsetInCU: 0x18F, offset: 0x2DE2, size: 0x8, addend: 0x0, symName: _registerPath, symObjAddr: 0x748, symBinAddr: 0x100007AF0, symSize: 0x10F8 }
+...

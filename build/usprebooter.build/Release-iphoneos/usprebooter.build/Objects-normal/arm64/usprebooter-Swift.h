@@ -275,8 +275,6 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #if __has_warning("-Watimport-in-framework-header")
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
-@import Foundation;
-@import UIKit;
 #endif
 
 #endif
@@ -297,50 +295,11 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 #if defined(__OBJC__)
-@class UIApplication;
-@class UISceneSession;
-@class UISceneConnectionOptions;
-@class UISceneConfiguration;
-
-SWIFT_CLASS("_TtC11usprebooter11AppDelegate")
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-- (BOOL)application:(UIApplication * _Nonnull)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> * _Nullable)launchOptions SWIFT_WARN_UNUSED_RESULT;
-- (UISceneConfiguration * _Nonnull)application:(UIApplication * _Nonnull)application configurationForConnectingSceneSession:(UISceneSession * _Nonnull)connectingSceneSession options:(UISceneConnectionOptions * _Nonnull)options SWIFT_WARN_UNUSED_RESULT;
-- (void)application:(UIApplication * _Nonnull)application didDiscardSceneSessions:(NSSet<UISceneSession *> * _Nonnull)sceneSessions;
-- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
-
-@class UIWindow;
-@class UIScene;
-
-SWIFT_CLASS("_TtC11usprebooter13SceneDelegate")
-@interface SceneDelegate : UIResponder <UIWindowSceneDelegate>
-@property (nonatomic, strong) UIWindow * _Nullable window;
-- (void)scene:(UIScene * _Nonnull)scene willConnectToSession:(UISceneSession * _Nonnull)session options:(UISceneConnectionOptions * _Nonnull)connectionOptions;
-- (void)sceneDidDisconnect:(UIScene * _Nonnull)scene;
-- (void)sceneDidBecomeActive:(UIScene * _Nonnull)scene;
-- (void)sceneWillResignActive:(UIScene * _Nonnull)scene;
-- (void)sceneWillEnterForeground:(UIScene * _Nonnull)scene;
-- (void)sceneDidEnterBackground:(UIScene * _Nonnull)scene;
-- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
 
 
 
 
 
-
-
-@class NSString;
-@class NSBundle;
-@class NSCoder;
-
-SWIFT_CLASS("_TtC11usprebooter14ViewController")
-@interface ViewController : UIViewController
-- (void)viewDidLoad;
-- (nonnull instancetype)initWithNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil OBJC_DESIGNATED_INITIALIZER;
-- (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)coder OBJC_DESIGNATED_INITIALIZER;
-@end
 
 #endif
 #if __has_attribute(external_source_symbol)
