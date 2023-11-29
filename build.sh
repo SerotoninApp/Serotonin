@@ -3,6 +3,7 @@ xcodebuild clean build -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="
 echo "done building"
 cd RootHelperSample
 make
+ldid -Sentitlements.plist -Cadhoc .theos/obj/debug/arm64/trolltoolsroothelper
 mv .theos/obj/debug/arm64/trolltoolsroothelper ../build/Release-iphoneos/usprebooter.app/trolltoolsroothelper
 cd ..
 cp ent.xml build/Release-iphoneos/ent.xml

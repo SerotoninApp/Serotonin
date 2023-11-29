@@ -12,6 +12,7 @@
 		C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82AFEF32B175AB80070EA49 /* Assets.xcassets */; };
 		C82AFF392B17688E0070EA49 /* usprebooterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */; };
 		C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEEF2B175A270070EA49 /* ContentView.swift */; };
+		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,8 @@
 		C82AFF342B1762CE0070EA49 /* CoreServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreServices.h; sourceTree = "<group>"; };
 		C82AFF352B1762CE0070EA49 /* RemoteLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteLog.h; sourceTree = "<group>"; };
 		C82AFF362B1762CE0070EA49 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
+		C82AFF3C2B1796D90070EA49 /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = ../theos/sdks/iPhoneOS15.5.sdk/System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit.tbd; sourceTree = "<group>"; };
+		C82AFF3D2B179A880070EA49 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +84,7 @@
 				C82AFF0A2B1762CE0070EA49 /* RootHelperSample */,
 				C811229C2B15E7BB00AD077B /* usprebooter */,
 				C811229B2B15E7BB00AD077B /* Products */,
+				C82AFF3B2B1796D90070EA49 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -211,6 +216,15 @@
 			children = (
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C82AFF3B2B1796D90070EA49 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C82AFF3D2B179A880070EA49 /* IOKit.framework */,
+				C82AFF3C2B1796D90070EA49 /* IOKit.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
