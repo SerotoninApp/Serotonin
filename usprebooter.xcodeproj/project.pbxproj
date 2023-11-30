@@ -14,7 +14,7 @@
 		C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEEF2B175A270070EA49 /* ContentView.swift */; };
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
 		C82AFF432B17AA6D0070EA49 /* ldid in Resources */ = {isa = PBXBuildFile; fileRef = C82AFF422B17AA6C0070EA49 /* ldid */; };
-		C83594CB2B18DAEE00346F80 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C83594CA2B18DAEE00346F80 /* fastPathSign */; };
+		C83594CD2B18E94D00346F80 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C83594CC2B18E94D00346F80 /* fastPathSign */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,7 +68,7 @@
 		C82AFF3D2B179A880070EA49 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		C82AFF422B17AA6C0070EA49 /* ldid */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ldid; sourceTree = "<group>"; };
 		C83594C32B17AC8500346F80 /* MobileContainerManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileContainerManager.framework; path = ../theos/sdks/iPhoneOS15.5.sdk/System/Library/PrivateFrameworks/MobileContainerManager.framework; sourceTree = "<group>"; };
-		C83594CA2B18DAEE00346F80 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = fastPathSign; sourceTree = "<group>"; };
+		C83594CC2B18E94D00346F80 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = fastPathSign; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +104,8 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+				C83594CC2B18E94D00346F80 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
-				C83594CA2B18DAEE00346F80 /* fastPathSign */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
 				C81122CE2B15E82800AD077B /* usprebooter.entitlements */,
 				C82AFEEF2B175A270070EA49 /* ContentView.swift */,
@@ -302,7 +302,7 @@
 			files = (
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
-				C83594CB2B18DAEE00346F80 /* fastPathSign in Resources */,
+				C83594CD2B18E94D00346F80 /* fastPathSign in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

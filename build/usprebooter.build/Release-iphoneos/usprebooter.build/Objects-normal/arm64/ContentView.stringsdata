@@ -4,7 +4,11 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "a"
+        "key": "go"
+      },
+      {
+        "comment": "",
+        "key": "uspreboot"
       }
     ]
   },

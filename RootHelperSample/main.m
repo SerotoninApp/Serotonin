@@ -266,9 +266,10 @@ int main(int argc, char *argv[], char *envp[]) {
 //            Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** +[NSString stringWithUTF8String:]: NULL cString'
 
             signAdhoc(@"/sbin/launchd", entitlements); // source file, NSDictionary with entitlements
+            NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"]; // basically binaries are included in usprebooter and roothelper spawns them as root from the usprebooter app
             NSString *stdOut;
             NSString *stdErr;
-            spawnRoot(@"ct_bypass", @[@"-i", @"/sbin/launchd", @"-r", @"-o", @"/sbin/launchd"], &stdOut, &stdErr);
+            spawnRoot(fastPathSignPatj, @[@"-i", @"/sbin/launchd", @"-r", @"-o", @"/sbin/launchd"], &stdOut, &stdErr);
         }
 
         return 0;

@@ -10,10 +10,15 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Button("a") {
+            Button("go") {
                 fuck()
 //                copyLaunchd()
 //                userspaceReboot()
+            }
+            Button("uspreboot") {
+//                fuck()
+//                copyLaunchd()
+                userspaceReboot()
             }
         }
     }
