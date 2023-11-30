@@ -11,8 +11,9 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Button("a") {
-                copyLaunchd()
-                userspaceReboot()
+                fuck()
+//                copyLaunchd()
+//                userspaceReboot()
             }
         }
     }

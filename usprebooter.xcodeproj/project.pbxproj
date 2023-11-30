@@ -13,6 +13,8 @@
 		C82AFF392B17688E0070EA49 /* usprebooterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */; };
 		C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEEF2B175A270070EA49 /* ContentView.swift */; };
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
+		C82AFF432B17AA6D0070EA49 /* ldid in Resources */ = {isa = PBXBuildFile; fileRef = C82AFF422B17AA6C0070EA49 /* ldid */; };
+		C83594CB2B18DAEE00346F80 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C83594CA2B18DAEE00346F80 /* fastPathSign */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,9 @@
 		C82AFF362B1762CE0070EA49 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
 		C82AFF3C2B1796D90070EA49 /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = ../theos/sdks/iPhoneOS15.5.sdk/System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit.tbd; sourceTree = "<group>"; };
 		C82AFF3D2B179A880070EA49 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		C82AFF422B17AA6C0070EA49 /* ldid */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ldid; sourceTree = "<group>"; };
+		C83594C32B17AC8500346F80 /* MobileContainerManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileContainerManager.framework; path = ../theos/sdks/iPhoneOS15.5.sdk/System/Library/PrivateFrameworks/MobileContainerManager.framework; sourceTree = "<group>"; };
+		C83594CA2B18DAEE00346F80 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = fastPathSign; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +104,8 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+				C82AFF422B17AA6C0070EA49 /* ldid */,
+				C83594CA2B18DAEE00346F80 /* fastPathSign */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
 				C81122CE2B15E82800AD077B /* usprebooter.entitlements */,
 				C82AFEEF2B175A270070EA49 /* ContentView.swift */,
@@ -221,6 +228,7 @@
 		C82AFF3B2B1796D90070EA49 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C83594C32B17AC8500346F80 /* MobileContainerManager.framework */,
 				C82AFF3D2B179A880070EA49 /* IOKit.framework */,
 				C82AFF3C2B1796D90070EA49 /* IOKit.tbd */,
 			);
@@ -293,6 +301,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
+				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
+				C83594CB2B18DAEE00346F80 /* fastPathSign in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

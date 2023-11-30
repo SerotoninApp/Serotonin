@@ -14,12 +14,6 @@ extern int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, u
 extern int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
 extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
 
-void chineseWifiFixup(void)
-{
-	NSBundle *bundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/SettingsCellular.framework"];
-	[bundle load];
-	[[NSClassFromString(@"PSAppDataUsagePolicyCache") sharedInstance] setUsagePoliciesForBundle:NSBundle.mainBundle.bundleIdentifier cellular:true wifi:true];
-}
 
 void loadMCMFramework(void)
 {
@@ -221,129 +215,7 @@ void respring(void)
 	exit(0);
 }
 
-void fetchLatestTrollStoreVersion(void (^completionHandler)(NSString* latestVersion))
-{
-	NSURL* githubLatestAPIURL = [NSURL URLWithString:@"https://api.github.com/repos/opa334/TrollStore/releases/latest"];
 
-	NSURLSessionDataTask* task = [NSURLSession.sharedSession dataTaskWithURL:githubLatestAPIURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-	{
-		if(!error)
-		{
-			if ([response isKindOfClass:[NSHTTPURLResponse class]])
-			{
-				NSError *jsonError;
-				NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-
-				if (!jsonError)
-				{
-					completionHandler(jsonResponse[@"tag_name"]);
-				}
-			}
-		}
-	}];
-
-	[task resume];
-}
-
-NSArray* trollStoreInstalledAppContainerPaths()
-{
-	NSMutableArray* appContainerPaths = [NSMutableArray new];
-
-	NSString* appContainersPath = @"/var/containers/Bundle/Application";
-
-	NSError* error;
-	NSArray* containers = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:appContainersPath error:&error];
-	if(error)
-	{
-		NSLog(@"error getting app bundles paths %@", error);
-	}
-	if(!containers) return nil;
-	
-	for(NSString* container in containers)
-	{
-		NSString* containerPath = [appContainersPath stringByAppendingPathComponent:container];
-		BOOL isDirectory = NO;
-		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:containerPath isDirectory:&isDirectory];
-		if(exists && isDirectory)
-		{
-			NSString* trollStoreMark = [containerPath stringByAppendingPathComponent:@"_TrollStore"];
-			if([[NSFileManager defaultManager] fileExistsAtPath:trollStoreMark])
-			{
-				NSString* trollStoreApp = [containerPath stringByAppendingPathComponent:@"TrollStore.app"];
-				if(![[NSFileManager defaultManager] fileExistsAtPath:trollStoreApp])
-				{
-					[appContainerPaths addObject:containerPath];
-				}
-			}
-		}
-	}
-
-	return appContainerPaths.copy;
-}
-
-NSArray* trollStoreInstalledAppBundlePaths()
-{
-	NSMutableArray* appPaths = [NSMutableArray new];
-	for(NSString* containerPath in trollStoreInstalledAppContainerPaths())
-	{
-		NSArray* items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:containerPath error:nil];
-		if(!items) return nil;
-		
-		for(NSString* item in items)
-		{
-			if([item.pathExtension isEqualToString:@"app"])
-			{
-				[appPaths addObject:[containerPath stringByAppendingPathComponent:item]];
-			}
-		}
-	}
-	return appPaths.copy;
-}
-
-NSString* trollStorePath()
-{
-	loadMCMFramework();
-	NSError* mcmError;
-	MCMAppContainer* appContainer = [NSClassFromString(@"MCMAppContainer") containerWithIdentifier:@"com.opa334.TrollStore" createIfNecessary:NO existed:NULL error:&mcmError];
-	if(!appContainer) return nil;
-	return appContainer.url.path;
-}
-
-NSString* trollStoreAppPath()
-{
-	return [trollStorePath() stringByAppendingPathComponent:@"TrollStore.app"];
-}
-
-LSApplicationProxy* findPersistenceHelperApp(PERSISTENCE_HELPER_TYPE allowedTypes)
-{
-	__block LSApplicationProxy* outProxy;
-
-	void (^searchBlock)(LSApplicationProxy* appProxy) = ^(LSApplicationProxy* appProxy)
-	{
-		if(appProxy.installed && !appProxy.restricted)
-		{
-			if([appProxy.bundleURL.path hasPrefix:@"/private/var/containers"])
-			{
-				NSURL* trollStorePersistenceMarkURL = [appProxy.bundleURL URLByAppendingPathComponent:@".TrollStorePersistenceHelper"];
-				if([trollStorePersistenceMarkURL checkResourceIsReachableAndReturnError:nil])
-				{
-					outProxy = appProxy;
-				}
-			}
-		}
-	};
-
-	if(allowedTypes & PERSISTENCE_HELPER_TYPE_USER)
-	{
-		[[LSApplicationWorkspace defaultWorkspace] enumerateApplicationsOfType:0 block:searchBlock];
-	}
-	if(allowedTypes & PERSISTENCE_HELPER_TYPE_SYSTEM)
-	{
-		[[LSApplicationWorkspace defaultWorkspace] enumerateApplicationsOfType:1 block:searchBlock];
-	}
-
-	return outProxy;
-}
 
 SecStaticCodeRef getStaticCodeRef(NSString *binaryPath)
 {

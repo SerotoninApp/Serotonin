@@ -14,10 +14,10 @@ extern void killall(NSString* processName);
 extern void respring(void);
 extern void fetchLatestTrollStoreVersion(void (^completionHandler)(NSString* latestVersion));
 
-extern NSArray* trollStoreInstalledAppBundlePaths();
-extern NSArray* trollStoreInstalledAppContainerPaths();
-extern NSString* trollStorePath();
-extern NSString* trollStoreAppPath();
+//extern NSArray* trollStoreInstalledAppBundlePaths();
+//extern NSArray* trollStoreInstalledAppContainerPaths();
+//extern NSString* trollStorePath();
+//extern NSString* trollStoreAppPath();
 
 #import <UIKit/UIAlertController.h>
 

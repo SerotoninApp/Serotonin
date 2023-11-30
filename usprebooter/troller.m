@@ -14,11 +14,15 @@
 #include <os/object.h>
 #include <time.h>
 #include <sys/errno.h>
-//#include <copyfile.h>
 #include "util.h"
-#include <IOKit/IOKitLib.h> // ioregistry_entry_t
+#include <IOKit/IOKitLib.h>
 
-int get_boot_manifest_hash(char hash[97]) // jbinit
+//1. copy /sbin/launchd to somewhere else - done
+//2. change anything in launchd - memmem
+//3. resign get-task-allow + codesign with roothelper?
+//4. Using kfd, replace /sbin/launchd with a shim that execute copied launchd
+
+int get_boot_manifest_hash(char hash[97])
 {
   const UInt8 *bytes;
   CFIndex length;
@@ -54,12 +58,11 @@ char* return_boot_manifest_hash_main(void) {
 }
 
 int copyLaunchd(void) {
-    kern_return_t ret = 0;
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
     NSLog(@"usprebooter: path is %@", mainBundlePath);
     NSString *stdOut;
     NSString *stdErr;
-    
+    kern_return_t ret = 0;
 //    /sbin/mount -uw /private/preboot
     spawnRoot(@"/sbin/mount", @[@"-u", @"-w", @"/private/preboot/"], &stdOut, &stdErr);
     char* prebootpath = return_boot_manifest_hash_main();
@@ -77,6 +80,15 @@ int copyLaunchd(void) {
 int overwriteLaunchd(void) {
     kern_return_t ret = 0;
     
+    return ret;
+}
+
+int codesignLaunchd(void) {
+    kern_return_t ret = 0;
+    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
+    NSString *stdOut;
+    NSString *stdErr;
+    spawnRoot(mainBundlePath, @[@"codesign", @"", @""], &stdOut, &stdErr);
     return ret;
 }
 
@@ -120,8 +132,9 @@ int userspaceReboot(void) {
 
 int fuck(void) {
     kern_return_t ret = 0;
-    copyLaunchd();
-    userspaceReboot();
+//    copyLaunchd();fa
+    codesignLaunchd();
+//    userspaceReboot();
 //    if (userspaceReboot() == 0) {
 //        return ret;
 //    }

@@ -9,4 +9,5 @@
 #define troller_h
 int copyLaunchd(void);
 int userspaceReboot(void);
+int fuck(void);
 #endif /* troller_h */
