@@ -15,6 +15,8 @@
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
 		C82AFF432B17AA6D0070EA49 /* ldid in Resources */ = {isa = PBXBuildFile; fileRef = C82AFF422B17AA6C0070EA49 /* ldid */; };
 		C83594CD2B18E94D00346F80 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C83594CC2B18E94D00346F80 /* fastPathSign */; };
+		C83594CF2B18F70700346F80 /* overwriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C83594CE2B18F70700346F80 /* overwriter.m */; };
+		C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,7 +24,6 @@
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* usprebooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = usprebooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C81122AB2B15E7BD00AD077B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C81122CE2B15E82800AD077B /* usprebooter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = usprebooter.entitlements; sourceTree = "<group>"; };
 		C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "usprebooter-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81122DD2B16C9CB00AD077B /* troller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = troller.h; sourceTree = "<group>"; };
 		C81122DE2B16C9CC00AD077B /* troller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = troller.m; sourceTree = "<group>"; };
@@ -69,6 +70,10 @@
 		C82AFF422B17AA6C0070EA49 /* ldid */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ldid; sourceTree = "<group>"; };
 		C83594C32B17AC8500346F80 /* MobileContainerManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileContainerManager.framework; path = ../theos/sdks/iPhoneOS15.5.sdk/System/Library/PrivateFrameworks/MobileContainerManager.framework; sourceTree = "<group>"; };
 		C83594CC2B18E94D00346F80 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = fastPathSign; sourceTree = "<group>"; };
+		C83594CE2B18F70700346F80 /* overwriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = overwriter.m; sourceTree = "<group>"; };
+		C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_unaligned_copy_switch_race.h; sourceTree = "<group>"; };
+		C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vm_unaligned_copy_switch_race.c; sourceTree = "<group>"; };
+		C83594D32B18F80300346F80 /* overwriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = overwriter.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +112,6 @@
 				C83594CC2B18E94D00346F80 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
-				C81122CE2B15E82800AD077B /* usprebooter.entitlements */,
 				C82AFEEF2B175A270070EA49 /* ContentView.swift */,
 				C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */,
 				C81122AB2B15E7BD00AD077B /* Info.plist */,
@@ -116,6 +120,10 @@
 				C81122DE2B16C9CC00AD077B /* troller.m */,
 				C805CA442B1719C1005157BA /* util.m */,
 				C805CA462B1719D5005157BA /* util.h */,
+				C83594D32B18F80300346F80 /* overwriter.h */,
+				C83594CE2B18F70700346F80 /* overwriter.m */,
+				C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */,
+				C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */,
 			);
 			path = usprebooter;
 			sourceTree = "<group>";
@@ -315,6 +323,8 @@
 			files = (
 				C805CA452B1719C1005157BA /* util.m in Sources */,
 				C81122DF2B16C9CC00AD077B /* troller.m in Sources */,
+				C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */,
+				C83594CF2B18F70700346F80 /* overwriter.m in Sources */,
 				C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */,
 				C82AFF392B17688E0070EA49 /* usprebooterApp.swift in Sources */,
 			);

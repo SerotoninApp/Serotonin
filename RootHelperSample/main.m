@@ -16,6 +16,7 @@
 #import <choma/MachO.h>
 #import <choma/FileStream.h>
 #import <choma/Host.h>
+#import "overwriter.h"
 
 NSString* usprebooterPath()
 {
@@ -173,56 +174,56 @@ NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 
 // Apparently there is some odd behaviour where TrollStore installed apps sometimes get restricted
 // This works around that issue at least and is triggered when rebuilding icon cache
-void cleanRestrictions(void)
-{
-	NSString* clientTruthPath = @"/private/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/ClientTruth.plist";
-	NSURL* clientTruthURL = [NSURL fileURLWithPath:clientTruthPath];
-	NSDictionary* clientTruthDictionary = [NSDictionary dictionaryWithContentsOfURL:clientTruthURL];
-
-	if(!clientTruthDictionary) return;
-
-	NSArray* valuesArr;
-
-	NSDictionary* lsdAppRemoval = clientTruthDictionary[@"com.apple.lsd.appremoval"];
-	if(lsdAppRemoval && [lsdAppRemoval isKindOfClass:NSDictionary.class])
-	{
-		NSDictionary* clientRestrictions = lsdAppRemoval[@"clientRestrictions"];
-		if(clientRestrictions && [clientRestrictions isKindOfClass:NSDictionary.class])
-		{
-			NSDictionary* unionDict = clientRestrictions[@"union"];
-			if(unionDict && [unionDict isKindOfClass:NSDictionary.class])
-			{
-				NSDictionary* removedSystemAppBundleIDs = unionDict[@"removedSystemAppBundleIDs"];
-				if(removedSystemAppBundleIDs && [removedSystemAppBundleIDs isKindOfClass:NSDictionary.class])
-				{
-					valuesArr = removedSystemAppBundleIDs[@"values"];
-				}
-			}
-		}
-	}
-
-	if(!valuesArr || !valuesArr.count) return;
-
-	NSMutableArray* valuesArrM = valuesArr.mutableCopy;
-	__block BOOL changed = NO;
-
-	[valuesArrM enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSString* value, NSUInteger idx, BOOL *stop)
-	{
-		if(![value hasPrefix:@"com.apple."])
-		{
-			[valuesArrM removeObjectAtIndex:idx];
-			changed = YES;
-		}
-	}];
-
-	if(!changed) return;
-
-	NSMutableDictionary* clientTruthDictionaryM = (__bridge_transfer NSMutableDictionary*)CFPropertyListCreateDeepCopy(kCFAllocatorDefault, (__bridge CFDictionaryRef)clientTruthDictionary, kCFPropertyListMutableContainersAndLeaves);
-	
-	clientTruthDictionaryM[@"com.apple.lsd.appremoval"][@"clientRestrictions"][@"union"][@"removedSystemAppBundleIDs"][@"values"] = valuesArrM;
-
-	[clientTruthDictionaryM writeToURL:clientTruthURL error:nil];
-}
+//void cleanRestrictions(void)
+//{
+//	NSString* clientTruthPath = @"/private/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/ClientTruth.plist";
+//	NSURL* clientTruthURL = [NSURL fileURLWithPath:clientTruthPath];
+//	NSDictionary* clientTruthDictionary = [NSDictionary dictionaryWithContentsOfURL:clientTruthURL];
+//
+//	if(!clientTruthDictionary) return;
+//
+//	NSArray* valuesArr;
+//
+//	NSDictionary* lsdAppRemoval = clientTruthDictionary[@"com.apple.lsd.appremoval"];
+//	if(lsdAppRemoval && [lsdAppRemoval isKindOfClass:NSDictionary.class])
+//	{
+//		NSDictionary* clientRestrictions = lsdAppRemoval[@"clientRestrictions"];
+//		if(clientRestrictions && [clientRestrictions isKindOfClass:NSDictionary.class])
+//		{
+//			NSDictionary* unionDict = clientRestrictions[@"union"];
+//			if(unionDict && [unionDict isKindOfClass:NSDictionary.class])
+//			{
+//				NSDictionary* removedSystemAppBundleIDs = unionDict[@"removedSystemAppBundleIDs"];
+//				if(removedSystemAppBundleIDs && [removedSystemAppBundleIDs isKindOfClass:NSDictionary.class])
+//				{
+//					valuesArr = removedSystemAppBundleIDs[@"values"];
+//				}
+//			}
+//		}
+//	}
+//
+//	if(!valuesArr || !valuesArr.count) return;
+//
+//	NSMutableArray* valuesArrM = valuesArr.mutableCopy;
+//	__block BOOL changed = NO;
+//
+//	[valuesArrM enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSString* value, NSUInteger idx, BOOL *stop)
+//	{
+//		if(![value hasPrefix:@"com.apple."])
+//		{
+//			[valuesArrM removeObjectAtIndex:idx];
+//			changed = YES;
+//		}
+//	}];
+//
+//	if(!changed) return;
+//
+//	NSMutableDictionary* clientTruthDictionaryM = (__bridge_transfer NSMutableDictionary*)CFPropertyListCreateDeepCopy(kCFAllocatorDefault, (__bridge CFDictionaryRef)clientTruthDictionary, kCFPropertyListMutableContainersAndLeaves);
+//	
+//	clientTruthDictionaryM[@"com.apple.lsd.appremoval"][@"clientRestrictions"][@"union"][@"removedSystemAppBundleIDs"][@"values"] = valuesArrM;
+//
+//	[clientTruthDictionaryM writeToURL:clientTruthURL error:nil];
+//}
 
 
 int main(int argc, char *argv[], char *envp[]) {
@@ -266,10 +267,10 @@ int main(int argc, char *argv[], char *envp[]) {
 //            Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** +[NSString stringWithUTF8String:]: NULL cString'
 
             signAdhoc(@"/sbin/launchd", entitlements); // source file, NSDictionary with entitlements
-            NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"]; // basically binaries are included in usprebooter and roothelper spawns them as root from the usprebooter app
+            NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
             NSString *stdOut;
             NSString *stdErr;
-            spawnRoot(fastPathSignPatj, @[@"-i", @"/sbin/launchd", @"-r", @"-o", @"/sbin/launchd"], &stdOut, &stdErr);
+            spawnRoot(fastPathSignPath, @[@"-i", getPatchedLaunchdCopy(), @"-r", @"-o", getPatchedLaunchdCopy], &stdOut, &stdErr);
         }
 
         return 0;

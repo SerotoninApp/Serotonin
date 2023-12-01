@@ -16,7 +16,7 @@
 #include <sys/errno.h>
 #include "util.h"
 #include <IOKit/IOKitLib.h>
-
+#include "overwriter.h"
 //1. copy /sbin/launchd to somewhere else - done
 //2. change anything in launchd - memmem
 //3. resign get-task-allow + codesign with roothelper?
@@ -68,20 +68,27 @@ int copyLaunchd(void) {
     char* prebootpath = return_boot_manifest_hash_main();
     char originallaunchd[256];
     sprintf(originallaunchd, "%s/%s", prebootpath, "originallaunchd");
-    ret = unlink(originallaunchd);
+    
+    char patchedlaunchd[256];
+    sprintf(patchedlaunchd, "%s/%s", prebootpath, "patchedlaunchd");
     
     NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
-    NSLog(@"fakelaunchdPath: %s", originallaunchd);
+//    NSLog(@"fakelaunchdPath: %s", originallaunchd);
+    
+    NSString *patchedlaunchdPath = [NSString stringWithUTF8String:patchedlaunchd];
+//    NSLog(@"fakelaunchdPath: %s", patchedlaunchd);
+    
+    spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
     spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
 //    copyfile("/sbin/launchd", "/var/originallaunchd", NULL, COPYFILE_ALL);
     return ret;
 }
 
-int overwriteLaunchd(void) {
-    kern_return_t ret = 0;
-    
-    return ret;
-}
+//int overwriteLaunchd(void) {
+//    kern_return_t ret = 0;
+//    
+//    return ret;
+//}
 
 int codesignLaunchd(void) {
     kern_return_t ret = 0;
@@ -132,7 +139,8 @@ int userspaceReboot(void) {
 
 int fuck(void) {
     kern_return_t ret = 0;
-//    copyLaunchd();fa
+    copyLaunchd();
+    overwrite_launchd_mdc();
     codesignLaunchd();
 //    userspaceReboot();
 //    if (userspaceReboot() == 0) {

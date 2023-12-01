@@ -10,4 +10,6 @@
 int copyLaunchd(void);
 int userspaceReboot(void);
 int fuck(void);
+int get_boot_manifest_hash(char hash[97]);
+char* return_boot_manifest_hash_main(void);
 #endif /* troller_h */
