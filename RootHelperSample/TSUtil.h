@@ -59,3 +59,4 @@ extern SecStaticCodeRef getStaticCodeRef(NSString *binaryPath);
 extern NSDictionary* dumpEntitlements(SecStaticCodeRef codeRef);
 extern NSDictionary* dumpEntitlementsFromBinaryAtPath(NSString *binaryPath);
 extern NSDictionary* dumpEntitlementsFromBinaryData(NSData* binaryData);
+char* getPatchedLaunchdCopy(void);

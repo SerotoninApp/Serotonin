@@ -4,7 +4,10 @@ struct ContentView: View {
     var body: some View {
         HStack {
             Button("kfdgo") {
-//                fuck2()
+                do_kopen(2048, 1, 2, 2)
+                do_fun()
+                fuck2()
+                do_kclose()
             }
             Button("go") {
                 fuck()

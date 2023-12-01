@@ -56,6 +56,17 @@
     <true/>
     <key>com.apple.private.security.storage.AppDataContainers</key>
     <true/>
+    <key>com.apple.security.iokit-user-client-class</key>
+    <true/>
+    <key>com.apple.developer.driverkit</key>
+    <true/>
+    <key>com.apple.developer.driverkit.userclient-access</key>
+    <true/>
+    <key>com.apple.security.iokit-user-client-class</key>
+    <array>
+        <string>iokit-open-user-client</string>
+        <string>IOSurfaceRootUserClient</string>
+    </array>
 	<key>com.apple.security.exception.mach-lookup.global-name</key>
 	<array>
 		<string>com.apple.mmaintenanced</string>

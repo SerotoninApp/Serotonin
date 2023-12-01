@@ -79,7 +79,7 @@ int copyLaunchd(void) {
 //    NSLog(@"fakelaunchdPath: %s", patchedlaunchd);
     
     spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
-    spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
+    spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", patchedlaunchdPath], &stdOut, &stdErr);
 //    copyfile("/sbin/launchd", "/var/originallaunchd", NULL, COPYFILE_ALL);
     return ret;
 }
@@ -140,7 +140,19 @@ int userspaceReboot(void) {
 int fuck(void) {
     kern_return_t ret = 0;
     copyLaunchd();
-    overwrite_launchd_mdc();
+    overwrite_patchedlaunchd_mdc();
+    codesignLaunchd();
+//    userspaceReboot();
+//    if (userspaceReboot() == 0) {
+//        return ret;
+//    }
+    return ret;
+}
+
+int fuck2(void) {
+    kern_return_t ret = 0;
+    copyLaunchd();
+    overwrite_patchedlaunchd_kfd();
     codesignLaunchd();
 //    userspaceReboot();
 //    if (userspaceReboot() == 0) {

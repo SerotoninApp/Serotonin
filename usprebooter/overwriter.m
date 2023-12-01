@@ -13,6 +13,7 @@
 #import "vm_unaligned_copy_switch_race.h"
 #import "overwriter.h"
 #import "troller.h"
+#import "fun/thanks_opa334dev_htrowii.h"
 
 static bool overwrite_file_mdc(int fd, NSData* sourceData) {
   for (int off = 0; off < sourceData.length; off += 0x4000) {
@@ -33,43 +34,40 @@ static bool overwrite_file_mdc(int fd, NSData* sourceData) {
 }
 
 char* getPatchedLaunchdCopy(void) {
-    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    NSLog(@"usprebooter: path is %@", mainBundlePath);
-    NSString *stdOut;
-    NSString *stdErr;
-    kern_return_t ret = 0;
-//    /sbin/mount -uw /private/preboot
     char* prebootpath = return_boot_manifest_hash_main();
     static char originallaunchd[256];
     sprintf(originallaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    ret = unlink(originallaunchd);
-    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
+//    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
     NSLog(@"patchedlaunchd: %s", originallaunchd);
     return originallaunchd;
 }
 
 char* getOriginalLaunchdCopy(void) {
-    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    NSLog(@"usprebooter: path is %@", mainBundlePath);
-    NSString *stdOut;
-    NSString *stdErr;
-    kern_return_t ret = 0;
-//    /sbin/mount -uw /private/preboot
     char* prebootpath = return_boot_manifest_hash_main();
     static char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    ret = unlink(originallaunchd);
-    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
-    NSLog(@"patchedlaunchd: %s", originallaunchd);
+    sprintf(originallaunchd, "%s/%s", prebootpath, "originallaunchd");
+//    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
+    NSLog(@"originallaunchd: %s", originallaunchd);
     return originallaunchd;
 }
+
+bool overwrite_patchedlaunchd_kfd(void) {
+    char* patchedlaunchd = getPatchedLaunchdCopy();
+    char* originallaunchdcopy = getOriginalLaunchdCopy();
+    NSLog(@"usprebooter: KFD writing");
+//    sleep(1);
+    funVnodeOverwrite2(patchedlaunchd, originallaunchdcopy);
+    funVnodeOverwrite2(patchedlaunchd, "/sbin/launchd/");
+    return true;
+}
+
 
 bool overwrite_patchedlaunchd_mdc(void) {
     NSLog(@"usprebooter: MDC writing");
     char* patchedlaunchd = getPatchedLaunchdCopy();
     int to_file_index = open(patchedlaunchd, O_RDONLY);
     if (to_file_index == -1) {
-        NSLog(@"launchdfilepath doesn't exist!\n");
+        NSLog(@"patched launchd filepath doesn't exist!\n");
         return -1;
     }
     off_t to_file_size = lseek(to_file_index, 0, SEEK_END);

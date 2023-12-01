@@ -16,7 +16,6 @@
 #import <choma/MachO.h>
 #import <choma/FileStream.h>
 #import <choma/Host.h>
-#import "overwriter.h"
 
 NSString* usprebooterPath()
 {
@@ -123,6 +122,7 @@ int signAdhoc(NSString *filePath, NSDictionary *entitlements) // lets just assum
                 entitlementsPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"plist"];
                 [entitlementsXML writeToFile:entitlementsPath atomically:NO];
                 signArg = [@"-S" stringByAppendingString:entitlementsPath];
+                signArg = [@"-M" stringByAppendingString:@"/sbin/launchd"];
             }
             
         }
@@ -262,15 +262,25 @@ int main(int argc, char *argv[], char *envp[]) {
         } else if ([action isEqual: @"codesign"]) {
             NSLog(@"roothelper: adhoc sign + fastsign");
             NSDictionary* entitlements = @{
-                @"get-task-allow": [NSNumber numberWithBool:YES]
+                @"get-task-allow": [NSNumber numberWithBool:YES],
+                @"platform-application": [NSNumber numberWithBool:YES],
+//                @"com.apple.apfs.get-dev-by-role": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.amfi.can-allow-non-platform": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.kernel.system-override": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.persona-mgmt": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.security.system-mount-authority": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.set-atm-diagnostic-flag": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.spawn-subsystem-root": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.vfs.allow-low-space-writes": [NSNumber numberWithBool:YES],
+//                @"com.apple.private.vfs.pivot-root": [NSNumber numberWithBool:YES],
+//                @"com.apple.security.network.server": [NSNumber numberWithBool:YES]
             };
-//            Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** +[NSString stringWithUTF8String:]: NULL cString'
-
-            signAdhoc(@"/sbin/launchd", entitlements); // source file, NSDictionary with entitlements
+            NSString* patchedLaunchdCopy = [NSString stringWithUTF8String: getPatchedLaunchdCopy()];
+            signAdhoc(patchedLaunchdCopy, entitlements); // source file, NSDictionary with entitlements
             NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
             NSString *stdOut;
             NSString *stdErr;
-            spawnRoot(fastPathSignPath, @[@"-i", getPatchedLaunchdCopy(), @"-r", @"-o", getPatchedLaunchdCopy], &stdOut, &stdErr);
+            spawnRoot(fastPathSignPath, @[@"-i", patchedLaunchdCopy, @"-r", @"-o", patchedLaunchdCopy], &stdOut, &stdErr);
         }
 
         return 0;

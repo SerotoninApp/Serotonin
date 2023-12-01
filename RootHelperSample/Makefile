@@ -11,6 +11,6 @@ trolltoolsroothelper_CFLAGS = -fobjc-arc $(shell pkg-config --cflags libcrypto) 
 trolltoolsroothelper_CODESIGN_FLAGS = -Sentitlements.plist
 trolltoolsroothelper_INSTALL_PATH = /usr/local/bin
 trolltoolsroothelper_LIBRARIES = archive
-trolltoolsroothelper_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices MobileCoreServices MobileContainerManager
+trolltoolsroothelper_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices MobileCoreServices MobileContainerManager IOKit
 
 include $(THEOS_MAKE_PATH)/tool.mk
