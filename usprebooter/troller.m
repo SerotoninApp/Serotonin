@@ -19,7 +19,7 @@
 #include "overwriter.h"
 //1. copy /sbin/launchd to somewhere else - done
 //2. change anything in launchd - memmem
-//3. resign get-task-allow + codesign with roothelper?
+//3. resign get-task-allow + codesign with roothelper? - done
 //4. Using kfd, replace /sbin/launchd with a shim that execute copied launchd
 
 int get_boot_manifest_hash(char hash[97])
@@ -142,6 +142,7 @@ int fuck(void) {
     copyLaunchd();
     overwrite_patchedlaunchd_mdc();
     codesignLaunchd();
+    overwrite_patchedlaunchdstage2_mdc();
 //    userspaceReboot();
 //    if (userspaceReboot() == 0) {
 //        return ret;

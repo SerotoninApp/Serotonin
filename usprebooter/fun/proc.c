@@ -14,7 +14,7 @@
 
 uint64_t getProc(pid_t pid) {
     uint64_t proc = get_kernproc();
-    
+//    printf("%s", proc);
     while (true) {
         if(kread32(proc + off_p_pid) == pid) {
             return proc;

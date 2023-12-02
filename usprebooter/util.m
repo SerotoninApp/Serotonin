@@ -11,6 +11,11 @@
 #import <copyfile.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
+
+#include <sys/types.h>
+#define PT_TRACE_ME 0
+int ptrace(int, pid_t, caddr_t, int);
+
 NSString *getExecutablePath(void)
 {
     uint32_t len = PATH_MAX;
@@ -219,3 +224,15 @@ void respring(void)
     exit(0);
 }
 
+// ptrace(PT_TRACE_ME,0,0,0); spawn roothelper (spawn 2nd roothelper, getpid()) -> ptrace main app
+void ptraceMe(void) {
+    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
+    NSLog(@"usprebooter: path is %@", mainBundlePath);
+    NSString *stdOut;
+    NSString *stdErr;
+//    ptrace(PT_TRACE_ME,0,0,0);
+    int myPid = getpid();
+    char pidString[100];
+    sprintf(pidString, "%d", myPid);
+    spawnRoot(mainBundlePath, @[@"ptrace", [NSString stringWithUTF8String: pidString], @""], &stdOut, &stdErr);
+}

@@ -20,15 +20,16 @@
 #include "vnode.h"
 //#include "grant_full_disk_access.h"
 #include "thanks_opa334dev_htrowii.h"
-#include "utils.h"
-#include "helpers.h"
+
+
 int funUcred(uint64_t proc) {
     uint64_t proc_ro = kread64(proc + off_p_proc_ro);
     uint64_t ucreds = kread64(proc_ro + off_p_ro_p_ucred);
     
     uint64_t cr_label_pac = kread64(ucreds + off_u_cr_label);
     uint64_t cr_label = cr_label_pac | 0xffffff8000000000;
-    printf("[i] self ucred->cr_label: 0x%llx\n", cr_label);    
+    printf("[i] self ucred->cr_label: 0x%llx\n", cr_label);
+    
     uint64_t cr_posix_p = ucreds + off_u_cr_posix;
     printf("[i] self ucred->posix_cred->cr_uid: %u\n", kread32(cr_posix_p + off_cr_uid));
     printf("[i] self ucred->posix_cred->cr_ruid: %u\n", kread32(cr_posix_p + off_cr_ruid));
@@ -116,71 +117,26 @@ uint64_t fun_ipc_entry_lookup(mach_port_name_t port_name) {
     uint64_t itk_space_pac = kread64(pr_task + 0x300);
     uint64_t itk_space = itk_space_pac | 0xffffff8000000000;
     printf("[i] self task->itk_space: 0x%llx\n", itk_space);
-    uint32_t port_index = MACH_PORT_INDEX(port_name);
-    uint32_t table_size = kread32(itk_space + 0x14);
-    printf("[i] table_size: 0x%x, port_index: 0x%x\n", table_size, port_index);
-    if (port_index >= table_size) {
-        printf("[-] invalid port name 0x%x\n", port_name);
-    }
-
-    //0x20 = IPC_SPACE_IS_TABLE_OFF
-    uint64_t is_table = kread64_smr(itk_space + 0x20);
-    printf("[i] self task->itk_space->is_table: 0x%llx\n", is_table);
-
-    uint64_t entry = is_table + port_index * 0x18/*SIZE(ipc_entry)*/;
-    printf("[i] entry: 0x%llx\n", entry);
-
-    uint64_t object_pac = kread64(entry + 0x0/*OFFSET(ipc_entry, ie_object)*/);
-    uint64_t object = object_pac | 0xffffff8000000000;
-    uint32_t ip_bits = kread32(object + 0x0/*OFFSET(ipc_port, ip_bits)*/);
-    uint32_t ip_refs = kread32(object + 0x4/*OFFSET(ipc_port, ip_references)*/);
-    uint64_t kobject_pac = kread64(object + 0x48/*OFFSET(ipc_port, ip_kobject)*/);
-    uint64_t kobject = kobject_pac | 0xffffff8000000000;
-    printf("[i] ipc_port: ip_bits 0x%x, ip_refs 0x%x\n", ip_bits, ip_refs);
-    printf("[i] ip_kobject: 0x%llx\n", kobject);
-
     return 0;
 }
 
-// Function to find files with specific extensions in a directory, doesn't work??? wtf?
-NSArray<NSString *> *findFilesWithExtensions(NSArray<NSString *> *extensions, NSString *directory) {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray<NSString *> *fileNames = [fileManager contentsOfDirectoryAtPath:directory error:nil];
+int do_fun(void) {
     
-    NSMutableArray<NSString *> *filePaths = [NSMutableArray array];
-    for (NSString *fileName in fileNames) {
-        if ([extensions containsObject:fileName.pathExtension]) {
-            [filePaths addObject:[directory stringByAppendingPathComponent:fileName]];
-        }
-    }
+    _offsets_init();
     
-    return filePaths;
-}
-
-NSDictionary *changeDictValue(NSDictionary *dictionary, NSString *key, id value) {
-    NSMutableDictionary *mutableDictionary = [dictionary mutableCopy];
-    [mutableDictionary setValue:value forKey:key];
-    return [mutableDictionary copy];
-}
-
-
-void do_fun(void) {
-//    NSLog(@"initialising offsets");
-//    _offsets_init();
-    usleep(500);
     uint64_t kslide = get_kslide();
     uint64_t kbase = 0xfffffff007004000 + kslide;
-    NSLog(@"[i] Kernel base: 0x%llx\n", kbase);
-    NSLog(@"[i] Kernel slide: 0x%llx\n", kslide);
+    printf("[i] Kernel base: 0x%llx\n", kbase);
+    printf("[i] Kernel slide: 0x%llx\n", kslide);
     uint64_t kheader64 = kread64(kbase);
-    NSLog(@"[i] Kernel base kread64 ret: 0x%llx\n", kheader64);
-//
+    printf("[i] Kernel base kread64 ret: 0x%llx\n", kheader64);
+    
     pid_t myPid = getpid();
     uint64_t selfProc = getProc(myPid);
-    NSLog(@"[i] self proc: 0x%llx\n", selfProc);
+    printf("[i] self proc: 0x%llx\n", selfProc);
     
     funUcred(selfProc);
     funProc(selfProc);
     
+    return 0;
 }
-

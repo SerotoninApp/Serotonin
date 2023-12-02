@@ -25,6 +25,7 @@
 		C835952A2B1A589000346F80 /* vnode.m in Sources */ = {isa = PBXBuildFile; fileRef = C83595182B1A589000346F80 /* vnode.m */; };
 		C835952B2B1A589000346F80 /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C83595192B1A589000346F80 /* proc.c */; };
 		C835952F2B1A776F00346F80 /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C835952E2B1A776F00346F80 /* fun.m */; };
+		C85782F12B1B99390096B6B0 /* shim in Resources */ = {isa = PBXBuildFile; fileRef = C85782F02B1B99390096B6B0 /* shim */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -138,6 +139,7 @@
 		C835952C2B1A5B0400346F80 /* IOKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKit.h; sourceTree = "<group>"; };
 		C835952D2B1A776F00346F80 /* fun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fun.h; sourceTree = "<group>"; };
 		C835952E2B1A776F00346F80 /* fun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fun.m; sourceTree = "<group>"; };
+		C85782F02B1B99390096B6B0 /* shim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = shim; path = RootHelperSample/launchdshim/shim; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +179,7 @@
 				C835950A2B1A589000346F80 /* fun */,
 				C83594D72B1A588F00346F80 /* libkfd */,
 				C835951D2B1A589000346F80 /* libkfd.h */,
+				C85782F02B1B99390096B6B0 /* shim */,
 				C83594CC2B18E94D00346F80 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
@@ -420,15 +423,15 @@
 				C835950B2B1A589000346F80 /* thanks_opa334dev_htrowii.h */,
 				C835950C2B1A589000346F80 /* utils.h */,
 				C835950D2B1A589000346F80 /* vnode.h */,
+				C83595182B1A589000346F80 /* vnode.m */,
 				C835950E2B1A589000346F80 /* proc.h */,
-				C835950F2B1A589000346F80 /* offsets.h */,
 				C83595102B1A589000346F80 /* krw.h */,
 				C83595132B1A589000346F80 /* helpers.m */,
 				C83595142B1A589000346F80 /* utils.m */,
 				C83595152B1A589000346F80 /* thanks_opa334dev_htrowii.m */,
 				C83595162B1A589000346F80 /* krw.c */,
+				C835950F2B1A589000346F80 /* offsets.h */,
 				C83595172B1A589000346F80 /* offsets.m */,
-				C83595182B1A589000346F80 /* vnode.m */,
 				C83595192B1A589000346F80 /* proc.c */,
 				C835951B2B1A589000346F80 /* helpers.h */,
 			);
@@ -501,6 +504,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
+				C85782F12B1B99390096B6B0 /* shim in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
 				C83594CD2B18E94D00346F80 /* fastPathSign in Resources */,
 			);

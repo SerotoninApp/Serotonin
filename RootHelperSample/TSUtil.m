@@ -40,7 +40,7 @@ NSString* rootHelperPath(void)
 #else
 NSString* rootHelperPath(void)
 {
-	return [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"trollstorehelper"];
+	return [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"trolltoolsroothelper"];
 }
 #endif
 

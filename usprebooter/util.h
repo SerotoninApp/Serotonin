@@ -11,5 +11,5 @@
 void respring(void);
 //int respawnSelf(NSArray* args);
 int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdErr);
-
+void ptraceMe(void);
 #endif /* util_h */

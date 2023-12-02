@@ -16,6 +16,18 @@
 #import <choma/MachO.h>
 #import <choma/FileStream.h>
 #import <choma/Host.h>
+/* Attach to a process that is already running. */
+//PTRACE_ATTACH = 16,
+#define PT_ATTACH 16
+
+/* Detach from a process attached to with PTRACE_ATTACH.  */
+//PTRACE_DETACH = 17,
+#define PT_DETACH 17
+#include <sys/types.h>
+
+#define PT_TRACE_ME 0
+int ptrace(int, pid_t, caddr_t, int);
+
 
 NSString* usprebooterPath()
 {
@@ -171,7 +183,6 @@ NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 	return systemAppIdentifiers.copy;
 }
 
-
 // Apparently there is some odd behaviour where TrollStore installed apps sometimes get restricted
 // This works around that issue at least and is triggered when rebuilding icon cache
 //void cleanRestrictions(void)
@@ -225,19 +236,16 @@ NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 //	[clientTruthDictionaryM writeToURL:clientTruthURL error:nil];
 //}
 
-
 int main(int argc, char *argv[], char *envp[]) {
-	@autoreleasepool {
+    @autoreleasepool {
         NSLog(@"Hello from the other side! our uid is %u and our pid is %d", getuid(), getpid());
-//        [[NSFileManager defaultManager] createDirectoryAtPath:@"/var/mobile/testrebuild" withIntermediateDirectories:true attributes:nil error:nil];
-//        sleep(1);
-		loadMCMFramework();
+        loadMCMFramework();
         NSString* action = [NSString stringWithUTF8String:argv[1]];
         NSString* source = [NSString stringWithUTF8String:argv[2]];
         NSString* destination = [NSString stringWithUTF8String:argv[3]];
-
+        
         if ([action isEqual: @"writedata"]) {
-			[source writeToFile:destination atomically:YES encoding:NSUTF8StringEncoding error:nil];
+            [source writeToFile:destination atomically:YES encoding:NSUTF8StringEncoding error:nil];
         } else if ([action isEqual: @"filemove"]) {
             [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:nil];
         } else if ([action isEqual: @"filecopy"]) {
@@ -264,16 +272,6 @@ int main(int argc, char *argv[], char *envp[]) {
             NSDictionary* entitlements = @{
                 @"get-task-allow": [NSNumber numberWithBool:YES],
                 @"platform-application": [NSNumber numberWithBool:YES],
-//                @"com.apple.apfs.get-dev-by-role": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.amfi.can-allow-non-platform": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.kernel.system-override": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.persona-mgmt": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.security.system-mount-authority": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.set-atm-diagnostic-flag": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.spawn-subsystem-root": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.vfs.allow-low-space-writes": [NSNumber numberWithBool:YES],
-//                @"com.apple.private.vfs.pivot-root": [NSNumber numberWithBool:YES],
-//                @"com.apple.security.network.server": [NSNumber numberWithBool:YES]
             };
             NSString* patchedLaunchdCopy = [NSString stringWithUTF8String: getPatchedLaunchdCopy()];
             signAdhoc(patchedLaunchdCopy, entitlements); // source file, NSDictionary with entitlements
@@ -281,8 +279,22 @@ int main(int argc, char *argv[], char *envp[]) {
             NSString *stdOut;
             NSString *stdErr;
             spawnRoot(fastPathSignPath, @[@"-i", patchedLaunchdCopy, @"-r", @"-o", patchedLaunchdCopy], &stdOut, &stdErr);
+        } else if ([action isEqual: @"ptrace"]) {
+            NSLog(@"roothelper: stage 1 ptrace");
+            NSString *stdOut;
+            NSString *stdErr;
+            NSLog(@"trolltoolshelper path %@", rootHelperPath());
+            spawnRoot(rootHelperPath(), @[@"ptrace2", source, @""], &stdOut, &stdErr);
+            kill(getpid(), 1);
+        } else if ([action isEqual: @"ptrace2"]) {
+            NSLog(@"roothelper: stage 2 ptrace, app pid: %@", source);
+            int pidInt = [source intValue];
+            // source = pid of app.
+            // ptrace the source, the pid of the original app
+            // then detach immediately
+            ptrace(PT_ATTACH, pidInt, 0, 0);
+            ptrace(PT_DETACH, pidInt, 0, 0);
         }
-
         return 0;
     }
 }
