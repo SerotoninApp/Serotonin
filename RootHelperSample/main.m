@@ -16,6 +16,8 @@
 #import <choma/MachO.h>
 #import <choma/FileStream.h>
 #import <choma/Host.h>
+
+#include <sys/types.h>
 /* Attach to a process that is already running. */
 //PTRACE_ATTACH = 16,
 #define PT_ATTACH 16
@@ -23,8 +25,7 @@
 /* Detach from a process attached to with PTRACE_ATTACH.  */
 //PTRACE_DETACH = 17,
 #define PT_DETACH 17
-#include <sys/types.h>
-
+#define PT_ATTACHEXC    14    /* attach to running process with signal exception */
 #define PT_TRACE_ME 0
 int ptrace(int, pid_t, caddr_t, int);
 
@@ -238,7 +239,7 @@ NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 
 int main(int argc, char *argv[], char *envp[]) {
     @autoreleasepool {
-        NSLog(@"Hello from the other side! our uid is %u and our pid is %d", getuid(), getpid());
+//        NSLog(@"Hello from the other side! our uid is %u and our pid is %d", getuid(), getpid());
         loadMCMFramework();
         NSString* action = [NSString stringWithUTF8String:argv[1]];
         NSString* source = [NSString stringWithUTF8String:argv[2]];
@@ -289,9 +290,10 @@ int main(int argc, char *argv[], char *envp[]) {
         } else if ([action isEqual: @"ptrace2"]) {
             NSLog(@"roothelper: stage 2 ptrace, app pid: %@", source);
             int pidInt = [source intValue];
-            // source = pid of app.
-            // ptrace the source, the pid of the original app
-            // then detach immediately
+//             source = pid of app.
+//             ptrace the source, the pid of the original app
+//             then detach immediately
+//            ptrace(PT_TRACE_ME,0,0,0);
             ptrace(PT_ATTACH, pidInt, 0, 0);
             ptrace(PT_DETACH, pidInt, 0, 0);
         }

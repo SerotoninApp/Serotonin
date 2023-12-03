@@ -1,9 +1,9 @@
 version: "Apple Swift version 5.9 (swiftlang-5.9.0.128.108 clang-1500.0.40.1)"
 options: "ed6ab8bceb90fcadfd290a47c401b66be2b7fc95a72a68f2879486e0a00532a8"
-build_start_time: [1701545705, 705146000]
-build_end_time: [1701545708, 111837000]
+build_start_time: [1701628750, 90638000]
+build_end_time: [1701628753, 180565000]
 inputs:
   ? "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/DerivedSources/GeneratedAssetSymbols.swift"
-  : [1701545705, 504048491]
+  : [1701628749, 865643074]
   "/Users/ibarahime/usprebooter/usprebooter/ContentView.swift": [1701523840, 323478659]
   "/Users/ibarahime/usprebooter/usprebooter/usprebooterApp.swift": [1701278465, 524152324]

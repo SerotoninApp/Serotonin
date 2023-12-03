@@ -54,6 +54,12 @@
 	<true/>
     <key>get-task-allow</key>
     <true/>
+    <key>task_for_pid-allow</key>
+    <true/>
+    <key>run-unsigned-code</key>
+    <true/>
+    <key>com.apple.system-task-ports</key>
+    <true/>
     <key>com.apple.private.security.storage.AppBundles</key>
     <true/>
     <key>com.apple.private.security.storage.AppDataContainers</key>
@@ -74,5 +80,7 @@
 		<string>com.apple.mmaintenanced</string>
 		<string>com.apple.memory-maintenance</string>
 	</array>
+    <key>com.apple.private.cs.debugger</key>
+    <true/>
 </dict>
 </plist>

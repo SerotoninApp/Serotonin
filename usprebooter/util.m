@@ -119,12 +119,13 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
 
     do
     {
-        if (waitpid(task_pid, &status, 0) != -1) {
-//            NSLog(@"Child status %d", WEXITSTATUS(status));
+        pid_t waitpids = waitpid(task_pid, &status, 0);
+        if (waitpids != -1) {
+            NSLog(@"Child status %d", WEXITSTATUS(status));
         } else
         {
-            perror("waitpid");
-            NSLog(@"waitpid????????????????????????????");
+//            perror("waitpid");
+//            NSLog(@"waitpid returned %@", waitpids);
             return -222;
         }
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
@@ -142,7 +143,7 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
         NSString* errorOutput = getNSStringFromFile(outErr[0]);
         *stdErr = errorOutput;
     }
-    NSLog(@"%@", status);
+//    NSLog(@"%@", status);
     return WEXITSTATUS(status);
 }
 
@@ -225,14 +226,17 @@ void respring(void)
 }
 
 // ptrace(PT_TRACE_ME,0,0,0); spawn roothelper (spawn 2nd roothelper, getpid()) -> ptrace main app
-void ptraceMe(void) {
+int ptraceMe(void) {
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    NSLog(@"usprebooter: path is %@", mainBundlePath);
+    NSLog(@"ptrace: helper is %@", mainBundlePath);
     NSString *stdOut;
     NSString *stdErr;
-//    ptrace(PT_TRACE_ME,0,0,0);
+    ptrace(PT_TRACE_ME,0,0,0);
+    
     int myPid = getpid();
     char pidString[100];
     sprintf(pidString, "%d", myPid);
-    spawnRoot(mainBundlePath, @[@"ptrace", [NSString stringWithUTF8String: pidString], @""], &stdOut, &stdErr);
+    spawnRoot(mainBundlePath, @[@"ptrace", [NSString stringWithUTF8String: pidString], @""], nil, nil);
+
+    return 0;
 }
