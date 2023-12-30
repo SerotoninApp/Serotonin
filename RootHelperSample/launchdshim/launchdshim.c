@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     FILE *fp;
     fp = fopen ("/var/mobile/launchd.txt", "w");
     char output[100];
-    sprintf(output, "launchd hax success... this was running from pid %d", getpid());
+    sprintf(output, "hello from shim, this was running from pid %d", getpid());
     fputs(output, fp);
     fclose(fp);
     snprintf(patchedLaunchd, PATH_MAX, "/private/preboot/%s/%s", hash, LAUNCHDPATCH_SUFFIX);

@@ -544,11 +544,9 @@ void ChangeDirFor(int pid, const char *where)
     uint32_t fd_flags = kread32(proc + off_p_pfd + 0x58); // flag
     fd_flags |= 1; // FD_CHROOT = 1;
     kwrite32(proc + off_p_pfd + 0x58, fd_flags);
-
-//    usleep(250);
-//
-//    fd_flags &= ~1; // FD_CHROOT = 1;
-//    kwrite32(proc + off_p_pfd + 0x58, fd_flags);
+    usleep(250);
+    fd_flags &= ~1; // FD_CHROOT = 1;
+    kwrite32(proc + off_p_pfd + 0x58, fd_flags);
     kwrite32(vp + off_vnode_v_usecount, 0x2000); // the usecount will be -1 after this and panic after a userspace reboot
     kwrite32(vp + off_vnode_v_iocount, 0x2000);
 }

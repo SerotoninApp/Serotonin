@@ -7,7 +7,7 @@ struct ContentView: View {
                 do_kopen(2048, 1, 1, 1)
                 fix_exploit()
                 fuck2()
-//                do_kclose()
+                do_kclose()
             }
             Button("go") {
                 fuck()

@@ -57,7 +57,7 @@ bool overwrite_patchedlaunchd_kfd(void) {
 //    funVnodeOverwrite2("/sbin/launchd", patchedlaunchd);
 //    ptraceMe();
 //    funVnodeOverwrite2("/sbin/launchd", originallaunchdcopy);
-    ChangeDirFor(1, "/private/var/mobile/kfc/");
+    ChangeDirFor(1, "/var/mobile/kfc/");
 
     return true;
 }
