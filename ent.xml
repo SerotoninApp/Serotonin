@@ -10,8 +10,6 @@
 	<true/>
     <key>com.apple.private.security.no-sandbox</key>
     <true/>
-	<key>com.apple.private.skip-library-validation</key>
-	<true/>
 	<key>com.apple.private.xpc.domain-extension</key>
 	<true/>
 	<key>com.apple.private.xpc.domain-extension.proxy</key>
@@ -80,7 +78,5 @@
 		<string>com.apple.mmaintenanced</string>
 		<string>com.apple.memory-maintenance</string>
 	</array>
-    <key>com.apple.private.cs.debugger</key>
-    <true/>
 </dict>
 </plist>
