@@ -72,15 +72,16 @@ int copyLaunchd(void) {
     char patchedlaunchd[256];
     sprintf(patchedlaunchd, "%s/%s", prebootpath, "patchedlaunchd");
     
+    char patchedlaunchdshim;
+    sprintf(patchedlaunchd, "%s/%s", prebootpath, "launchd");
+    
     NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
 //    NSLog(@"fakelaunchdPath: %s", originallaunchd);
     
     NSString *patchedlaunchdPath = [NSString stringWithUTF8String:patchedlaunchd];
 //    NSLog(@"fakelaunchdPath: %s", patchedlaunchd);
-    
     spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
     spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", patchedlaunchdPath], &stdOut, &stdErr);
-//    copyfile("/sbin/launchd", "/var/originallaunchd", NULL, COPYFILE_ALL);
     return ret;
 }
 

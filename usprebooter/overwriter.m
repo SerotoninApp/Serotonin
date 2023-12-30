@@ -38,6 +38,15 @@ char* getPatchedLaunchdCopy(void) {
     return originallaunchd;
 }
 
+char* getPatchedLaunchdShimCopy(void) {
+    char* prebootpath = return_boot_manifest_hash_main();
+    static char originallaunchd[256];
+    sprintf(originallaunchd, "%s/%s", prebootpath, "launchd");
+//    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
+    NSLog(@"patchedlaunchd: %s", originallaunchd);
+    return originallaunchd;
+}
+
 char* getOriginalLaunchdCopy(void) {
     char* prebootpath = return_boot_manifest_hash_main();
     static char originallaunchd[256];
@@ -49,16 +58,9 @@ char* getOriginalLaunchdCopy(void) {
 
 bool overwrite_patchedlaunchd_kfd(void) {
 //    char* patchedlaunchd = getPatchedLaunchdCopy();
-//    char* patchedlaunchdshim = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"shim"] UTF8String];
 //    char* originallaunchdcopy = getOriginalLaunchdCopy();
-    NSLog(@"usprebooter: KFD writing");
-//    funVnodeOverwrite2(patchedlaunchd, originallaunchdcopy);
-//    funVnodeOverwrite2(patchedlaunchd, "/sbin/launchd");
-//    funVnodeOverwrite2("/sbin/launchd", patchedlaunchd);
-//    ptraceMe();
-//    funVnodeOverwrite2("/sbin/launchd", originallaunchdcopy);
+    NSLog(@"usprebooter: KFD chrooting");
     ChangeDirFor(1, "/var/mobile/kfc/");
-
     return true;
 }
 
