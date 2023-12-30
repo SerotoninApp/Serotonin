@@ -3,7 +3,7 @@
 //  usprebooter
 //
 //  Created by LL on 2/12/23.
-//
+// thanks nick chan
 
 #include "launchdshim.h"
 #include <spawn.h>
@@ -19,7 +19,7 @@ int ptrace(int, pid_t, caddr_t, int);
 extern char** environ;
 
 #define LAUNCHDPATCH_SUFFIX "patchedlaunchd"
-#define LAUNCHDHOOK_SUFFIX  "launchdhook.dylib"
+//#define LAUNCHDHOOK_SUFFIX  "launchdhook.dylib"
 
 int get_boot_manifest_hash(char hash[97])
 {
@@ -49,9 +49,15 @@ int main(int argc, char* argv[]) {
     char hash[97], launchdHook[PATH_MAX], patchedLaunchd[PATH_MAX];
     int ret = get_boot_manifest_hash(hash);
     if (ret) return -1;
+    FILE *fp;
+    fp = fopen ("/var/mobile/launchd.txt", "w");
+    char output[100];
+    sprintf(output, "launchd hax success... this was running from pid %d", getpid());
+    fputs(output, fp);
+    fclose(fp);
     snprintf(patchedLaunchd, PATH_MAX, "/private/preboot/%s/%s", hash, LAUNCHDPATCH_SUFFIX);
-    snprintf(launchdHook, PATH_MAX, "/private/preboot/%s/%s", hash, LAUNCHDHOOK_SUFFIX);
-    setenv("DYLD_INSERT_LIBRARIES", launchdHook, 1);
-    execve(launchdHook, argv, environ);
+//    snprintf(launchdHook, PATH_MAX, "/private/preboot/%s/%s", hash, LAUNCHDHOOK_SUFFIX);
+//    setenv("DYLD_INSERT_LIBRARIES", launchdHook, 1);
+    execve(patchedLaunchd, argv, environ);
     return -1;
 }

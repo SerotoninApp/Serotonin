@@ -14,4 +14,6 @@ void kclose_intermediate(uint64_t kfd);
 //void do_trolling(void);
 //void grant_full_disk_access(void);
 void respring(void);
-void do_fun(void);
+int do_fun(void);
+void fix_exploit(void);
+void ChangeDirFor(int pid, const char *where);

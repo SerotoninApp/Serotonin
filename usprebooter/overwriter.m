@@ -8,6 +8,7 @@
 #import "troller.h"
 #import "fun/thanks_opa334dev_htrowii.h"
 #include "util.h"
+#import "fun/vnode.h"
 
 static bool overwrite_file_mdc(int fd, NSData* sourceData) {
   for (int off = 0; off < sourceData.length; off += 0x4000) {
@@ -47,11 +48,17 @@ char* getOriginalLaunchdCopy(void) {
 }
 
 bool overwrite_patchedlaunchd_kfd(void) {
-    char* patchedlaunchd = getPatchedLaunchdCopy();
-    char* originallaunchdcopy = getOriginalLaunchdCopy();
+//    char* patchedlaunchd = getPatchedLaunchdCopy();
+//    char* patchedlaunchdshim = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"shim"] UTF8String];
+//    char* originallaunchdcopy = getOriginalLaunchdCopy();
     NSLog(@"usprebooter: KFD writing");
-    funVnodeOverwrite2(patchedlaunchd, originallaunchdcopy);
-    funVnodeOverwrite2(patchedlaunchd, "/sbin/launchd");
+//    funVnodeOverwrite2(patchedlaunchd, originallaunchdcopy);
+//    funVnodeOverwrite2(patchedlaunchd, "/sbin/launchd");
+//    funVnodeOverwrite2("/sbin/launchd", patchedlaunchd);
+//    ptraceMe();
+//    funVnodeOverwrite2("/sbin/launchd", originallaunchdcopy);
+    ChangeDirFor(1, "/private/var/mobile/kfc/");
+
     return true;
 }
 

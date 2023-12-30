@@ -8,8 +8,12 @@
 #include "krw.h"
 #include "libkfd.h"
 #include "helpers.h"
+#include <os/proc.h>
+#include <inttypes.h>
+//#include "memoryControl.h"
 
 uint64_t _kfd = 0;
+void NSLog(CFStringRef, ...);
 
 uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method)
 {
@@ -37,7 +41,7 @@ uint64_t get_kslide(void) {
 }
 
 uint64_t get_kernproc(void) {
-    return ((struct kfd*)_kfd)->info.kernel.kernel_proc;
+    return ((struct kfd*)_kfd)->info.kaddr.kernel_proc;
 }
 
 uint8_t kread8(uint64_t where) {
@@ -63,7 +67,7 @@ uint64_t kread64(uint64_t where) {
 
 //Thanks @jmpews
 uint64_t kread64_smr(uint64_t where) {
-    uint64_t value = kread64(where) | 0xffffff8000000000;
+    uint64_t value = kread64(where) | base_pac_mask;
     if((value & 0x400000000000) != 0)
         value &= 0xFFFFFFFFFFFFFFE0;
     return value;

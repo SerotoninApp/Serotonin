@@ -9,25 +9,27 @@
 #import <dirent.h>
 #import <sys/statvfs.h>
 #import <sys/stat.h>
+#import <dlfcn.h>
 #import "proc.h"
 #import "vnode.h"
 #import "krw.h"
 #import "helpers.h"
-#include "offsets.h"
+#import "offsets.h"
 #import "thanks_opa334dev_htrowii.h"
-#import <errno.h>
 #import "utils.h"
 
 uint64_t createFolderAndRedirect(uint64_t vnode, NSString *mntPath) {
     [[NSFileManager defaultManager] removeItemAtPath:mntPath error:nil];
     [[NSFileManager defaultManager] createDirectoryAtPath:mntPath withIntermediateDirectories:NO attributes:nil error:nil];
     uint64_t orig_to_v_data = funVnodeRedirectFolderFromVnode(mntPath.UTF8String, vnode);
+    
     return orig_to_v_data;
 }
 
 uint64_t UnRedirectAndRemoveFolder(uint64_t orig_to_v_data, NSString *mntPath) {
     funVnodeUnRedirectFolder(mntPath.UTF8String, orig_to_v_data);
     [[NSFileManager defaultManager] removeItemAtPath:mntPath error:nil];
+    
     return 0;
 }
 
@@ -39,7 +41,7 @@ int setResolution(NSString *path, NSInteger height, NSInteger width) {
     
     BOOL success = [dictionary writeToFile:path atomically:YES];
     if (!success) {
-        printf("[-] Failed createPlistAtPath.\n");
+        NSLog(@"[-] Failed createPlistAtPath.");
         return -1;
     }
     
@@ -50,9 +52,8 @@ int ResSet16(NSInteger height, NSInteger width) {
     NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
     
     //1. Create /var/tmp/com.apple.iokit.IOMobileGraphicsFamily.plist
-    uint64_t var_tmp_vnode = getVnodeAtPathByChdir("/var/tmp");
-    printf("[i] /var/tmp vnode: 0x%llx\n", var_tmp_vnode);
-    
+    uint64_t var_tmp_vnode = getVnodeAtPathByChdir("/private/var/tmp");
+    NSLog(@"[i] /var/tmp vnode: 0x%llx", var_tmp_vnode);
     uint64_t orig_to_v_data = createFolderAndRedirect(var_tmp_vnode, mntPath);
     
     
@@ -67,35 +68,66 @@ int ResSet16(NSInteger height, NSInteger width) {
     orig_to_v_data = createFolderAndRedirect(preferences_vnode, mntPath);
 
     remove([mntPath stringByAppendingString:@"/com.apple.iokit.IOMobileGraphicsFamily.plist"].UTF8String);
-    printf("symlink ret: %d\n", symlink("/var/tmp/com.apple.iokit.IOMobileGraphicsFamily.plist", [mntPath stringByAppendingString:@"/com.apple.iokit.IOMobileGraphicsFamily.plist"].UTF8String));
+    NSLog(@"symlink ret: %d", symlink("/var/tmp/com.apple.iokit.IOMobileGraphicsFamily.plist", [mntPath stringByAppendingString:@"/com.apple.iokit.IOMobileGraphicsFamily.plist"].UTF8String));
     UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
     
     //3. xpc restart
-//    do_kclose();
-//    sleep(1);
-//    xpc_crasher("com.apple.cfprefsd.daemon");
-//    xpc_crasher("com.apple.backboard.TouchDeliveryPolicyServer");
+    //do_kclose();
+    //sleep(1);
+    //xpc_crasher("com.apple.cfprefsd.daemon");
+    //xpc_crasher("com.apple.backboard.TouchDeliveryPolicyServer");
     
     return 0;
 }
 
+//int CopyTS(NSString *path_to, NSString *path_from) {
+//    NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
+//    
+//    //1. Create /var/tmp/com.apple.iokit.IOMobileGraphicsFamily.plist
+//    uint64_t var_tmp_vnode = getVnodeAtPathByChdir("/private/var/tmp");
+//    NSLog(@"[i] /var/tmp vnode: 0x%llx\n", var_tmp_vnode);
+//    uint64_t orig_to_v_data = createFolderAndRedirect(var_tmp_vnode, mntPath);
+//    
+//    
+//    //iPhone 14 Pro Max Resolution
+//    setResolution([mntPath stringByAppendingString:@"/com.apple.iokit.IOMobileGraphicsFamily.plist"], height, width);
+//    
+//    UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
+//    
+//    
+//    //2. Create symbolic link /var/tmp/com.apple.iokit.IOMobileGraphicsFamily.plist -> /var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist
+//    uint64_t preferences_vnode = getVnodePreferences();
+//    orig_to_v_data = createFolderAndRedirect(preferences_vnode, mntPath);
+//
+//    remove([mntPath stringByAppendingString:@"/com.apple.iokit.IOMobileGraphicsFamily.plist"].UTF8String);
+//    NSLog(@"symlink ret: %d\n", symlink("/var/tmp/com.apple.iokit.IOMobileGraphicsFamily.plist", [mntPath stringByAppendingString:@"/com.apple.iokit.IOMobileGraphicsFamily.plist"].UTF8String));
+//    UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
+//    
+//    //3. xpc restart
+//    //do_kclose();
+//    //sleep(1);
+//    //xpc_crasher("com.apple.cfprefsd.daemon");
+//    //xpc_crasher("com.apple.backboard.TouchDeliveryPolicyServer");
+//    
+//    return 0;
+//}
+
 int removeSMSCache(void) {
     NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
     
-    uint64_t library_vnode = getVnodeLibrary();
     uint64_t sms_vnode = getVnodeAtPathByChdir("/var/mobile/Library/SMS");
-    printf("[i] /var/mobile/Library/SMS vnode: 0x%llx\n", sms_vnode);
+    NSLog(@"[i] /var/mobile/Library/SMS vnode: 0x%llx", sms_vnode);
     
     uint64_t orig_to_v_data = createFolderAndRedirect(sms_vnode, mntPath);
-
+    
     NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
     NSLog(@"/var/mobile/Library/SMS directory list: %@", dirs);
-
+    
     remove([mntPath stringByAppendingString:@"/com.apple.messages.geometrycache_v7.plist"].UTF8String);
-
+    
     dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
     NSLog(@"/var/mobile/Library/SMS directory list: %@", dirs);
-
+    
     UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
     
     return 0;
@@ -112,7 +144,31 @@ int VarMobileWriteTest(void) {
     NSLog(@"/var/mobile directory list: %@", dirs);
     
     //create
-    [@"PLZ_GIVE_ME_GIRLFRIENDS!@#" writeToFile:[mntPath stringByAppendingString:@"/can_i_remove_file"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    int open_fd = open([mntPath stringByAppendingString:@"/can_i_remove_file"].UTF8String, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    const char* data = "PLZ_GIVE_ME_GIRLFRIENDS!@#";
+    write(open_fd, data, strlen(data));
+    close(open_fd);
+    
+    dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
+    NSLog(@"/var/mobile directory list: %@", dirs);
+    
+    UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
+    
+    return 0;
+}
+
+int VarMobileWriteFolderTest(void) {
+    NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
+    
+    uint64_t var_mobile_vnode = getVnodeVarMobile();
+    
+    uint64_t orig_to_v_data = createFolderAndRedirect(var_mobile_vnode, mntPath);
+    
+    NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
+    NSLog(@"/var/mobile directory list: %@", dirs);
+    
+    //create
+    mkdir([mntPath stringByAppendingString:@"/can_i_remove_folder"].UTF8String, 0755);
     
     dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
     NSLog(@"/var/mobile directory list: %@", dirs);
@@ -134,7 +190,28 @@ int VarMobileRemoveTest(void) {
     
     //remove
     int ret = remove([mntPath stringByAppendingString:@"/can_i_remove_file"].UTF8String);
-    printf("remove ret: %d\n", ret);
+    NSLog(@"remove ret: %d\n", ret);
+    
+    dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
+    NSLog(@"/var/mobile directory list: %@", dirs);
+    
+    UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
+    
+    return 0;
+}
+
+int VarMobileRemoveFolderTest(void) {
+    NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
+    
+    uint64_t var_mobile_vnode = getVnodeVarMobile();
+    
+    uint64_t orig_to_v_data = createFolderAndRedirect(var_mobile_vnode, mntPath);
+    
+    NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
+    NSLog(@"/var/mobile directory list: %@", dirs);
+    
+    //remove
+    [[NSFileManager defaultManager] removeItemAtPath:[mntPath stringByAppendingString:@"/can_i_remove_folder"] error:nil];
     
     dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
     NSLog(@"/var/mobile directory list: %@", dirs);
@@ -146,34 +223,9 @@ int VarMobileRemoveTest(void) {
 
 int setSuperviseMode(BOOL enable) {
     NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
-    // /var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/CloudConfigurationDetails.plist
-    
-    uint64_t systemgroup_vnode = getVnodeSystemGroup();
-    
-    //must enter 3 subdirectories
-    uint64_t configurationprofiles_vnode = findChildVnodeByVnode(systemgroup_vnode, "systemgroup.com.apple.configurationprofiles");
-    while(1) {
-        if(configurationprofiles_vnode != 0)
-            break;
-        configurationprofiles_vnode = findChildVnodeByVnode(systemgroup_vnode, "systemgroup.com.apple.configurationprofiles");
-    }
-    printf("[i] /var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles vnode: 0x%llx\n", configurationprofiles_vnode);
-    
-    configurationprofiles_vnode = findChildVnodeByVnode(configurationprofiles_vnode, "Library");
-    while(1) {
-        if(configurationprofiles_vnode != 0)
-            break;
-        configurationprofiles_vnode = findChildVnodeByVnode(configurationprofiles_vnode, "Library");
-    }
-    printf("[i] /var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library vnode: 0x%llx\n", configurationprofiles_vnode);
-    
-    configurationprofiles_vnode = findChildVnodeByVnode(configurationprofiles_vnode, "ConfigurationProfiles");
-    while(1) {
-        if(configurationprofiles_vnode != 0)
-            break;
-        configurationprofiles_vnode = findChildVnodeByVnode(configurationprofiles_vnode, "ConfigurationProfiles");
-    }
-    printf("[i] /var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles vnode: 0x%llx\n", configurationprofiles_vnode);
+
+    uint64_t configurationprofiles_vnode = getVnodeAtPathByChdir("/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles");
+    NSLog(@"[i] /var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles vnode: 0x%llx", configurationprofiles_vnode);
     
     uint64_t orig_to_v_data = createFolderAndRedirect(configurationprofiles_vnode, mntPath);
     
@@ -191,12 +243,12 @@ int setSuperviseMode(BOOL enable) {
         
         // Save the updated plist back to the file
         if ([plist writeToFile:plistPath atomically:YES]) {
-            printf("[+] Successfully set IsSupervised in the plist.");
+            NSLog(@"[+] Successfully set IsSupervised in the plist.");
         } else {
-            printf("[-] Failed to write the updated plist to file.");
+            NSLog(@"[-] Failed to write the updated plist to file.");
         }
     } else {
-        printf("[-] Failed to load the plist file.");
+        NSLog(@"[-] Failed to load the plist file.");
     }
     
     UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
@@ -248,163 +300,73 @@ int regionChanger(NSString *country_value, NSString *region_value) {
     NSData *binaryData = [NSPropertyListSerialization dataWithPropertyList:mdict1 format:NSPropertyListBinaryFormat_v1_0 options:0 error:nil];
     [binaryData writeToFile:rewrittenPlistPath atomically:YES];
     
-    funVnodeOverwriteFile(plistPath.UTF8String, rewrittenPlistPath.UTF8String);
+    funVnodeOverwriteFileUnlimitSize(plistPath.UTF8String, rewrittenPlistPath.UTF8String);
     
     return 0;
 }
 
-void do_trolling(void) {
-    NSString *trolling = [NSString stringWithFormat:@"%@/%s", NSBundle.mainBundle.bundlePath, "/PersistenceHelper_Embedded"];
-    funVnodeOverwriteFileUnlimitSize("/var/containers/Bundle/Application/C2B25B81-5A68-4FBF-94C2-C8B16B6CA8C6/Tips.app/Tips", [trolling UTF8String]);
-}
-
-int themePasscodes(void) {
-    NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
-    uint64_t var_tmp_vnode = getVnodeAtPathByChdir("/var/tmp");
-    
-    NSArray *fileNames = @[
-        @"/PersistenceHelper_Embedded",
-    ];
-    
-    printf("[i] /var/tmp vnode: 0x%llx\n", var_tmp_vnode);
-    // symlink documents folder to /var/tmp, then copy all our images there
-    uint64_t orig_to_v_data = createFolderAndRedirect(var_tmp_vnode, mntPath);
-    
-    NSError *error;
-    
-    // create a file picker and let users choose the image, add them to your documents or whatever, then do this.
-    
-    // the topath name can be anything but i'm making them the same for easy copy paste
-    
-    NSArray *selectedFiles = @[
-        @"/PersistenceHelper_Embedded",
-    ];
-    
-    for (int i = 0; i < selectedFiles.count; i++) {
-            NSString *sourceFilePath = [NSString stringWithFormat:@"%@/%@", NSBundle.mainBundle.bundlePath, selectedFiles[i]];
-            NSString *destinationFilePath = [mntPath stringByAppendingString:fileNames[i]];
-
-            [[NSFileManager defaultManager] copyItemAtPath:sourceFilePath toPath:destinationFilePath error:&error];
-            if (error) {
-                NSLog(@"Error while copying file: %@", error);
-                error = nil; // Reset error for the next iteration
+void HexDump(uint64_t addr, size_t size) {
+    void *data = malloc(size);
+    kreadbuf(addr, data, size);
+    char ascii[17];
+    size_t i, j;
+    ascii[16] = '\0';
+    for (i = 0; i < size; ++i) {
+        if ((i % 16) == 0)
+        {
+            NSLog(@"[0x%016llx+0x%03zx] ", addr, i);
+//            NSLog(@"[0x%016llx] ", i + addr);
+        }
+        
+        NSLog(@"%02X ", ((unsigned char*)data)[i]);
+        if (((unsigned char*)data)[i] >= ' ' && ((unsigned char*)data)[i] <= '~') {
+            ascii[i % 16] = ((unsigned char*)data)[i];
+        } else {
+            ascii[i % 16] = '.';
+        }
+        if ((i+1) % 8 == 0 || i+1 == size) {
+            NSLog(@" ");
+            if ((i+1) % 16 == 0) {
+                NSLog(@"|  %s \n", ascii);
+            } else if (i+1 == size) {
+                ascii[(i+1) % 16] = '\0';
+                if ((i+1) % 16 <= 8) {
+                    NSLog(@" ");
+                }
+                for (j = (i+1) % 16; j < 16; ++j) {
+                    NSLog(@"   ");
+                }
+                NSLog(@"|  %s \n", ascii);
             }
         }
-    
-    NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
-//    NSLog(@"/var/tmp directory list:\n %@", dirs);
-    printf("unredirecting from tmp\n");
-    UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
-    
-    uint64_t telephonyui_vnode = getVnodeAtPathByChdir("/var/containers/Bundle/Application/");
-    printf("[i] /var/containers/Bundle/Application/ vnode: 0x%llx\n", telephonyui_vnode);
-    
-    //2. Create symbolic link /var/tmp/image.png -> /var/mobile/Library/Caches/TelephonyUI-9/en-number-letters--white.png, loop through then done. Technically just add our known image paths in /var/tmp (they can be anything, just 1.png also works) into an array then loop through both that array and this directory to automate it
-
-    orig_to_v_data = createFolderAndRedirect(telephonyui_vnode, mntPath);
-    dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
-    NSLog(@"directory list: %@", dirs);
-
-    for (NSString *fileName in fileNames) {
-        NSString *filePath = [mntPath stringByAppendingPathComponent:fileName];
-        NSString *symlinkPath = [NSString stringWithFormat:@"/var/tmp/%@", fileName];
-
-        printf("remove ret: %d\n", [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil]);
-        printf("symlink ret: %d, errno: %d\n", symlink(symlinkPath.UTF8String, filePath.UTF8String), errno);
     }
-    
-    dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL];
-    NSLog(@"/var/mobile/Library/Caches/TelephonyUI-9 directory list:\n %@", dirs);
+    free(data);
+}
 
+bool sandbox_escape_can_i_access_file(char* path, int mode) {
+    NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted"];
+    uint64_t vnode = getVnodeAtPathByChdir([[NSString stringWithUTF8String:path] stringByDeletingLastPathComponent].UTF8String);
+    uint64_t orig_to_v_data = createFolderAndRedirect(vnode, mntPath);
     
-    printf("cleaning up\n");
+    NSString *mountedPath = [NSString stringWithFormat:@"%@/%@", mntPath, [[NSString stringWithUTF8String:path] lastPathComponent]];
+    
+    bool ret = false;
+    
+    if(access(mountedPath.UTF8String, mode) == 0) {
+        ret = true;
+    }
+
     UnRedirectAndRemoveFolder(orig_to_v_data, mntPath);
-    return 0;
-}
-
-#define HEXDUMP_COLS 16
-void hexdump(void *mem, unsigned int len)
-{
-        unsigned int i, j;
-        
-        for(i = 0; i < len + ((len % HEXDUMP_COLS) ? (HEXDUMP_COLS - len % HEXDUMP_COLS) : 0); i++)
-        {
-                /* print offset */
-                if(i % HEXDUMP_COLS == 0)
-                {
-                        printf("0x%06x: ", i);
-                }
- 
-                /* print hex data */
-                if(i < len)
-                {
-                        printf("%02x ", 0xFF & ((char*)mem + i)[i]);
-                }
-                else /* end of block, just aligning for ASCII dump */
-                {
-                        printf("   ");
-                }
-                
-                /* print ASCII dump */
-                if(i % HEXDUMP_COLS == (HEXDUMP_COLS - 1))
-                {
-                        for(j = i - (HEXDUMP_COLS - 1); j <= i; j++)
-                        {
-                                if(j >= len) /* end of block, not really printing */
-                                {
-                                        putchar(' ');
-                                }
-                                else if(isprint(((char*)mem)[j])) /* printable char */
-                                {
-                                        putchar(0xFF & ((char*)mem)[j]);
-                                }
-                                else /* other char */
-                                {
-                                        putchar('.');
-                                }
-                        }
-                        putchar('\n');
-                }
-        }
-}
-
-void DynamicCOW(void) {
     
+    return ret;
+}
+
+void DynamicKFD(int subtype) {
     _offsets_init();
-    
     xpc_crasher("com.apple.mobilegestalt.xpc");
-    
-    //1. find "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"
-    //    uint64_t var_vnode = getVnodeVar();
-    //    printf("found var vnode\n");
     uint64_t vnode = getVnodeAtPathByChdir("/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/");
-    //    printf("found containers vnode\n");
-    //    printf("[i] /var/containers vnode: 0x%llx\n", var_containers_vnode);
-    //
-    //    uint64_t Shared_vnode = findChildVnodeByVnode(var_containers_vnode, "Shared");
-    //    printf("found Shared vnode\n");
-    //    printf("[i] /var/containers/Shared vnode: 0x%llx\n", Shared_vnode);
-    //
-    //    uint64_t SystemGroup_vnode = findChildVnodeByVnode(Shared_vnode, "SystemGroup");
-    //    printf("found SystemGroup vnode\n");
-    //    printf("[i] /var/containers/Shared/SystemGroup vnode: 0x%llx\n", SystemGroup_vnode); sleep(1);
-    //
     NSString *mntPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/mounted/"];
     uint64_t orig_to_v_data = createFolderAndRedirect(vnode, mntPath);
-    //
-    //    uint64_t _cache_vnode = findChildVnodeByVnodeWithBlock(SystemGroup_vnode, "Caches", ^(uint64_t vn, bool* stop){
-    //        printf("found cache vnode\n");
-    //        printf("[i] /var/containers/Shared/SystemGroup vnode: 0x%llx\n", vn);
-    //
-    //        uint64_t orig_to_v_data = createFolderAndRedirect(vn, mntPath);
-    //
-    //        if (orig_to_v_data == -1) {
-    //            return;
-    //        }
-    //
-    //        printf("created var vnode folder\n");
-    //
-    
     
     [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL] enumerateObjectsUsingBlock:^(NSString * _Nonnull __strong content, NSUInteger index, BOOL * _Nonnull stop2) {
         NSLog(@"element: %@", content);
@@ -412,7 +374,7 @@ void DynamicCOW(void) {
             
             NSLog(@"contents: %@", [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mntPath error:NULL]);
             
-            printf("found proper vnode\n"); sleep(1);
+            NSLog(@"found proper vnode"); sleep(1);
             
             NSError *error = nil;
             NSData * tempData = [[NSData alloc] initWithContentsOfFile:[mntPath stringByAppendingString:@"com.apple.MobileGestalt.plist"]];
@@ -420,16 +382,13 @@ void DynamicCOW(void) {
             NSPropertyListFormat* plistFormat = NULL;
             NSMutableDictionary *temp = [NSPropertyListSerialization propertyListWithData:tempData options:NSPropertyListMutableContainersAndLeaves format:plistFormat error:&error];
             
-//            hexdump([tempData bytes], [tempData length]);
-            
             NSMutableDictionary* cacheExtra = [temp valueForKey:@"CacheExtra"];
             
             [cacheExtra enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull __strong key, id  _Nonnull __strong value, BOOL * _Nonnull stop3) {
                 NSLog(@"key %@, value %@", key, value);
                 if ([key isEqualToString:@"oPeik/9e8lQWMszEjbPzng"]) {
-                    printf("found key\n");
-                    [value setValue:[NSNumber numberWithInt:2556] forKey: @"ArtworkDeviceSubType"]; // 2532, 2556, 2796
-//                    [value setValue:@"phone" forKey: @"ArtworkDeviceIdiom"]; bricks your fucking phone don't do this please PLEASE
+                    NSLog(@"found key\n");
+                    [value setValue:[NSNumber numberWithInt:subtype] forKey: @"ArtworkDeviceSubType"]; // 2532, 2556, 2796
                     *stop3 = true;
                 }
             }];
@@ -453,12 +412,10 @@ void DynamicCOW(void) {
             // Create a new NSData instance with the remaining data
             NSData *data = _tempData;
             
-//            hexdump([data bytes], [data length]);
-            
             NSLog(@"error serializing to xml: %@", error2);
             
             if (data == nil) {
-                printf("NULL DATA!!\n");
+                NSLog(@"NULL DATA!!\n");
                 return;
             }
             
@@ -487,5 +444,3 @@ void DynamicCOW(void) {
         }
     }];
 }
-
-

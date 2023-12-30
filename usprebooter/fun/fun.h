@@ -8,6 +8,11 @@
 #ifndef fun_h
 #define fun_h
 
+#include <stdio.h>
 
-void do_fun(void);
+int do_fun(void);
+void fix_exploit(void);
+//void respring(void);
+void backboard_respring(void);
+
 #endif /* fun_h */

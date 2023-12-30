@@ -296,6 +296,7 @@ int main(int argc, char *argv[], char *envp[]) {
 //            ptrace(PT_TRACE_ME,0,0,0);
             ptrace(PT_ATTACH, pidInt, 0, 0);
             ptrace(PT_DETACH, pidInt, 0, 0);
+            NSLog(@"Done ptracing!");
         }
         return 0;
     }

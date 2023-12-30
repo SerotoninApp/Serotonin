@@ -152,9 +152,9 @@ int fuck(void) {
 
 int fuck2(void) {
     kern_return_t ret = 0;
-    copyLaunchd();
+//    copyLaunchd();
     overwrite_patchedlaunchd_kfd();
-    codesignLaunchd();
+//    codesignLaunchd();
 //    userspaceReboot();
 //    if (userspaceReboot() == 0) {
 //        return ret;

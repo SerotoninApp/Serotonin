@@ -10,11 +10,11 @@ char* get_temp_file_path(void) {
 // create a read-only test file we can target:
 char* set_up_tmp_file(void) {
   char* path = get_temp_file_path();
-  printf("path: %s\n", path);
+  NSLog(@"path: %s", path);
   
   FILE* f = fopen(path, "w");
   if (!f) {
-    printf("opening the tmp file failed...\n");
+    NSLog(@"opening the tmp file failed...");
     return NULL;
   }
   char* buf = malloc(PAGE_SIZE*10);
@@ -39,10 +39,10 @@ mach_port_t get_send_once(mach_port_t recv) {
   mach_msg_type_name_t type = 0;
   kern_return_t err = mach_port_extract_right(mach_task_self(), recv, MACH_MSG_TYPE_MAKE_SEND_ONCE, &so, &type);
   if (err != KERN_SUCCESS) {
-    printf("port right extraction failed: %s\n", mach_error_string(err));
+    NSLog(@"port right extraction failed: %s", mach_error_string(err));
     return MACH_PORT_NULL;
   }
-  printf("made so: 0x%x from recv: 0x%x\n", so, recv);
+  NSLog(@"made so: 0x%x from recv: 0x%x", so, recv);
   return so;
 }
 
@@ -59,19 +59,19 @@ void xpc_crasher(char* service_name) {
 
   kern_return_t err = bootstrap_look_up(bootstrap_port, service_name, &service_port);
   if(err != KERN_SUCCESS){
-    printf("unable to look up %s\n", service_name);
+    NSLog(@"unable to look up %s", service_name);
     return;
   }
 
   if (service_port == MACH_PORT_NULL) {
-    printf("bad service port\n");
+    NSLog(@"bad service port");
     return;
   }
 
   // allocate the client and reply port:
   err = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &client_port);
   if (err != KERN_SUCCESS) {
-    printf("port allocation failed: %s\n", mach_error_string(err));
+    NSLog(@"port allocation failed: %s", mach_error_string(err));
     return;
   }
 
@@ -81,13 +81,13 @@ void xpc_crasher(char* service_name) {
   // insert a send so we maintain the ability to send to this port
   err = mach_port_insert_right(mach_task_self(), client_port, client_port, MACH_MSG_TYPE_MAKE_SEND);
   if (err != KERN_SUCCESS) {
-    printf("port right insertion failed: %s\n", mach_error_string(err));
+    NSLog(@"port right insertion failed: %s", mach_error_string(err));
     return;
   }
 
   err = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &reply_port);
   if (err != KERN_SUCCESS) {
-    printf("port allocation failed: %s\n", mach_error_string(err));
+    NSLog(@"port allocation failed: %s", mach_error_string(err));
     return;
   }
 
@@ -117,10 +117,10 @@ void xpc_crasher(char* service_name) {
                  MACH_PORT_NULL);
 
   if (err != KERN_SUCCESS) {
-    printf("w00t message send failed: %s\n", mach_error_string(err));
+    NSLog(@"w00t message send failed: %s", mach_error_string(err));
     return;
   } else {
-    printf("sent xpc w00t message\n");
+    NSLog(@"sent xpc w00t message");
   }
 
   mach_port_deallocate(mach_task_self(), so0);
