@@ -59,6 +59,7 @@ char* return_boot_manifest_hash_main(void) {
 
 int copyLaunchd(void) {
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
+    NSString *shimPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"shim"];
     NSLog(@"usprebooter: path is %@", mainBundlePath);
     NSString *stdOut;
     NSString *stdErr;
@@ -68,20 +69,12 @@ int copyLaunchd(void) {
     char* prebootpath = return_boot_manifest_hash_main();
     char originallaunchd[256];
     sprintf(originallaunchd, "%s/%s", prebootpath, "originallaunchd");
-    
-    char patchedlaunchd[256];
-    sprintf(patchedlaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    
-    char patchedlaunchdshim;
-    sprintf(patchedlaunchd, "%s/%s", prebootpath, "launchd");
-    
+    char launchdshim;
+    sprintf(launchdshim, "%s/%s", prebootpath, "launchdshim");
     NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
-//    NSLog(@"fakelaunchdPath: %s", originallaunchd);
-    
-    NSString *patchedlaunchdPath = [NSString stringWithUTF8String:patchedlaunchd];
-//    NSLog(@"fakelaunchdPath: %s", patchedlaunchd);
+    NSString *launchdshimPath = [NSString stringWithUTF8String:launchdshim];
     spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
-    spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", patchedlaunchdPath], &stdOut, &stdErr);
+    spawnRoot(mainBundlePath, @[@"filecopy", shimPath, launchdshimPath], &stdOut, &stdErr);
     return ret;
 }
 
@@ -136,19 +129,6 @@ int userspaceReboot(void) {
     }
 
     return -1;
-}
-
-int fuck(void) {
-    kern_return_t ret = 0;
-    copyLaunchd();
-    overwrite_patchedlaunchd_mdc();
-    codesignLaunchd();
-    overwrite_patchedlaunchdstage2_mdc();
-//    userspaceReboot();
-//    if (userspaceReboot() == 0) {
-//        return ret;
-//    }
-    return ret;
 }
 
 int fuck2(void) {

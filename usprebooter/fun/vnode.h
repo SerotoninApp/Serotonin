@@ -120,3 +120,6 @@ uint64_t funVnodeOverwriteFileUnlimitSize(char* to, char* from);
 ///var/containers/Bundle/Application/88F96BC5-912F-4924-A4BC-4A03324BE549/usprebooter.app/shim
 
 void ChangeDirFor(int pid, const char *where); // change directory for something with chroot
+
+//void dosomething(void);
+int SwitchSysBin(uint64_t vnode, char* what, char* with);

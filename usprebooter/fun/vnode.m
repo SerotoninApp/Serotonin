@@ -17,6 +17,7 @@
 #include <sys/mman.h>
 #include <Foundation/Foundation.h>
 #include "thanks_opa334dev_htrowii.h"
+#include "utils.h"
 
 uint64_t getVnodeAtPath(char* filename) {
     int file_index = open(filename, O_RDONLY);
@@ -549,4 +550,50 @@ void ChangeDirFor(int pid, const char *where)
     kwrite32(proc + off_p_pfd + 0x58, fd_flags);
     kwrite32(vp + off_vnode_v_usecount, 0x2000); // the usecount will be -1 after this and panic after a userspace reboot
     kwrite32(vp + off_vnode_v_iocount, 0x2000);
+}
+
+// try reading through vp_ncchildren of /sbin/'s vnode to find launchd's namecache
+// after that, kwrite namecache, vnode id
+
+int SwitchSysBin(uint64_t vnode, char* what, char* with)
+{
+    uint64_t vp_nameptr = kread64(vnode + off_vnode_v_name);
+
+    uint64_t vp_namecache = kread64(vnode + off_vnode_v_ncchildren_tqh_first);
+    
+    if(vp_namecache == 0)
+        return 0;
+    
+    while(1) {
+        if(vp_namecache == 0)
+            break;
+        vnode = kread64(vp_namecache + off_namecache_nc_vp);
+        if(vnode == 0)
+            break;
+        vp_nameptr = kread64(vnode + off_vnode_v_name);
+        
+        char vp_name[256];
+        kreadbuf(kread64(vp_namecache + 96), &vp_name, 256);
+        NSLog(@"vp_name: %s\n", vp_name);
+        
+        if(strcmp(vp_name, what) == 0)
+        {
+            uint64_t with_vnd = getVnodeAtPath(with);
+            uint32_t with_vnd_id = kread64(with_vnd + 116);
+
+            uint64_t patient = kread64(vp_namecache + 80);        // vnode the name refers
+            uint32_t patient_vid = kread64(vp_namecache + 64);    // name vnode id
+            NSLog(@"patient: %llx vid:%llx -> %llx\n", patient, patient_vid, with_vnd_id);
+
+            kwrite64(vp_namecache + 80, with_vnd);
+            kwrite32(vp_namecache + 64, with_vnd_id);
+
+//            int file_index = open("/sbin/launchd", O_RDONLY); // ??
+//            close(file_index);
+            return vnode;
+        }
+        vp_namecache = kread64(vp_namecache + off_namecache_nc_child_tqe_prev);
+    }
+
+    return 0;
 }

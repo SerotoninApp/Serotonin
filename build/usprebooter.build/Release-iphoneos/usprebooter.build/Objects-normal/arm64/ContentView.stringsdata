@@ -4,15 +4,11 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "kfdgo"
+        "key": "do the thing!"
       },
       {
         "comment": "",
-        "key": "go"
-      },
-      {
-        "comment": "",
-        "key": "uspreboot"
+        "key": "reboot userspace"
       },
       {
         "comment": "",

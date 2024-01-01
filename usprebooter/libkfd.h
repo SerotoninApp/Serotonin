@@ -9,7 +9,7 @@
  * The global configuration parameters of libkfd.
  */
 #define CONFIG_ASSERT 1
-#define CONFIG_PRINT 1
+#define CONFIG_PRINT 0
 #define CONFIG_TIMER 1
 
 #include "libkfd/common.h"

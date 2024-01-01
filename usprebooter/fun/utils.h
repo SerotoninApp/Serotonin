@@ -19,5 +19,3 @@ int setSuperviseMode(bool enable);
 int removeKeyboardCache(void);
 int regionChanger(NSString *country_value, NSString *region_value);
 void HexDump(uint64_t addr, size_t size);
-bool sandbox_escape_can_i_access_file(char* path, int mode);
-void DynamicKFD(int subtype);
