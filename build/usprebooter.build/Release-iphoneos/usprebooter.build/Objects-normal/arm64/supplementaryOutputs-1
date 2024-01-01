@@ -1,9 +1,9 @@
 "/Users/ibarahime/usprebooter/usprebooter/ContentView.swift":
-  swiftsourceinfo: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter.swiftsourceinfo"
+  swiftmodule: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter.swiftmodule"
   swiftdoc: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter.swiftdoc"
-  objc-header: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter-Swift.h"
   abi-baseline-json: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter.abi.json"
   const-values: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter-master.swiftconstvalues"
-  diagnostics: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter-master.dia"
   dependencies: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter-master.d"
-  swiftmodule: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter.swiftmodule"
+  diagnostics: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter-master.dia"
+  objc-header: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter-Swift.h"
+  swiftsourceinfo: "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooter.swiftsourceinfo"
