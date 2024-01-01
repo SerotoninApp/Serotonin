@@ -28,6 +28,7 @@
 		C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC882B3FFE560008D8FD /* offsets.m */; };
 		C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC892B3FFE560008D8FD /* vnode.m */; };
 		C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC8A2B3FFE560008D8FD /* proc.c */; };
+		C8BFCCB42B427C0F0008D8FD /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCCB32B427C0F0008D8FD /* Log.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +121,7 @@
 		C8BFCCA12B3FFE560008D8FD /* perf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perf.h; sourceTree = "<group>"; };
 		C8BFCCA22B3FFE560008D8FD /* info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = info.h; sourceTree = "<group>"; };
 		C8BFCCA32B3FFE570008D8FD /* libkfd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libkfd.h; sourceTree = "<group>"; };
+		C8BFCCB32B427C0F0008D8FD /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +176,7 @@
 				C83594CE2B18F70700346F80 /* overwriter.m */,
 				C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */,
 				C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */,
+				C8BFCCB32B427C0F0008D8FD /* Log.swift */,
 			);
 			path = usprebooter;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				C83594CF2B18F70700346F80 /* overwriter.m in Sources */,
 				C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */,
 				C82AFF392B17688E0070EA49 /* usprebooterApp.swift in Sources */,
+				C8BFCCB42B427C0F0008D8FD /* Log.swift in Sources */,
 				C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */,
 				C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */,
 				C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */,

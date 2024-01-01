@@ -17,6 +17,11 @@
     "llvm-bc" : "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/ContentView.bc",
     "object" : "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/ContentView.o"
   },
+  "/Users/ibarahime/usprebooter/usprebooter/Log.swift" : {
+    "index-unit-output-path" : "/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/Log.o",
+    "llvm-bc" : "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/Log.bc",
+    "object" : "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/Log.o"
+  },
   "/Users/ibarahime/usprebooter/usprebooter/usprebooterApp.swift" : {
     "index-unit-output-path" : "/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooterApp.o",
     "llvm-bc" : "/Users/ibarahime/usprebooter/build/usprebooter.build/Release-iphoneos/usprebooter.build/Objects-normal/arm64/usprebooterApp.bc",
