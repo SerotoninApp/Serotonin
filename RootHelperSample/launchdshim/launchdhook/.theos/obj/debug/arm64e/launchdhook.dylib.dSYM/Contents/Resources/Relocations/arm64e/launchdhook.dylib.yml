@@ -2,25 +2,26 @@
 triple:          'arm64e-apple-darwin'
 binary-path:     '/Users/ibarahime/usprebooter/RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/arm64e/launchdhook.dylib'
 relocations:
-  - { offsetInCU: 0x1E, offset: 0x1E, size: 0x8, addend: 0x0, symName: _hooked_csops, symObjAddr: 0x0, symBinAddr: 0x4F14, symSize: 0x7C }
+  - { offsetInCU: 0x1E, offset: 0x1E, size: 0x8, addend: 0x0, symName: _hooked_csops, symObjAddr: 0x0, symBinAddr: 0x4D9C, symSize: 0x7C }
   - { offsetInCU: 0x45, offset: 0x45, size: 0x8, addend: 0x0, symName: _orig_csops, symBinAddr: 0x10000, symSize: 0x0 }
   - { offsetInCU: 0xBB, offset: 0xBB, size: 0x8, addend: 0x0, symName: _orig_csops_audittoken, symBinAddr: 0x10008, symSize: 0x0 }
   - { offsetInCU: 0x124, offset: 0x124, size: 0x8, addend: 0x0, symName: _orig_posix_spawn, symBinAddr: 0x10018, symSize: 0x0 }
   - { offsetInCU: 0x1BE, offset: 0x1BE, size: 0x8, addend: 0x0, symName: _orig_posix_spawnp, symBinAddr: 0x10020, symSize: 0x0 }
   - { offsetInCU: 0x201, offset: 0x201, size: 0x8, addend: 0x0, symName: _orig_os_variant_has_internal_content, symBinAddr: 0x10010, symSize: 0x0 }
-  - { offsetInCU: 0x226, offset: 0x226, size: 0x8, addend: 0x0, symName: _hooked_csops, symObjAddr: 0x0, symBinAddr: 0x4F14, symSize: 0x7C }
-  - { offsetInCU: 0x286, offset: 0x286, size: 0x8, addend: 0x0, symName: _hooked_csops_audittoken, symObjAddr: 0x7C, symBinAddr: 0x4F90, symSize: 0x84 }
-  - { offsetInCU: 0x2F4, offset: 0x2F4, size: 0x8, addend: 0x0, symName: _change_launchtype, symObjAddr: 0x100, symBinAddr: 0x5014, symSize: 0x164 }
-  - { offsetInCU: 0x3A5, offset: 0x3A5, size: 0x8, addend: 0x0, symName: _hooked_posix_spawn, symObjAddr: 0x264, symBinAddr: 0x5178, symSize: 0x70 }
-  - { offsetInCU: 0x421, offset: 0x421, size: 0x8, addend: 0x0, symName: _hooked_posix_spawnp, symObjAddr: 0x2D4, symBinAddr: 0x51E8, symSize: 0x68 }
-  - { offsetInCU: 0x48F, offset: 0x48F, size: 0x8, addend: 0x0, symName: _hooked_os_variant_has_internal_content, symObjAddr: 0x33C, symBinAddr: 0x5250, symSize: 0x34 }
-  - { offsetInCU: 0x4B7, offset: 0x4B7, size: 0x8, addend: 0x0, symName: _init, symObjAddr: 0x370, symBinAddr: 0x5284, symSize: 0x100 }
-  - { offsetInCU: 0x1E, offset: 0x774, size: 0x8, addend: 0x0, symName: _rebind_symbols_image, symObjAddr: 0x0, symBinAddr: 0x5384, symSize: 0x84 }
-  - { offsetInCU: 0x37, offset: 0x78D, size: 0x8, addend: 0x0, symName: __rebindings_head, symObjAddr: 0x28A8, symBinAddr: 0x10028, symSize: 0x0 }
-  - { offsetInCU: 0x4EB, offset: 0xC41, size: 0x8, addend: 0x0, symName: _rebind_symbols_image, symObjAddr: 0x0, symBinAddr: 0x5384, symSize: 0x84 }
-  - { offsetInCU: 0x559, offset: 0xCAF, size: 0x8, addend: 0x0, symName: _prepend_rebindings, symObjAddr: 0x84, symBinAddr: 0x5408, symSize: 0xEC }
-  - { offsetInCU: 0x5AB, offset: 0xD01, size: 0x8, addend: 0x0, symName: _rebind_symbols_for_image, symObjAddr: 0x170, symBinAddr: 0x54F4, symSize: 0x398 }
-  - { offsetInCU: 0x6EB, offset: 0xE41, size: 0x8, addend: 0x0, symName: _rebind_symbols, symObjAddr: 0x508, symBinAddr: 0x588C, symSize: 0x104 }
-  - { offsetInCU: 0x76D, offset: 0xEC3, size: 0x8, addend: 0x0, symName: __rebind_symbols_for_image, symObjAddr: 0x60C, symBinAddr: 0x5990, symSize: 0x38 }
-  - { offsetInCU: 0x79F, offset: 0xEF5, size: 0x8, addend: 0x0, symName: _perform_rebinding_with_section, symObjAddr: 0x644, symBinAddr: 0x59C8, symSize: 0x35C }
+  - { offsetInCU: 0x226, offset: 0x226, size: 0x8, addend: 0x0, symName: _hooked_csops, symObjAddr: 0x0, symBinAddr: 0x4D9C, symSize: 0x7C }
+  - { offsetInCU: 0x286, offset: 0x286, size: 0x8, addend: 0x0, symName: _hooked_csops_audittoken, symObjAddr: 0x7C, symBinAddr: 0x4E18, symSize: 0x84 }
+  - { offsetInCU: 0x2F4, offset: 0x2F4, size: 0x8, addend: 0x0, symName: _change_launchtype, symObjAddr: 0x100, symBinAddr: 0x4E9C, symSize: 0x178 }
+  - { offsetInCU: 0x3A5, offset: 0x3A5, size: 0x8, addend: 0x0, symName: _hook_springboard, symObjAddr: 0x278, symBinAddr: 0x5014, symSize: 0x114 }
+  - { offsetInCU: 0x411, offset: 0x411, size: 0x8, addend: 0x0, symName: _hooked_posix_spawn, symObjAddr: 0x38C, symBinAddr: 0x5128, symSize: 0x78 }
+  - { offsetInCU: 0x48D, offset: 0x48D, size: 0x8, addend: 0x0, symName: _hooked_posix_spawnp, symObjAddr: 0x404, symBinAddr: 0x51A0, symSize: 0x70 }
+  - { offsetInCU: 0x4FB, offset: 0x4FB, size: 0x8, addend: 0x0, symName: _hooked_os_variant_has_internal_content, symObjAddr: 0x474, symBinAddr: 0x5210, symSize: 0x18 }
+  - { offsetInCU: 0x523, offset: 0x523, size: 0x8, addend: 0x0, symName: _init, symObjAddr: 0x48C, symBinAddr: 0x5228, symSize: 0x100 }
+  - { offsetInCU: 0x1E, offset: 0x7E0, size: 0x8, addend: 0x0, symName: _rebind_symbols_image, symObjAddr: 0x0, symBinAddr: 0x5328, symSize: 0x84 }
+  - { offsetInCU: 0x37, offset: 0x7F9, size: 0x8, addend: 0x0, symName: __rebindings_head, symObjAddr: 0x28A8, symBinAddr: 0x10028, symSize: 0x0 }
+  - { offsetInCU: 0x4EB, offset: 0xCAD, size: 0x8, addend: 0x0, symName: _rebind_symbols_image, symObjAddr: 0x0, symBinAddr: 0x5328, symSize: 0x84 }
+  - { offsetInCU: 0x559, offset: 0xD1B, size: 0x8, addend: 0x0, symName: _prepend_rebindings, symObjAddr: 0x84, symBinAddr: 0x53AC, symSize: 0xEC }
+  - { offsetInCU: 0x5AB, offset: 0xD6D, size: 0x8, addend: 0x0, symName: _rebind_symbols_for_image, symObjAddr: 0x170, symBinAddr: 0x5498, symSize: 0x398 }
+  - { offsetInCU: 0x6EB, offset: 0xEAD, size: 0x8, addend: 0x0, symName: _rebind_symbols, symObjAddr: 0x508, symBinAddr: 0x5830, symSize: 0x104 }
+  - { offsetInCU: 0x76D, offset: 0xF2F, size: 0x8, addend: 0x0, symName: __rebind_symbols_for_image, symObjAddr: 0x60C, symBinAddr: 0x5934, symSize: 0x38 }
+  - { offsetInCU: 0x79F, offset: 0xF61, size: 0x8, addend: 0x0, symName: _perform_rebinding_with_section, symObjAddr: 0x644, symBinAddr: 0x596C, symSize: 0x35C }
 ...

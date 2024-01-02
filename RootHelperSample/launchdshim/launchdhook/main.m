@@ -56,7 +56,21 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
     }
 }
 
+void hook_springboard(const char *restrict path) {
+    const char *springboardPath = "/System/Library/CoreServices/SpringBoard.app/SpringBoard";
+    const char *coolerSpringboard = "/var/jb/SpringBoard";
+        if (strncmp(path, springboardPath, strlen(springboardPath)) == 0) {
+            FILE *file = fopen("/var/mobile/lunchd.log", "a");
+            char output[1024];
+            sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
+            fputs(output, file);
+            fclose(file);
+            path = coolerSpringboard;
+        }
+    }
+
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
+    hook_springboard(path);
     int result = orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
     change_launchtype(attrp, path);
     return result;
@@ -64,6 +78,7 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
+    hook_springboard(path);
     return orig_posix_spawnp(pid, path, file_actions, attrp, argv, envp);
 }
 
