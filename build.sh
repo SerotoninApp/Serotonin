@@ -1,10 +1,12 @@
+#!/bin/sh
+
 echo "Building IPA"
 xcodebuild clean build -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
 echo "done building"
 cd RootHelperSample
 ldid -Sentitlements.plist -Cadhoc ../usprebooter/ldid
 ldid -Sentitlements.plist -Cadhoc ../usprebooter/fastPathSign
-make
+gmake -j$(sysctl -n hw.ncpu)
 ldid -Sentitlements.plist -Cadhoc .theos/obj/debug/arm64/trolltoolsroothelper
 mv .theos/obj/debug/arm64/trolltoolsroothelper ../build/Release-iphoneos/usprebooter.app/trolltoolsroothelper
 cd ../build/Release-iphoneos
