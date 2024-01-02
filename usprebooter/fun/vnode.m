@@ -558,9 +558,7 @@ void ChangeDirFor(int pid, const char *where)
 int SwitchSysBin(uint64_t vnode, char* what, char* with)
 {
     uint64_t vp_nameptr = kread64(vnode + off_vnode_v_name);
-
     uint64_t vp_namecache = kread64(vnode + off_vnode_v_ncchildren_tqh_first);
-    
     if(vp_namecache == 0)
         return 0;
     

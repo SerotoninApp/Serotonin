@@ -22,6 +22,7 @@
 enum puaf_method {
     puaf_physpuppet,
     puaf_smith,
+    puaf_landa,
 };
 
 enum kread_method {
@@ -65,8 +66,6 @@ struct info {
         u64 current_pmap;
         u64 current_proc;
         u64 current_task;
-        u64 current_thread;
-        u64 current_uthread;
         u64 kernel_map;
         u64 kernel_pmap;
         u64 kernel_proc;
@@ -171,13 +170,13 @@ void kfd_free(struct kfd* kfd)
 
 u64 kopen(u64 puaf_pages, u64 puaf_method, u64 kread_method, u64 kwrite_method)
 {
-    timer_start();
+//    timer_start();
 
     const u64 puaf_pages_min = 16;
     const u64 puaf_pages_max = 4096;
     assert(puaf_pages >= puaf_pages_min);
     assert(puaf_pages <= puaf_pages_max);
-    assert(puaf_method <= puaf_smith);
+    assert(puaf_method <= puaf_landa);
     assert(kread_method <= kread_sem_open);
     assert(kwrite_method <= kwrite_sem_open);
 
@@ -188,7 +187,7 @@ u64 kopen(u64 puaf_pages, u64 puaf_method, u64 kread_method, u64 kwrite_method)
     perf_run(kfd);
     puaf_cleanup(kfd);
 
-    timer_end();
+//    timer_end();
     return (u64)(kfd);
 }
 
@@ -206,5 +205,34 @@ void kclose(u64 kfd)
 {
     kfd_free((struct kfd*)(kfd));
 }
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <Security/Security.h>
+#include <CoreFoundation/CoreFoundation.h>
+#define MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT        6
+#define MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES      8
+
+typedef struct CF_BRIDGED_TYPE(id) __SecTask *SecTaskRef;
+SecTaskRef SecTaskCreateFromSelf(CFAllocatorRef _Nullable allocator);
+CFTypeRef SecTaskCopyValueForEntitlement(SecTaskRef task, CFStringRef entitlement, CFErrorRef *error);
+
+bool hasEntitlement(CFStringRef entitlement);
+int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
+uint64_t getPhysicalMemorySize(void);
+
+typedef struct memorystatus_memlimit_properties {
+    int32_t memlimit_active;                /* jetsam memory limit (in MB) when process is active */
+    uint32_t memlimit_active_attr;
+    int32_t memlimit_inactive;              /* jetsam memory limit (in MB) when process is inactive */
+    uint32_t memlimit_inactive_attr;
+} memorystatus_memlimit_properties_t;
+
+typedef struct memorystatus_memlimit_properties2 {
+    memorystatus_memlimit_properties_t v1;
+    uint32_t memlimit_increase;             /* jetsam memory limit increase (in MB) for active and inactive states */
+    uint32_t memlimit_increase_bytes;       /* bytes used to determine the jetsam memory limit increase, for active and inactive states */
+} memorystatus_memlimit_properties2_t;
 
 #endif /* libkfd_h */

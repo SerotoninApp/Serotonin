@@ -124,16 +124,16 @@ void info_init(struct kfd* kfd)
                print_u64(kfd->info.env.vid);
                t1sz_boot = strstr(current_kern_version, "T8120") != NULL ? 17ull : 25ull;
                base_pac_mask = 0xffffff8000000000;
-//               if (strstr(current_device_id, "iPad") != NULL) {
-//                   const char *stringList[] = {"T8103", "T8101", "T8112", "T8030", "T8020", "T8110"};
-//                   for (int i = 0; i < sizeof(stringList) / sizeof(stringList[0]); i++) {
-//                       if (strstr(current_kern_version, stringList[i]) != NULL) {
-//                           t1sz_boot = 17ull;
-//                           base_pac_mask =  0xffff800000000000;
-//                           break;
-//                       }
-//                   }
-//               }
+               if (strstr(current_device_id, "iPad") != NULL) {
+                   const char *stringList[] = {"T8103", "T8101", "T8112", "T8030", "T8020", "T8110"};
+                   for (int i = 0; i < sizeof(stringList) / sizeof(stringList[0]); i++) {
+                       if (strstr(current_kern_version, stringList[i]) != NULL) {
+                           t1sz_boot = 17ull;
+                           base_pac_mask =  0xffff800000000000;
+                           break;
+                       }
+                   }
+               }
                return;
            }
        }
@@ -168,28 +168,6 @@ void info_run(struct kfd* kfd)
     u64 signed_pmap_kaddr = kget_u64(_vm_map__pmap, kfd->info.kaddr.current_map);
     kfd->info.kaddr.current_pmap = unsign_kaddr(signed_pmap_kaddr);
     print_x64(kfd->info.kaddr.current_pmap);
-
-    /*
-     * current_thread() and current_uthread()
-     */
-    const bool find_current_thread = false;
-    if (find_current_thread) {
-        u64 thread_kaddr = kget_u64(task__threads__next, kfd->info.kaddr.current_task);
-
-        while (true) {
-            u64 tid = kget_u64(thread__thread_id, thread_kaddr);
-            if (tid == kfd->info.env.tid) {
-                kfd->info.kaddr.current_thread = thread_kaddr;
-                kfd->info.kaddr.current_uthread = thread_kaddr + kfd_offset(thread__object_size);
-                break;
-            }
-
-            thread_kaddr = kget_u64(thread__task_threads__next, thread_kaddr);
-        }
-
-        print_x64(kfd->info.kaddr.current_thread);
-        print_x64(kfd->info.kaddr.current_uthread);
-    }
 
     if (kfd->info.kaddr.kernel_proc) {
         /*
