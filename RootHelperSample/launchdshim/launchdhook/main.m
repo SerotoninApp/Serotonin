@@ -8,9 +8,13 @@
 #include <dirent.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <signal.h>
 
-int
-posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
+#define PT_DETACH 11    /* stop tracing a process */
+#define PT_ATTACHEXC 14 /* attach to running process with signal exception */
+int ptrace(int request, pid_t pid, caddr_t addr, int data);
+
+int posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
 
 int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
 int (*orig_csops_audittoken)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
@@ -18,6 +22,7 @@ int (*orig_posix_spawn)(pid_t * __restrict pid, const char * __restrict path,
                         const posix_spawn_file_actions_t *file_actions,
                         const posix_spawnattr_t * __restrict attrp,
                         char *const argv[ __restrict], char *const envp[ __restrict]);
+
 int (*orig_posix_spawnp)(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, const posix_spawnattr_t *restrict attrp, char *const argv[restrict], char *const envp[restrict]);
 
 bool (*orig_os_variant_has_internal_content)(const char * __unused subsystem);
@@ -65,30 +70,50 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
     }
 }
 
-void hook_springboard(const char *restrict path) {
+void hook_springboard(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     const char *springboardPath = "/System/Library/CoreServices/SpringBoard.app/SpringBoard";
-    const char *coolerSpringboard = "/var/jb/SpringBoard";
-        if (strncmp(path, springboardPath, strlen(springboardPath)) == 0) {
+    const char *coolerSpringboard = "/var/jb/SpringBoard.app/SpringBoard";
+    // only redirect SpringBoard once so that spawning springboard doesn't spawn another which doesn't...
+    static bool already_launched_springboard = false;
+
+        if (!already_launched_springboard && !strncmp(path, springboardPath, strlen(springboardPath))) {
+            already_launched_springboard = true;
+            
+            short flags;
+            posix_spawnattr_getflags(attrp, &flags);
+            flags |= POSIX_SPAWN_START_SUSPENDED;
+            posix_spawnattr_setflags((posix_spawnattr_t *)attrp, flags);
+                
             FILE *file = fopen("/var/mobile/lunchd.log", "a");
             char output[1024];
             sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
             fputs(output, file);
-            fclose(file);
+            
             path = coolerSpringboard;
+            posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+            
+            sprintf(output, "[lunchd] ptrace attach ret %d", ptrace(PT_ATTACHEXC, *pid, nil, 0));
+            fputs(output, file);
+            
+            sprintf(output, "[lunchd] ptrace detach ret %d", ptrace(PT_DETACH, *pid, nil, 0));
+
+            kill(*pid, SIGCONT); // unsuspend
+
+            fclose(file);
+            
         }
     }
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
-    hook_springboard(path);
-    int result = orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
     change_launchtype(attrp, path);
-    return result;
+    hook_springboard(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
 }
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
-    hook_springboard(path);
-    return orig_posix_spawnp(pid, path, file_actions, attrp, argv, envp);
+    hook_springboard(pid, path, file_actions, attrp, argv, envp);
+    return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 
 bool hooked_os_variant_has_internal_content(const char * __unused subsystem) {
