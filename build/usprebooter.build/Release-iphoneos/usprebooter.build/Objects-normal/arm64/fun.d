@@ -7,5 +7,4 @@ dependencies: /Users/ibarahime/usprebooter/usprebooter/fun/fun.m \
   /Users/ibarahime/usprebooter/usprebooter/fun/thanks_opa334dev_htrowii.h \
   /Users/ibarahime/usprebooter/usprebooter/fun/utils.h \
   /Users/ibarahime/usprebooter/usprebooter/fun/cs_blobs.h \
-  /Users/ibarahime/usprebooter/usprebooter/fun/helpers.h \
   /Users/ibarahime/usprebooter/usprebooter/libkfd/common.h

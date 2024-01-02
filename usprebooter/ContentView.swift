@@ -9,7 +9,7 @@ struct ContentView: View {
             Button("do the thing!") {
                 do_kopen(2048, 1, 1, 1)
                 fix_exploit()
-                fuck2()
+                go()
                 do_kclose()
             }
             Button("reboot userspace") {

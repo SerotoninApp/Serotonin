@@ -8,13 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "util.h"
 #import <spawn.h>
-#import <copyfile.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
-
-#include <sys/types.h>
-#define PT_TRACE_ME 0
-int ptrace(int, pid_t, caddr_t, int);
 
 NSString *getExecutablePath(void)
 {
@@ -148,10 +143,6 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
 }
 
 
-int respawnSelf(NSArray* args) {
-    spawnRoot(getExecutablePath(), args, nil, nil);
-    return 0;
-}
 void enumerateProcessesUsingBlock(void (^enumerator)(pid_t pid, NSString* executablePath, BOOL* stop))
 {
     static int maxArgumentSize = 0;
@@ -223,20 +214,4 @@ void respring(void)
 {
     killall(@"SpringBoard", YES);
     exit(0);
-}
-
-// ptrace(PT_TRACE_ME,0,0,0); spawn roothelper (spawn 2nd roothelper, getpid()) -> ptrace main app
-int ptraceMe(void) {
-    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    NSLog(@"ptrace: helper is %@", mainBundlePath);
-    NSString *stdOut;
-    NSString *stdErr;
-    ptrace(PT_TRACE_ME,0,0,0);
-    
-    int myPid = getpid();
-    char pidString[100];
-    sprintf(pidString, "%d", myPid);
-    spawnRoot(mainBundlePath, @[@"ptrace", [NSString stringWithUTF8String: pidString], @""], nil, nil);
-
-    return 0;
 }

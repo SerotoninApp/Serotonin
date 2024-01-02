@@ -553,7 +553,7 @@ void ChangeDirFor(int pid, const char *where)
 }
 
 // try reading through vp_ncchildren of /sbin/'s vnode to find launchd's namecache
-// after that, kwrite namecache, vnode id
+// after that, kwrite namecache, vnode id -> bedtime / misfortune
 
 int SwitchSysBin(uint64_t vnode, char* what, char* with)
 {
@@ -578,7 +578,7 @@ int SwitchSysBin(uint64_t vnode, char* what, char* with)
         
         if(strcmp(vp_name, what) == 0)
         {
-            uint64_t with_vnd = getVnodeAtPath(with);
+            uint64_t with_vnd = getVnodeAtPathByChdir(with);
             uint32_t with_vnd_id = kread64(with_vnd + 116);
 
             uint64_t patient = kread64(vp_namecache + 80);        // vnode the name refers

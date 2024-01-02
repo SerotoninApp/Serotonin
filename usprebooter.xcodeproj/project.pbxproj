@@ -17,10 +17,8 @@
 		C83594CD2B18E94D00346F80 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C83594CC2B18E94D00346F80 /* fastPathSign */; };
 		C83594CF2B18F70700346F80 /* overwriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C83594CE2B18F70700346F80 /* overwriter.m */; };
 		C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */; };
-		C85782F12B1B99390096B6B0 /* shim in Resources */ = {isa = PBXBuildFile; fileRef = C85782F02B1B99390096B6B0 /* shim */; };
 		C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC7F2B3FFE560008D8FD /* fun.m */; };
 		C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC822B3FFE560008D8FD /* dir.m */; };
-		C8BFCCA72B3FFE570008D8FD /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC832B3FFE560008D8FD /* helpers.m */; };
 		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
 		C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */; };
 		C8BFCCAA2B3FFE570008D8FD /* cs_blobs.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC862B3FFE560008D8FD /* cs_blobs.m */; };
@@ -42,7 +40,6 @@
 		C82AFEEF2B175A270070EA49 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = usprebooterApp.swift; sourceTree = "<group>"; };
 		C82AFEF32B175AB80070EA49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C82AFF0B2B1762CE0070EA49 /* uicache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uicache.h; sourceTree = "<group>"; };
 		C82AFF0D2B1762CE0070EA49 /* fakeroot */ = {isa = PBXFileReference; lastKnownFileType = text; path = fakeroot; sourceTree = "<group>"; };
 		C82AFF102B1762CE0070EA49 /* trolltoolsroothelper */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = trolltoolsroothelper; sourceTree = "<group>"; };
 		C82AFF112B1762CE0070EA49 /* .stamp */ = {isa = PBXFileReference; lastKnownFileType = text; path = .stamp; sourceTree = "<group>"; };
@@ -72,7 +69,6 @@
 		C82AFF2D2B1762CE0070EA49 /* TSUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSUtil.m; sourceTree = "<group>"; };
 		C82AFF2E2B1762CE0070EA49 /* RootHelperSample.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = RootHelperSample.xcodeproj; sourceTree = "<group>"; };
 		C82AFF312B1762CE0070EA49 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C82AFF322B1762CE0070EA49 /* uicache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = uicache.m; sourceTree = "<group>"; };
 		C82AFF332B1762CE0070EA49 /* TSUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSUtil.h; sourceTree = "<group>"; };
 		C82AFF342B1762CE0070EA49 /* CoreServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreServices.h; sourceTree = "<group>"; };
 		C82AFF352B1762CE0070EA49 /* RemoteLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteLog.h; sourceTree = "<group>"; };
@@ -86,7 +82,6 @@
 		C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_unaligned_copy_switch_race.h; sourceTree = "<group>"; };
 		C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vm_unaligned_copy_switch_race.c; sourceTree = "<group>"; };
 		C83594D32B18F80300346F80 /* overwriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = overwriter.h; sourceTree = "<group>"; };
-		C85782F02B1B99390096B6B0 /* shim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = shim; path = RootHelperSample/launchdshim/shim; sourceTree = SOURCE_ROOT; };
 		C8BFCC782B3FFE560008D8FD /* cs_blobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cs_blobs.h; sourceTree = "<group>"; };
 		C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
 		C8BFCC7A2B3FFE560008D8FD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -96,7 +91,6 @@
 		C8BFCC7E2B3FFE560008D8FD /* krw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = krw.h; sourceTree = "<group>"; };
 		C8BFCC7F2B3FFE560008D8FD /* fun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fun.m; sourceTree = "<group>"; };
 		C8BFCC822B3FFE560008D8FD /* dir.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dir.m; sourceTree = "<group>"; };
-		C8BFCC832B3FFE560008D8FD /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		C8BFCC842B3FFE560008D8FD /* utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = utils.m; sourceTree = "<group>"; };
 		C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thanks_opa334dev_htrowii.m; sourceTree = "<group>"; };
 		C8BFCC862B3FFE560008D8FD /* cs_blobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cs_blobs.m; sourceTree = "<group>"; };
@@ -105,7 +99,6 @@
 		C8BFCC892B3FFE560008D8FD /* vnode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vnode.m; sourceTree = "<group>"; };
 		C8BFCC8A2B3FFE560008D8FD /* proc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = proc.c; sourceTree = "<group>"; };
 		C8BFCC8C2B3FFE560008D8FD /* fun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fun.h; sourceTree = "<group>"; };
-		C8BFCC8E2B3FFE560008D8FD /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		C8BFCC8F2B3FFE560008D8FD /* dir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dir.h; sourceTree = "<group>"; };
 		C8BFCC912B3FFE560008D8FD /* krkw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = krkw.h; sourceTree = "<group>"; };
 		C8BFCC942B3FFE560008D8FD /* kread_sem_open.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kread_sem_open.h; sourceTree = "<group>"; };
@@ -160,7 +153,6 @@
 				C8BFCC772B3FFE560008D8FD /* fun */,
 				C8BFCC902B3FFE560008D8FD /* libkfd */,
 				C8BFCCA32B3FFE570008D8FD /* libkfd.h */,
-				C85782F02B1B99390096B6B0 /* shim */,
 				C83594CC2B18E94D00346F80 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
@@ -184,14 +176,12 @@
 		C82AFF0A2B1762CE0070EA49 /* RootHelperSample */ = {
 			isa = PBXGroup;
 			children = (
-				C82AFF0B2B1762CE0070EA49 /* uicache.h */,
 				C82AFF0C2B1762CE0070EA49 /* .theos */,
 				C82AFF2B2B1762CE0070EA49 /* Makefile */,
 				C82AFF2C2B1762CE0070EA49 /* entitlements.plist */,
 				C82AFF2D2B1762CE0070EA49 /* TSUtil.m */,
 				C82AFF2E2B1762CE0070EA49 /* RootHelperSample.xcodeproj */,
 				C82AFF312B1762CE0070EA49 /* main.m */,
-				C82AFF322B1762CE0070EA49 /* uicache.m */,
 				C82AFF332B1762CE0070EA49 /* TSUtil.h */,
 				C82AFF342B1762CE0070EA49 /* CoreServices.h */,
 				C82AFF352B1762CE0070EA49 /* RemoteLog.h */,
@@ -310,14 +300,12 @@
 				C8BFCC7E2B3FFE560008D8FD /* krw.h */,
 				C8BFCC7F2B3FFE560008D8FD /* fun.m */,
 				C8BFCC822B3FFE560008D8FD /* dir.m */,
-				C8BFCC832B3FFE560008D8FD /* helpers.m */,
 				C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */,
 				C8BFCC862B3FFE560008D8FD /* cs_blobs.m */,
 				C8BFCC872B3FFE560008D8FD /* krw.c */,
 				C8BFCC882B3FFE560008D8FD /* offsets.m */,
 				C8BFCC8A2B3FFE560008D8FD /* proc.c */,
 				C8BFCC8C2B3FFE560008D8FD /* fun.h */,
-				C8BFCC8E2B3FFE560008D8FD /* helpers.h */,
 				C8BFCC8F2B3FFE560008D8FD /* dir.h */,
 			);
 			path = fun;
@@ -449,7 +437,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
-				C85782F12B1B99390096B6B0 /* shim in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
 				C83594CD2B18E94D00346F80 /* fastPathSign in Resources */,
 			);
@@ -474,7 +461,6 @@
 				C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */,
 				C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */,
 				C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */,
-				C8BFCCA72B3FFE570008D8FD /* helpers.m in Sources */,
 				C8BFCCAB2B3FFE570008D8FD /* krw.c in Sources */,
 				C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */,
 				C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */,

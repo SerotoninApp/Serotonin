@@ -321,6 +321,7 @@ void _offsets_init(void)
         off_vnode_v_ncchildren_tqh_first = 0x30;
         off_vnode_v_iocount = 0x64;
         off_vnode_v_usecount = 0x60;
+        off_vnode_v_holdcount = 
         off_vnode_v_flag = 0x54;
         off_vnode_v_name = 0xb8;
         off_vnode_v_mount = 0xd8;

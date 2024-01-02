@@ -9,13 +9,4 @@
 #include <Foundation/Foundation.h>
 #include <UIKit/UIKit.h>
 
-int ResSet16(NSInteger height, NSInteger width);
-int removeSMSCache(void);
-int VarMobileWriteTest(void);
-int VarMobileRemoveTest(void);
-int VarMobileWriteFolderTest(void);
-int VarMobileRemoveFolderTest(void);
-int setSuperviseMode(bool enable);
-int removeKeyboardCache(void);
-int regionChanger(NSString *country_value, NSString *region_value);
 void HexDump(uint64_t addr, size_t size);

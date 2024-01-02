@@ -10,23 +10,13 @@
 #include "util.h"
 #import "fun/vnode.h"
 
-//char* getLaunchdShim(void) {
-//    char* prebootpath = return_boot_manifest_hash_main();
-//    static char originallaunchd[256];
-//    sprintf(originallaunchd, "%s/%s", prebootpath, "launchdshim");
-////    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
-//    NSLog(@"patchedlaunchd: %s", originallaunchd);
-//    return originallaunchd;
-//}
-
 char* getLunchd(void) {
     char* prebootpath = return_boot_manifest_hash_main();
     static char originallaunchd[256];
     sprintf(originallaunchd, "%s/%s", prebootpath, "lunchd");
-    NSLog(@"patchedlaunchd: %s", originallaunchd);
+    NSLog(@"lunchd: %s", originallaunchd);
     return originallaunchd;
 }
-
 
 bool overwrite_patchedlaunchd_kfd(void) {
     SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd());

@@ -17,10 +17,7 @@
 #include "util.h"
 #include <IOKit/IOKitLib.h>
 #include "overwriter.h"
-//1. copy /sbin/launchd to somewhere else - done
-//2. change anything in launchd - memmem
-//3. resign get-task-allow + codesign with roothelper? - done
-//4. Using kfd, replace /sbin/launchd with a shim that execute copied launchd
+
 
 int get_boot_manifest_hash(char hash[97])
 {
@@ -58,6 +55,10 @@ char* return_boot_manifest_hash_main(void) {
 }
 
 int copyLaunchd(void) {
+    // things to do:
+    // 1: symlink /var/jb/ to preboot/path/jb/
+    // 2: remove the shim and whatever, now we need lunchd in /preboot/path/lunchd
+    // 3: copy over launchdhook.dylib over to /var/jb/launchdhook.dylib
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
     NSString *shimPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"shim"];
     NSLog(@"usprebooter: path is %@", mainBundlePath);
@@ -77,12 +78,6 @@ int copyLaunchd(void) {
     spawnRoot(mainBundlePath, @[@"filecopy", shimPath, launchdshimPath], &stdOut, &stdErr);
     return ret;
 }
-
-//int overwriteLaunchd(void) {
-//    kern_return_t ret = 0;
-//    
-//    return ret;
-//}
 
 int codesignLaunchd(void) {
     kern_return_t ret = 0;
@@ -131,14 +126,10 @@ int userspaceReboot(void) {
     return -1;
 }
 
-int fuck2(void) {
+int go(void) {
     kern_return_t ret = 0;
 //    copyLaunchd();
     overwrite_patchedlaunchd_kfd();
 //    codesignLaunchd();
-//    userspaceReboot();
-//    if (userspaceReboot() == 0) {
-//        return ret;
-//    }
     return ret;
 }

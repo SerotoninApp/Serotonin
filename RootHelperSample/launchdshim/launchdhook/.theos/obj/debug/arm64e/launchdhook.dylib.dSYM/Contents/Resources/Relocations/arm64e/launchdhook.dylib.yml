@@ -1,0 +1,19 @@
+---
+triple:          'arm64e-apple-darwin'
+binary-path:     '/Users/ibarahime/usprebooter/RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/arm64e/launchdhook.dylib'
+relocations:
+  - { offsetInCU: 0x1E, offset: 0x1E, size: 0x8, addend: 0x0, symName: _hooked_csops, symObjAddr: 0x0, symBinAddr: 0x535C, symSize: 0x7C }
+  - { offsetInCU: 0x45, offset: 0x45, size: 0x8, addend: 0x0, symName: _orig_csops, symBinAddr: 0x10000, symSize: 0x0 }
+  - { offsetInCU: 0xBB, offset: 0xBB, size: 0x8, addend: 0x0, symName: _orig_csops_audittoken, symBinAddr: 0x10008, symSize: 0x0 }
+  - { offsetInCU: 0x118, offset: 0x118, size: 0x8, addend: 0x0, symName: _hooked_csops, symObjAddr: 0x0, symBinAddr: 0x535C, symSize: 0x7C }
+  - { offsetInCU: 0x178, offset: 0x178, size: 0x8, addend: 0x0, symName: _hooked_csops_audittoken, symObjAddr: 0x7C, symBinAddr: 0x53D8, symSize: 0x84 }
+  - { offsetInCU: 0x1E6, offset: 0x1E6, size: 0x8, addend: 0x0, symName: _init, symObjAddr: 0x100, symBinAddr: 0x545C, symSize: 0x88 }
+  - { offsetInCU: 0x1E, offset: 0x296, size: 0x8, addend: 0x0, symName: _rebind_symbols_image, symObjAddr: 0x0, symBinAddr: 0x54E4, symSize: 0x84 }
+  - { offsetInCU: 0x37, offset: 0x2AF, size: 0x8, addend: 0x0, symName: __rebindings_head, symObjAddr: 0x2910, symBinAddr: 0x10010, symSize: 0x0 }
+  - { offsetInCU: 0x50C, offset: 0x784, size: 0x8, addend: 0x0, symName: _rebind_symbols_image, symObjAddr: 0x0, symBinAddr: 0x54E4, symSize: 0x84 }
+  - { offsetInCU: 0x57A, offset: 0x7F2, size: 0x8, addend: 0x0, symName: _prepend_rebindings, symObjAddr: 0x84, symBinAddr: 0x5568, symSize: 0xEC }
+  - { offsetInCU: 0x5CC, offset: 0x844, size: 0x8, addend: 0x0, symName: _rebind_symbols_for_image, symObjAddr: 0x170, symBinAddr: 0x5654, symSize: 0x398 }
+  - { offsetInCU: 0x70C, offset: 0x984, size: 0x8, addend: 0x0, symName: _rebind_symbols, symObjAddr: 0x508, symBinAddr: 0x59EC, symSize: 0x104 }
+  - { offsetInCU: 0x78E, offset: 0xA06, size: 0x8, addend: 0x0, symName: __rebind_symbols_for_image, symObjAddr: 0x60C, symBinAddr: 0x5AF0, symSize: 0x38 }
+  - { offsetInCU: 0x7C0, offset: 0xA38, size: 0x8, addend: 0x0, symName: _perform_rebinding_with_section, symObjAddr: 0x644, symBinAddr: 0x5B28, symSize: 0x35C }
+...

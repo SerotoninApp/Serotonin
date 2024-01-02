@@ -10,9 +10,6 @@
 
 #include <stdio.h>
 
-int do_fun(void);
 void fix_exploit(void);
-//void respring(void);
-void backboard_respring(void);
 
 #endif /* fun_h */

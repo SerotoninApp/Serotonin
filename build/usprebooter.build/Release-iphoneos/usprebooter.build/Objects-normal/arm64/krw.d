@@ -14,5 +14,4 @@ dependencies: /Users/ibarahime/usprebooter/usprebooter/fun/krw.c \
   /Users/ibarahime/usprebooter/./usprebooter/libkfd/krkw/kread/kread_sem_open.h \
   /Users/ibarahime/usprebooter/./usprebooter/libkfd/krkw/kwrite/kwrite_dup.h \
   /Users/ibarahime/usprebooter/./usprebooter/libkfd/krkw/kwrite/kwrite_sem_open.h \
-  /Users/ibarahime/usprebooter/./usprebooter/libkfd/perf.h \
-  /Users/ibarahime/usprebooter/usprebooter/fun/helpers.h
+  /Users/ibarahime/usprebooter/./usprebooter/libkfd/perf.h
