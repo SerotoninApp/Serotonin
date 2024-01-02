@@ -7,7 +7,7 @@ TARGET_SYSROOT = $(shell xcrun -sdk iphoneos --show-sdk-path)
 
 all: FUCK.tipa
 
-FUCK.tipa: apple-include $(wildcard **/*.c **/*.m)
+FUCK.tipa: apple-include $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	echo "Building IPA"
 	xcodebuild clean build -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
 	echo "done building"

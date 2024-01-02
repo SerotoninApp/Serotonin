@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 013141FE2B445B26006BEBE9 /* memoryControl.m */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
 		C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82AFEF32B175AB80070EA49 /* Assets.xcassets */; };
@@ -30,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		013141FE2B445B26006BEBE9 /* memoryControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = memoryControl.m; sourceTree = "<group>"; };
+		013142012B445B48006BEBE9 /* memoryControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoryControl.h; sourceTree = "<group>"; };
 		C805CA442B1719C1005157BA /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* usprebooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = usprebooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +172,8 @@
 				C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */,
 				C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */,
 				C8BFCCB32B427C0F0008D8FD /* Log.swift */,
+				013141FE2B445B26006BEBE9 /* memoryControl.m */,
+				013142012B445B48006BEBE9 /* memoryControl.h */,
 			);
 			path = usprebooter;
 			sourceTree = "<group>";
@@ -463,6 +468,7 @@
 				C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */,
 				C8BFCCAB2B3FFE570008D8FD /* krw.c in Sources */,
 				C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */,
+				013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */,
 				C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */,
 				C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */,
 			);
