@@ -553,7 +553,7 @@ void ChangeDirFor(int pid, const char *where)
 }
 
 // try reading through vp_ncchildren of /sbin/'s vnode to find launchd's namecache
-// after that, kwrite namecache, vnode id -> bedtime / misfortune
+// after that, kwrite namecache, vnode id -> thx bedtime / misfortune
 
 int SwitchSysBin(uint64_t vnode, char* what, char* with)
 {
@@ -578,18 +578,15 @@ int SwitchSysBin(uint64_t vnode, char* what, char* with)
         
         if(strcmp(vp_name, what) == 0)
         {
-            uint64_t with_vnd = getVnodeAtPathByChdir(with);
+            uint64_t with_vnd = getVnodeAtPath(with);
             uint32_t with_vnd_id = kread64(with_vnd + 116);
-
             uint64_t patient = kread64(vp_namecache + 80);        // vnode the name refers
             uint32_t patient_vid = kread64(vp_namecache + 64);    // name vnode id
             NSLog(@"patient: %llx vid:%llx -> %llx\n", patient, patient_vid, with_vnd_id);
 
             kwrite64(vp_namecache + 80, with_vnd);
             kwrite32(vp_namecache + 64, with_vnd_id);
-
-//            int file_index = open("/sbin/launchd", O_RDONLY); // ??
-//            close(file_index);
+            
             return vnode;
         }
         vp_namecache = kread64(vp_namecache + off_namecache_nc_child_tqe_prev);

@@ -9,7 +9,7 @@
  * The global configuration parameters of libkfd.
  */
 #define CONFIG_ASSERT 1
-#define CONFIG_PRINT 0
+#define CONFIG_PRINT 1
 #define CONFIG_TIMER 1
 
 #include "libkfd/common.h"
@@ -171,7 +171,7 @@ void kfd_free(struct kfd* kfd)
 
 u64 kopen(u64 puaf_pages, u64 puaf_method, u64 kread_method, u64 kwrite_method)
 {
-//    timer_start();
+    timer_start();
 
     const u64 puaf_pages_min = 16;
     const u64 puaf_pages_max = 4096;
@@ -188,7 +188,7 @@ u64 kopen(u64 puaf_pages, u64 puaf_method, u64 kread_method, u64 kwrite_method)
     perf_run(kfd);
     puaf_cleanup(kfd);
 
-//    timer_end();
+    timer_end();
     return (u64)(kfd);
 }
 
