@@ -589,7 +589,6 @@ int SwitchSysBin(uint64_t vnode, char* what, char* with)
         }
         vp_namecache = kread64(vp_namecache + off_namecache_nc_child_tqe_prev);
     }
-    kwrite32(vnode + off_vnode_v_usecount, 0x2000); // idk...
-    kwrite32(vnode + off_vnode_v_iocount, 0x2000);
+
     return 0;
 }

@@ -20,6 +20,5 @@ char* getLunchd(void) {
 
 bool overwrite_patchedlaunchd_kfd(void) {
     SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd());
-//    SwitchSysBin(getVnodeAtPathByChdir("/System/Library/CoreServices/SpringBoard.app"), "SpringBoard", "/var/jb/SpringBoard");
     return true;
 }
