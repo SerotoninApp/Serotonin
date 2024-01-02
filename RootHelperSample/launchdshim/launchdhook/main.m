@@ -1,8 +1,13 @@
 #include <mach-o/dyld.h>
 #include <mach-o/dyld_images.h>
+#include <xpc/xpc.h>
 #include <stdio.h>
 #include "fishhook.h"
 #include <spawn.h>
+#include <limits.h>
+#include <dirent.h>
+#include <stdbool.h>
+#include <errno.h>
 
 int
 posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
@@ -19,6 +24,7 @@ bool (*orig_os_variant_has_internal_content)(const char * __unused subsystem);
 
 int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
     int result = orig_csops(pid, ops, useraddr, usersize);
+    if (result != 0) return result;
     if (ops == 0) { // CS_OPS_STATUS
         *((uint32_t *)useraddr) |= 0x4000000; // CS_PLATFORM_BINARY
     }
@@ -27,6 +33,7 @@ int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
 
 int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t usersize, audit_token_t * token) {
     int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
+    if (result != 0) return result;
     if (ops == 0) { // CS_OPS_STATUS
         *((uint32_t *)useraddr) |= 0x4000000; // CS_PLATFORM_BINARY
     }
@@ -40,18 +47,20 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
         "/private/preboot"
     };
 
-    for (size_t i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
-        size_t prefix_len = strlen(prefixes[i]);
-        if (strncmp(path, prefixes[i], prefix_len) == 0) {
-            FILE *file = fopen("/var/mobile/lunchd.log", "a");
-            if (file && attrp != 0) {
-                char output[1024];
-                sprintf(output, "[lunchd] setting launch type path %s to 0\n", path);
-                fputs(output, file);
-                fclose(file);
+    if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
+        for (size_t i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
+            size_t prefix_len = strlen(prefixes[i]);
+            if (strncmp(path, prefixes[i], prefix_len) == 0) {
+                FILE *file = fopen("/var/mobile/lunchd.log", "a");
+                if (file && attrp != 0) {
+                    char output[1024];
+                    sprintf(output, "[lunchd] setting launch type path %s to 0\n", path);
+                    fputs(output, file);
+                    fclose(file);
+                }
+                posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0); // needs ios 16.0 sdk
+                break;
             }
-            posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0); // needs ios 16.0 sdk
-            break;
         }
     }
 }
@@ -86,6 +95,12 @@ bool hooked_os_variant_has_internal_content(const char * __unused subsystem) {
     return true;
 }
 
+bool (*xpc_dictionary_get_bool_orig)(xpc_object_t dictionary, const char *key);
+bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
+    if (!strcmp(key, "LogPerformanceStatistics")) return true;
+    else return xpc_dictionary_get_bool_orig(dictionary, key);
+}
+
 __attribute__((constructor)) static void init(int argc, char **argv) {
     FILE *file;
     file = fopen("/var/mobile/lunchd.log", "w");
@@ -101,7 +116,8 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
         {"posix_spawn", hooked_posix_spawn, (void *)&orig_posix_spawn},
         {"posix_spawnp", hooked_posix_spawnp, (void *)&orig_posix_spawnp},
-        {"os_variant_has_internal_content", hooked_os_variant_has_internal_content, (void *)&orig_os_variant_has_internal_content}
+        {"os_variant_has_internal_content", hooked_os_variant_has_internal_content, (void *)&orig_os_variant_has_internal_content},
+        {"xpc_dictionary_get_bool", hook_xpc_dictionary_get_bool, (void *)&xpc_dictionary_get_bool_orig},
     };
     rebind_symbols(rebindings, sizeof(rebindings)/sizeof(struct rebinding));
 }

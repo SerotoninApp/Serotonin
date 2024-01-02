@@ -1,5 +1,5 @@
 build
-RootHelperSample/.theos/obj
+.theos
 Payload
 .DS_Store
 usprebooter.xcodeproj/xcuserdata
@@ -7,5 +7,5 @@ usprebooter.xcodeproj/project.xcworkspace/xcuserdata
 FUCK.tipa
 RootHelperSample/RootHelperSample.xcodeproj/xcuserdata
 RootHelperSample/build
+RootHelperSample/launchdshim/launchdhook/.theos
 apple-include
-RootHelperSample/.theos
