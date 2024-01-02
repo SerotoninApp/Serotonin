@@ -1,5 +1,5 @@
 build
-.theos/obj
+RootHelperSample/.theos/obj
 Payload
 .DS_Store
 usprebooter.xcodeproj/xcuserdata
