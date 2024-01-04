@@ -6,13 +6,10 @@ include $(THEOS)/makefiles/common.mk
 TOOL_NAME = springboardshim
 
 springboardshim_FILES = main.c
-springboardshim_CFLAGS = -fobjc-arc -isystem ../../../apple-include -lbsm -O2
-springboardshim_LDFLAGS = -lbsm
+springboardshim_CFLAGS = -fobjc-arc -isystem
+springboardshim_LDFLAGS = -L./ -lbsm
 springboardshim_CODESIGN_FLAGS = -SSpringBoardEntsBedtime.plist
-springboardshim_INSTALL_PATH = /usr/local/bin
-springboardshim_LIBRARIES = archive
-springboardshim_PRIVATE_FRAMEWORKS = SpringBoard SpringBoardServices Foundation CoreServices Security
-#springboardshim_OPTFLAG = 2
+#springboardshim_PRIVATE_FRAMEWORKS = SpringBoard SpringBoardServices Foundation // adding SpringBoard to privateframeworks here will add it into load command before the tweak dylib is loaded, which causes the platform check to fail - thanks DuyKhanhTran
 
 after-package::
 	ct_bypass -i .theos/obj/debug/springboardshim -o springboardshimsigned

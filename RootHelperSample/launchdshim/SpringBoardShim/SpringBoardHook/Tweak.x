@@ -16,7 +16,6 @@ int isJITEnabled() {
 }
 
 %ctor {
-    printf("hook works");
     if (!isJITEnabled()) {
         // Enable JIT
         int pid = fork();
