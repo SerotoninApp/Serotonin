@@ -3,7 +3,8 @@ function replaceByte() {
 }
 
 make
-/Users/ibarahime/insert_dylib/insert_dylib/insert_dylib /var/jb/springboardhook.dylib .theos/obj/debug/arm64e/springboardshim springboardshiminjected --all-yes
-replaceByte 'springboardshiminjected' 8 
-ldid -SSpringBoardEntsBedtime.plist springboardshiminjected 
-/Users/ibarahime/ChOma/ct_bypass -i springboardshiminjected -r -o springboardshimsignedinjected
+/Users/ibarahime/insert_dylib/insert_dylib/insert_dylib /var/jb/usr/lib/ellekit/libinjector.dylib .theos/obj/debug/arm64e/springboardshim springboardshiminjected1 --all-yes
+/Users/ibarahime/insert_dylib/insert_dylib/insert_dylib /var/jb/springboardhook.dylib springboardshiminjected1 springboardshiminjected2 --all-yes
+replaceByte 'springboardshiminjected2' 8 
+ldid -SSpringBoardEntsBedtime.plist springboardshiminjected2
+/Users/ibarahime/ChOma/ct_bypass -i springboardshiminjected2 -r -o springboardshimsignedinjected
