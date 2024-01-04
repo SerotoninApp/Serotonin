@@ -1,5 +1,5 @@
-TARGET := iphone:clang:latest:16.5
-ARCHS = arm64
+TARGET := iphone:clang:16.4:14.0
+ARCHS = arm64e
 THEOS_PACKAGE_SCHEME=rootless
 
 
@@ -8,6 +8,6 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = SpringBoardHook
 
 SpringBoardHook_FILES = Tweak.x
-SpringBoardHook_CFLAGS = -fobjc-arc
+SpringBoardHook_CFLAGS = -fobjc-arc -lbsm
 
 include $(THEOS_MAKE_PATH)/tweak.mk

@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdio.h>
 bool os_variant_has_internal_content(const char* subsystem);
 %hookf(bool, os_variant_has_internal_content, const char* subsystem) {
      return true;
@@ -15,6 +16,7 @@ int isJITEnabled() {
 }
 
 %ctor {
+    printf("hook works");
     if (!isJITEnabled()) {
         // Enable JIT
         int pid = fork();

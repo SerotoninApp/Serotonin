@@ -75,22 +75,22 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
     return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
 }
 
-extern char **environ;
-static void trace_and_detach(pid_t target_pid) {
-  char pid_arg_string[10];
-  snprintf(pid_arg_string, sizeof(pid_arg_string), "%d", target_pid);
-  char *argv[] = {"/var/jb/trace_and_detach", pid_arg_string, NULL};
-  pid_t pid = 0;
-  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, environ) != 0) {
-      FILE *file = fopen("/var/mobile/lunchd.log", "a");
-      char output[1024];
-      sprintf(output, "[lunchd] ptrace failed\n");
-      fputs(output, file);
-      fclose(file);
-    return;
-  }
-  waitpid(pid, NULL, 0);
-}
+//extern char **environ;
+//static void trace_and_detach(pid_t target_pid) {
+//  char pid_arg_string[10];
+//  snprintf(pid_arg_string, sizeof(pid_arg_string), "%d", target_pid);
+//  char *argv[] = {"/var/jb/trace_and_detach", pid_arg_string, NULL};
+//  pid_t pid = 0;
+//  if (posix_spawn(&pid, argv[0], NULL, NULL, argv, environ) != 0) {
+//      FILE *file = fopen("/var/mobile/lunchd.log", "a");
+//      char output[1024];
+//      sprintf(output, "[lunchd] ptrace failed\n");
+//      fputs(output, file);
+//      fclose(file);
+//    return;
+//  }
+//  waitpid(pid, NULL, 0);
+//}
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
@@ -100,23 +100,24 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
     static bool already_launched_springboard = false;
 
     if (!already_launched_springboard && !strncmp(path, springboardPath, strlen(springboardPath))) {
-        already_launched_springboard = true;
+//        already_launched_springboard = true;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-        short flags;
-        posix_spawnattr_getflags(attrp, &flags);
-        flags |= POSIX_SPAWN_START_SUSPENDED;
-        posix_spawnattr_setflags((posix_spawnattr_t *)attrp, flags);
+//        short flags;
+//        posix_spawnattr_getflags(attrp, &flags);
+//        flags |= POSIX_SPAWN_START_SUSPENDED;
+//        posix_spawnattr_setflags((posix_spawnattr_t *)attrp, flags);
         
         FILE *file = fopen("/var/mobile/lunchd.log", "a");
         char output[1024];
         sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
         fputs(output, file);
         path = coolerSpringboard;
-        int retval = posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
-        trace_and_detach(*pid);
-        kill(*pid, SIGCONT); // unsuspend
+//        int retval = posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+//        trace_and_detach(*pid);
+//        
+//        kill(*pid, SIGCONT); // unsuspend
         fclose(file);
-        return retval;
+        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
             
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
