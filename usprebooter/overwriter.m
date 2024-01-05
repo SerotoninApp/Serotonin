@@ -10,16 +10,12 @@
 #include "util.h"
 #import "fun/vnode.h"
 
-char* getLunchd(void) {
-    char* prebootpath = return_boot_manifest_hash_main();
-    static char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "lunchd");
-    NSLog(@"lunchd: %s", originallaunchd);
-    return originallaunchd;
+NSString* getLunchd(void) {
+    return jbroot(@"lunchd");
 }
 
 bool overwrite_patchedlaunchd_kfd(void) {
 //    SwitchSysBin(getVnodeAtPathByChdir("/System/Library/CoreServices/SpringBoard.app"), "SpringBoard", "/var/jb/SprangBoard");
-    SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd());
+    SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd().UTF8String);
     return true;
 }

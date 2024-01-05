@@ -10,4 +10,5 @@
 #import <Foundation/Foundation.h>
 void respring(void);
 int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdErr);
+NSString *jbroot(NSString *path);
 #endif /* util_h */
