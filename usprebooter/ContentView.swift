@@ -49,12 +49,13 @@ struct ContentView: View {
                             }
                         }
                     }
+                    .frame(height: 230)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(20)
                 .background {
                     Color(.black)
-                        .opacity(0.0)
-                }
+                        .cornerRadius(20)
+                    .opacity(0.5)                }
             }
 
             private func FetchLog() {
