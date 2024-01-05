@@ -49,13 +49,11 @@ struct ContentView: View {
                             }
                         }
                     }
-                    .frame(height: 230)
                 }
-                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background {
                     Color(.black)
-                        .cornerRadius(20)
-                        .opacity(0.5)
+                        .opacity(0.0)
                 }
             }
 

@@ -82,5 +82,15 @@
 		<string>com.apple.mmaintenanced</string>
 		<string>com.apple.memory-maintenance</string>
 	</array>
+    <key>com.apple.AutoWake-write-access</key>
+    <true/>
+    <key>com.apple.springboard.wallpaper-access</key>
+    <true/>
+    <key>com.apple.features.all-access</key>
+    <true/>
+    <key>com.apple.springboard.appbackgroundstyle</key>
+    <true/>
+    <key>com.apple.springboard.wallpaperAnimationSuspension</key>
+    <true/>
 </dict>
 </plist>
