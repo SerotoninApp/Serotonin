@@ -202,6 +202,18 @@
 		D6E090892B48E3A200AE49BF /* FluidGradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FluidGradientView.swift; sourceTree = "<group>"; };
 		D6E0908A2B48E3A200AE49BF /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
 		D6E0908B2B48E3A200AE49BF /* FluidGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FluidGradient.swift; sourceTree = "<group>"; };
+		D6E090922B48E60300AE49BF /* bootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bootstrap.h; sourceTree = "<group>"; };
+		D6E090942B48E60300AE49BF /* endpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = endpoint.h; sourceTree = "<group>"; };
+		D6E090952B48E60300AE49BF /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		D6E090962B48E60300AE49BF /* listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listener.h; sourceTree = "<group>"; };
+		D6E090972B48E60300AE49BF /* availability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = availability.h; sourceTree = "<group>"; };
+		D6E090982B48E60300AE49BF /* rich_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rich_error.h; sourceTree = "<group>"; };
+		D6E090992B48E60300AE49BF /* xpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpc.h; sourceTree = "<group>"; };
+		D6E0909A2B48E60300AE49BF /* session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = session.h; sourceTree = "<group>"; };
+		D6E0909B2B48E60300AE49BF /* xpc_connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpc_connection.h; sourceTree = "<group>"; };
+		D6E0909C2B48E60300AE49BF /* activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = activity.h; sourceTree = "<group>"; };
+		D6E0909D2B48E60300AE49BF /* launch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = launch.h; sourceTree = "<group>"; };
+		D6E0909E2B48E60300AE49BF /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +255,7 @@
 				C83594CC2B18E94D00346F80 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
+				D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */,
 				C82AFEEF2B175A270070EA49 /* ContentView.swift */,
 				D6E08F1D2B48B04E00AE49BF /* TheCoolerContentView.swift */,
 				C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */,
@@ -612,6 +625,33 @@
 				D6E0908B2B48E3A200AE49BF /* FluidGradient.swift */,
 			);
 			path = FluidGradient;
+			sourceTree = "<group>";
+		};
+		D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */ = {
+			isa = PBXGroup;
+			children = (
+				D6E090922B48E60300AE49BF /* bootstrap.h */,
+				D6E090932B48E60300AE49BF /* xpc */,
+			);
+			path = "Private Headers I stole from the macOS SDK";
+			sourceTree = "<group>";
+		};
+		D6E090932B48E60300AE49BF /* xpc */ = {
+			isa = PBXGroup;
+			children = (
+				D6E090942B48E60300AE49BF /* endpoint.h */,
+				D6E090952B48E60300AE49BF /* debug.h */,
+				D6E090962B48E60300AE49BF /* listener.h */,
+				D6E090972B48E60300AE49BF /* availability.h */,
+				D6E090982B48E60300AE49BF /* rich_error.h */,
+				D6E090992B48E60300AE49BF /* xpc.h */,
+				D6E0909A2B48E60300AE49BF /* session.h */,
+				D6E0909B2B48E60300AE49BF /* xpc_connection.h */,
+				D6E0909C2B48E60300AE49BF /* activity.h */,
+				D6E0909D2B48E60300AE49BF /* launch.h */,
+				D6E0909E2B48E60300AE49BF /* base.h */,
+			);
+			path = xpc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
