@@ -337,7 +337,9 @@ struct CoolerContentView: View {
 //                                    }
 //                                }
                                 
-                                logItems.append("[i] \(UIDevice.current.localizedModel), iOS \(UIDevice.current.systemVersion)")
+                                withAnimation(fancyAnimation) {
+                                    logItems.append("[i] \(UIDevice.current.localizedModel), iOS \(UIDevice.current.systemVersion)")
+                                }
 
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                                         logItems.append("[*] Doing kopen")
@@ -413,6 +415,7 @@ struct CoolerContentView: View {
         .onChange(of: color) { new in
             accentColor = updateCardColorInAppStorage(color: new)
         }
+        .animation(fancyAnimation, value: logItems)
         .onAppear {
             if showStdout {
                 openConsolePipe()
