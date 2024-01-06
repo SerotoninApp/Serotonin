@@ -3,8 +3,8 @@ import SwiftUI
 struct ContentView: View {
     @State var LogItems: [String.SubSequence] = [""]
 
-    @State var staticHeadroomMB = 384.0
-    @State var pUaFPages = 3072.0
+    @AppStorage("headroom") var staticHeadroomMB: Double = 384.0
+    @AppStorage("pages") var pUaFPages: Double = 3072.0
     @Binding var useNewUI: Bool
     var body: some View {
         // thx haxi0

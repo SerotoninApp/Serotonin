@@ -33,8 +33,8 @@ struct CoolerContentView: View {
     @State var reinstall = false
     @State var resetfs = false
 
-    @State var staticHeadroomMB = 384.0
-    @State var pUaFPages = 3072.0
+    @AppStorage("headroom") var staticHeadroomMB: Double = 384.0
+    @AppStorage("pages") var pUaFPages: Double = 3072.0
 
     public func openConsolePipe() {
         setvbuf(stdout, nil, _IONBF, 0)
@@ -45,7 +45,9 @@ struct CoolerContentView: View {
             let data = handle.availableData
             let str = String(data: data, encoding: .ascii) ?? "[*] <Non-ascii data of size\(data.count)>\n"
             DispatchQueue.main.async {
-                logItems.append(str)
+                withAnimation(fancyAnimation) {
+                    logItems.append(str)
+                }
             }
         }
     }
@@ -78,24 +80,29 @@ struct CoolerContentView: View {
                         .foregroundColor(.secondary)
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading) {
-                            Picker("PUAF Pages", systemImage: "doc", selection: $pUaFPages) {
-                                Text("16").tag(16)
-                                Text("32").tag(32)
-                                Text("64").tag(64)
-                                Text("128").tag(128)
-                                Text("256").tag(256)
-                                Text("512").tag(512)
-                                Text("1024").tag(1024)
-                                Text("2048").tag(2048)
-                                Text("3072").tag(3072)
-                                Text("4096").tag(4096)
-                                Text("65536").tag(65536)
+                            HStack {
+                                Label("PUAF Pages", systemImage: "doc")
+                                Spacer()
+                                Picker("PUAF Pages", systemImage: "doc", selection: $pUaFPages) {
+                                    Text("16").tag(16.0)
+                                    Text("32").tag(32.0)
+                                    Text("64").tag(64.0)
+                                    Text("128").tag(128.0)
+                                    Text("256").tag(256.0)
+                                    Text("512").tag(512.0)
+                                    Text("1024").tag(1024.0)
+                                    Text("2048").tag(2048.0)
+                                    Text("3072").tag(3072.0)
+                                    Text("4096").tag(4096.0)
+                                    Text("65536").tag(65536.0)
+                                }
+                                .labelsHidden()
                             }
                             let memSizeMB = getPhysicalMemorySize() / 1048576
                             HStack {
-                                Slider(value: $staticHeadroomMB, in: 0...Double(memSizeMB), step: 128.0, label: {
-                                    Label("Static Headroom", systemImage: "memorychip")
-                                })
+                                Label("Static Headroom", systemImage: "memorychip")
+                                Spacer()
+                                Slider(value: $staticHeadroomMB, in: 0...Double(memSizeMB), step: 128.0, label: {})
                                 Text("\(Int(staticHeadroomMB)) MB")
                                     .font(.caption.monospacedDigit())
                             }
@@ -283,7 +290,7 @@ struct CoolerContentView: View {
                                 .padding()
                             }
                         }
-                        .frame(height: logItems.isEmpty ? 0 : geo.size.height / 2.5, alignment: .leading)
+                        .frame(height: (!isRunning || !finished) ? 0 : geo.size.height / 2.5, alignment: .leading)
                         //                    .background(.ultraThinMaterial)
 
                         .clipShape(RoundedRectangle(cornerRadius: 14))
@@ -328,16 +335,28 @@ struct CoolerContentView: View {
 //                                        logItems.append(log)
 //                                    }
 //                                }
-                                DispatchQueue.main.async {
-                                    logItems.append("[*] Doing kopen")
-                                    do_kopen(UInt64(pUaFPages), 1, 1, 1, Int(staticHeadroomMB), true)
-                                    logItems.append("[*] Exploit fixup")
-                                    fix_exploit()
-                                    logItems.append("[*] Hammer time.")
-                                    go()
-                                    logItems.append("[*] All done, kclosing")
-                                    do_kclose()
-                                }
+                                
+                                logItems.append("[i] \(UIDevice.current.localizedModel), iOS \(UIDevice.current.systemVersion)")
+
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                                        logItems.append("[*] Doing kopen")
+                                        progress = 0.1
+                                        do_kopen(UInt64(pUaFPages), 1, 1, 1, Int(staticHeadroomMB), true)
+                                        progress = 0.25
+                                        logItems.append("[*] Exploit fixup")
+                                        progress = 0.3
+                                        fix_exploit()
+                                        progress = 0.5
+                                        logItems.append("[*] Hammer time.")
+                                        progress = 0.6
+                                        go()
+                                        progress = 0.75
+                                        logItems.append("[*] All done, kclosing")
+                                        progress = 0.9
+                                        do_kclose()
+                                        progress = 1.0
+                                    }
+                                
                             }
                         }, label: {
                             if isRunning {
@@ -367,10 +386,6 @@ struct CoolerContentView: View {
                                     useNewUI.toggle()
                                 }
                             }
-                            Text("This is a fake jailbreak.\nBy BomberFish. Released under the MIT Licence.")
-                                .multilineTextAlignment(.center)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
                         }
                         Spacer()
                     }
@@ -413,23 +428,6 @@ struct CoolerContentView: View {
             }
         }
     }
-
-//    func funnyThing(_ exampleArg: Bool, progress: @escaping ((Double, String)) -> ()) {
-//        let steps = [
-//            "[*] Getting Kernel R/W",
-//            "[*] Bypassing PPL",
-//            "[*] Bypassing KTRR",
-//            reinstall ? "[*] Reinstalling bootstrap" : "[*] Bootstrapping",
-//            untether ? "[*] Installing untether\n" : "",
-//            "[✓] Done."
-//        ]
-//        progress((0.0, "[i] \(UIDevice.current.localizedModel), iOS \(UIDevice.current.systemVersion)"))
-//        for i in 0 ..< steps.count {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 2.0) {
-//                progress((Double(i) / Double(steps.count - 1), steps[i]))
-//            }
-//        }
-//    }
 }
 
 struct LinkCell: View {

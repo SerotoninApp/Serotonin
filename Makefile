@@ -52,6 +52,6 @@ apple-include:
 	gsed -i -E s/'__API_UNAVAILABLE\(.*\)'// apple-include/IOKit/IOKitLib.h
 
 clean:
-	rm -rf Payload build RootHelperSample/.theos apple-include RootHelperSample/build
+	rm -rf Payload build RootHelperSample/.theos apple-include RootHelperSample/build FUCK.tipa
 
 .PHONY: all clean
