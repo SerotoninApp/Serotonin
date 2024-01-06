@@ -32,6 +32,8 @@ struct CoolerContentView: View {
     @AppStorage("showStdout") var showStdout = true
     @State var reinstall = false
     @State var resetfs = false
+    
+    @State var shouldShowLog = true
 
     @AppStorage("headroom") var staticHeadroomMB: Double = 384.0
     @AppStorage("pages") var pUaFPages: Double = 3072.0
@@ -290,7 +292,7 @@ struct CoolerContentView: View {
                                 .padding()
                             }
                         }
-                        .frame(height: (!isRunning || !finished) ? 0 : geo.size.height / 2.5, alignment: .leading)
+                        .frame(height: logItems.isEmpty ? 0 : geo.size.height / 2.5, alignment: .leading)
                         //                    .background(.ultraThinMaterial)
 
                         .clipShape(RoundedRectangle(cornerRadius: 14))
@@ -316,6 +318,9 @@ struct CoolerContentView: View {
                         .padding(.top, 10)
 
                         Button(action: {
+                            withAnimation(fancyAnimation) {
+                                shouldShowLog = true
+                            }
                             UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 200)
                             if finished {
 //                                triggerRespring = true // change this when porting this ui to your jailbreak
@@ -323,11 +328,7 @@ struct CoolerContentView: View {
                             } else {
                                 withAnimation(fancyAnimation) {
                                     isRunning = true
-                                }
-                                if showStdout {
-                                    withAnimation(fancyAnimation) {
-                                        print("[i] Hello from stdout!")
-                                    }
+                                    shouldShowLog = true
                                 }
 //                                funnyThing(true) { prog, log in
 //                                    withAnimation(fancyAnimation) {
