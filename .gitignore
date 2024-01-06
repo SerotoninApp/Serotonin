@@ -1,4 +1,5 @@
 build
+build/
 .theos
 Payload
 .DS_Store
