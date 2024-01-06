@@ -59,14 +59,14 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
         for (size_t i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
             size_t prefix_len = strlen(prefixes[i]);
             if (strncmp(path, prefixes[i], prefix_len) == 0) {
-                FILE *file = fopen("/var/mobile/lunchd.log", "a");
-                if (file && attrp != 0) {
-                    char output[1024];
-                    sprintf(output, "[lunchd] setting launch type path %s to 0\n", path);
-                    fputs(output, file);
-                    fclose(file);
+//                FILE *file = fopen("/var/mobile/lunchd.log", "a");
+                if (/*file && */attrp != 0) {
+//                    char output[1024];
+//                    sprintf(output, "[lunchd] setting launch type path %s to 0\n", path);
+//                    fputs(output, file);
+//                    fclose(file);
+                    posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0); // needs ios 16.0 sdk
                 }
-                posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0); // needs ios 16.0 sdk
                 break;
             }
         }
@@ -76,22 +76,34 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
     change_launchtype(attrp, path);
+    const char *launchdPath = "/sbin/launchd";
+    const char *coolerLaunchd = jbroot("lunchd");
+    // hook userspace reboot to prevent the namecache holdcount -ve panic
+    if (!strncmp(path, launchdPath, strlen(launchdPath))) {
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+//        FILE *file = fopen("/var/mobile/lunchd.log", "a");
+//        char output[1024];
+//        sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
+//        fputs(output, file);
+        path = coolerLaunchd;
+        return posix_spawn(pid, path, file_actions, attrp, argv, envp);
+    }
     return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
 }
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
     const char *springboardPath = "/System/Library/CoreServices/SpringBoard.app/SpringBoard";
-    const char *coolerSpringboard = jbroot("/SpringBoard.app/SpringBoard");
+    const char *coolerSpringboard = jbroot("/System/Library/CoreServices/SpringBoard.app/SpringBoard");
 
     if (!strncmp(path, springboardPath, strlen(springboardPath))) {
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-        FILE *file = fopen("/var/mobile/lunchd.log", "a");
-        char output[1024];
-        sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
-        fputs(output, file);
+//        FILE *file = fopen("/var/mobile/lunchd.log", "a");
+//        char output[1024];
+//        sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
+//        fputs(output, file);
         path = coolerSpringboard;
-        fclose(file);
+//        fclose(file);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
             
@@ -106,15 +118,14 @@ bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv) {
-    FILE *file;
-    file = fopen("/var/mobile/lunchd.log", "w");
-    char output[1024];
-    sprintf(output, "[lunchd] launchdhook pid %d", getpid());
-    printf("[lunchd] launchdhook pid %d", getpid());
-    fputs(output, file);
-    fclose(file);
-    sync();
-    
+//    FILE *file;
+//    file = fopen("/var/mobile/lunchd.log", "w");
+//    char output[1024];
+//    sprintf(output, "[lunchd] launchdhook pid %d", getpid());
+//    printf("[lunchd] launchdhook pid %d", getpid());
+//    fputs(output, file);
+//    fclose(file);
+//    sync();
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
