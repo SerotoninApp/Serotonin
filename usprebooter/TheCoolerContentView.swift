@@ -215,10 +215,10 @@ struct CoolerContentView: View {
                         .ignoresSafeArea(.all)
                     VStack(spacing: 15) {
                         VStack(alignment: .leading) {
-                            Text("usprebooter") // apex?????
+                            Text("Serotonin") // apex?????
                                 .multilineTextAlignment(.leading)
                                 .font(.system(.largeTitle, design: .rounded).weight(.bold))
-                            Text("Semi-jailbreak for iOS 15.5–16.6")
+                            Text("(Not-)jailbreak for iOS 15.5-16.6.1")
                         }
                         .padding(.top, geo.size.height / 50)
                         .padding(.leading, 5)
@@ -344,7 +344,7 @@ struct CoolerContentView: View {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                                         logItems.append("[*] Doing kopen")
                                         progress = 0.1
-                                        do_kopen(UInt64(pUaFPages), 1, 1, 1, Int(staticHeadroomMB), true)
+                                        do_kopen(UInt64(pUaFPages), 2, 1, 1, Int(staticHeadroomMB), true)
                                         progress = 0.25
                                         logItems.append("[*] Exploit fixup")
                                         progress = 0.3
@@ -466,6 +466,8 @@ struct LinkCell: View {
 struct CreditsView: View {
     var body: some View {
         List {
+            LinkCell(title: "hrtowii/sacrosanctuary", detail: "dev", link: "https://twitter.com/hrtowii", imageName: "https://pbs.twimg.com/profile_images/1369924696653762560/DW1_IBEv_400x400.jpg")
+            LinkCell(title: "BomberFish", detail: "UI Design", link: "https://bomberfish.ca", imageName: "fish")
             LinkCell(title: "BomberFish", detail: "UI Design", link: "https://bomberfish.ca", imageName: "fish")
         }
         .navigationTitle("Credits")
