@@ -475,7 +475,6 @@ struct CreditsView: View {
         List {
             LinkCell(title: "hrtowii/sacrosanctuary", detail: "dev", link: "https://twitter.com/hrtowii", imageName: "https://pbs.twimg.com/profile_images/1369924696653762560/DW1_IBEv_400x400.jpg")
             LinkCell(title: "BomberFish", detail: "UI Design", link: "https://bomberfish.ca", imageName: "fish")
-            LinkCell(title: "BomberFish", detail: "UI Design", link: "https://bomberfish.ca", imageName: "fish")
         }
         .navigationTitle("Credits")
     }
