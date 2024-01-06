@@ -127,7 +127,7 @@ int userspaceReboot(void) {
 }
 
 int go(void) {
-    printf("[*] Hammer time.");
+    printf("[*] Hammer time.\n");
     kern_return_t ret = 0;
 //    copyLaunchd();
     overwrite_patchedlaunchd_kfd();

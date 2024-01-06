@@ -19,8 +19,8 @@ struct CoolerContentView: View {
     @State var isRunning = false
     @State var finished = false
     @State var settingsOpen = false
-    @State var color: Color = .accentColor
-    @AppStorage("accent") var accentColor: String = updateCardColorInAppStorage(color: .accentColor)
+    @State var color: Color = .init("accent", bundle: Bundle.main)
+    @AppStorage("accent") var accentColor: String = ""
     @AppStorage("swag") var swag = true
     @State var showingGradient = false
     @State var blurScreen = false
@@ -45,7 +45,7 @@ struct CoolerContentView: View {
         // listening on the readabilityHandler
         pipe.fileHandleForReading.readabilityHandler = { handle in
             let data = handle.availableData
-            let str = String(data: data, encoding: .ascii) ?? "[*] <Non-ascii data of size\(data.count)>\n"
+            let str = String(data: data, encoding: .ascii) ?? "[i] <Non-ascii data of size\(data.count)>\n"
             DispatchQueue.main.async {
                 withAnimation(fancyAnimation) {
                     logItems.append(str)
@@ -139,10 +139,14 @@ struct CoolerContentView: View {
                                 Label("Accent Color", systemImage: "paintpalette")
                                 Spacer()
                                 ColorPicker("Accent Color", selection: $color)
+                                    .onChange(of: color) {_ in
+                                        accentColor = updateCardColorInAppStorage(color: color)
+                                    }
                                     .labelsHidden()
                                 Button("", systemImage: "arrow.counterclockwise") {
                                     withAnimation(fancyAnimation) {
                                         color = .accentColor
+                                        accentColor = updateCardColorInAppStorage(color: .init("accent", bundle: Bundle.main))
                                     }
                                 }
                                 .tint(color)
@@ -357,9 +361,12 @@ struct CoolerContentView: View {
 //                                        logItems.append("[*] All done, kclosing")
                                         setProgress(0.9)
                                         do_kclose()
-                                        setProgress(1.0)
-                                        logItems.append("[√] All done!")
                                     }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                                    logItems.append("[√] All done!")
+                                    setProgress(1.0)
+                                }
                                 
                             }
                         }, label: {
@@ -418,13 +425,18 @@ struct CoolerContentView: View {
         }
         .animation(fancyAnimation, value: logItems)
         .onAppear {
+            if accentColor == "" {
+                accentColor = updateCardColorInAppStorage(color: .init("accent", bundle: Bundle.main))
+            }
             if showStdout {
                 openConsolePipe()
             }
             showingGradient = swag
             withAnimation(fancyAnimation) {
                 let rgbArray = accentColor.components(separatedBy: ",")
-                if let red = Double(rgbArray[0]), let green = Double(rgbArray[1]), let blue = Double(rgbArray[2]), let alpha = Double(rgbArray[3]) { color = Color(.sRGB, red: red, green: green, blue: blue, opacity: alpha) }
+                if let red = Double(rgbArray[0]), let green = Double(rgbArray[1]), let blue = Double(rgbArray[2]), let alpha = Double(rgbArray[3]) {
+                    color = .init(.sRGB, red: red, green: green, blue: blue, opacity: alpha)
+                }
             }
         }
         .onChange(of: swag) { new in
