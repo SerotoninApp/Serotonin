@@ -29,22 +29,29 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
         int32_t old_memory_limit = 0;
         memorystatus_memlimit_properties2_t mmprops;
         NSLog(CFSTR("[memoryHogger] memory_avail = %zu"), memory_avail);
+        printf("[memoryHogger] memory_avail = %zu\n", memory_avail);
         NSLog(CFSTR("[memoryHogger] hog_headroom = %zu"), hog_headroom);
+        printf("[memoryHogger] hog_headroom = %zu\n", hog_headroom);
         NSLog(CFSTR("[memoryHogger] memory_to_hog = %zu"), memory_to_hog);
+        printf("[memoryHogger] memory_to_hog = %zu\n", memory_to_hog);
         if (hasEntitlement(CFSTR("com.apple.private.memorystatus"))) {
             uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
             int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, getpid(), 0, &mmprops, sizeof(mmprops));
             if (ret == 0) {
                 NSLog(CFSTR("[memoryHogger] current memory limit: %zu MiB"), mmprops.v1.memlimit_active);
+                printf("[memoryHogger] current memory limit: %d MiB\n", mmprops.v1.memlimit_active);
                 old_memory_limit = mmprops.v1.memlimit_active;
                 ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, getpid(), new_memory_limit, NULL, 0);
                 if (ret == 0) {
                     NSLog(CFSTR("[memoryHogger] The memory limit for pid %d has been set to %u MiB successfully"), getpid(), new_memory_limit);
+                    printf("[memoryHogger] The memory limit for pid %d has been set to %u MiB successfully\n", getpid(), new_memory_limit);
                 } else {
                     NSLog(CFSTR("[memoryHogger] Failed to set memory limit: %d (%s)"), errno, strerror(errno));
+                    printf("[memoryHogger] Failed to set memory limit: %d (%s)\n", errno, strerror(errno));
                 }
             } else {
                 NSLog(CFSTR("[memoryHogger] could not get current memory limits"));
+                printf("[memoryHogger] could not get current memory limits\n");
             }
         }
         if (memory_avail > hog_headroom) {
@@ -55,10 +62,12 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
                 }
             }
             NSLog(CFSTR("[memoryHogger] Filled up hogged memory with A's"));
+            printf("[memoryHogger] Filled up hogged memory with A's\n");
         } else {
             NSLog(CFSTR("[memoryHogger] Did not hog memory because there is too little free memory"));
+            printf("[memoryHogger] Did not hog memory because there is too little free memory\n");
         }
-        
+        printf("[*] Performing kopen");
         _kfd = kopen(puaf_pages, puaf_method, kread_method, kwrite_method);
         
         if (memory_hog) free(memory_hog);
@@ -67,8 +76,10 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
             int ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, getpid(), old_memory_limit, NULL, 0);
             if (ret == 0) {
                 NSLog(CFSTR("[memoryHogger] The memory limit for pid %d has been set to %u MiB successfully"), getpid(), old_memory_limit);
+                printf("[memoryHogger] The memory limit for pid %d has been set to %u MiB successfully\n", getpid(), old_memory_limit);
             } else {
                 NSLog(CFSTR("[memoryHogger] Failed to set memory limit: %d (%s)"), errno, strerror(errno));
+                printf("[memoryHogger] Failed to set memory limit: %d (%s)\n", errno, strerror(errno));
             }
         }
     } else {
@@ -80,6 +91,7 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
 
 void do_kclose(void)
 {
+    printf("[*] Performing kclose");
     kclose((struct kfd*)(_kfd));
 }
 

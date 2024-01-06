@@ -342,22 +342,23 @@ struct CoolerContentView: View {
                                 }
 
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                                        logItems.append("[*] Doing kopen")
-                                        progress = 0.1
+//                                        logItems.append("[*] Doing kopen")
+                                        setProgress(0.1)
                                         do_kopen(UInt64(pUaFPages), 1, 1, 1, Int(staticHeadroomMB), true)
-                                        progress = 0.25
-                                        logItems.append("[*] Exploit fixup")
-                                        progress = 0.3
+                                        setProgress(0.25)
+//                                        logItems.append("[*] Exploit fixup")
+                                        setProgress(0.3)
                                         fix_exploit()
-                                        progress = 0.5
-                                        logItems.append("[*] Hammer time.")
-                                        progress = 0.6
+                                        setProgress(0.5)
+//                                        logItems.append("[*] Hammer time.")
+                                        setProgress(0.6)
                                         go()
-                                        progress = 0.75
-                                        logItems.append("[*] All done, kclosing")
-                                        progress = 0.9
+                                        setProgress(0.75)
+//                                        logItems.append("[*] All done, kclosing")
+                                        setProgress(0.9)
                                         do_kclose()
-                                        progress = 1.0
+                                        setProgress(1.0)
+                                        logItems.append("[√] All done!")
                                     }
                                 
                             }
@@ -430,6 +431,12 @@ struct CoolerContentView: View {
             withAnimation(fancyAnimation) {
                 showingGradient = new
             }
+        }
+    }
+    
+    func setProgress(_ p: Double) {
+        withAnimation(fancyAnimation) {
+            progress = p
         }
     }
 }

@@ -6,6 +6,7 @@ struct usprebooterApp: App {
         WindowGroup {
             if useNewUI {
                 CoolerContentView(useNewUI: $useNewUI)
+                    .preferredColorScheme(.dark)
             } else {
                 ContentView(useNewUI: $useNewUI)
             }
