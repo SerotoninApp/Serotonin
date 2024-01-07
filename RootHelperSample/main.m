@@ -211,7 +211,7 @@ int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ld
 //            }
         }
         NSLog(@"roothelper: running ldid");
-        int ldidRet = runLdid(@[signArg, @"-Cadhoc", filePath], nil, &errorOutput);
+        int ldidRet = runLdid(@[signArg, filePath], nil, &errorOutput);
 //        if (entitlementsPath) {
 //            [[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
 //        }
@@ -366,7 +366,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     //                7. place springboardhooksigned.dylib as jbroot/SpringBoard.app/springboardhook.dylib
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
                     // last step: create a symlink to jbroot named .jbroot
-                    [[NSFileManager defaultManager] createSymbolicLinkAtPath:@".jbroot" withDestinationPath:jbroot(@"/") error:nil];
+                    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
 //                } else {
 //                    NSLog(@"lunchd was found, you've already installed");
 //                }

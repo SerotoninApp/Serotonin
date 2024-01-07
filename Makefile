@@ -20,7 +20,7 @@ FUCK.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	install -m755 RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib Payload/usprebooter.app/launchdhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib Payload/usprebooter.app/springboardhooksigned.dylib
 	
-	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/usprebooter.app/{fastPathSign,ldid,trolltoolsroothelper,springboardshimsignedinjected}
+	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/usprebooter.app/{fastPathSign,ldid,trolltoolsroothelper}
 	$(LDID) -Sent.xml -Cadhoc Payload/usprebooter.app/usprebooter
 	zip -vr9 FUCK.tipa Payload/ -x "*.DS_Store"
 
