@@ -1,6 +1,7 @@
 # Serotonin - not/semi-jailbreak for iOS 16.2 - 16.6.1
 
 ## How do I use it?
+* **Install [Bootstrap from RootHide](https://github.com/RootHide/Bootstrap)**
 * Download tipa, install via TrollStore
 * Press jailbreak
 * Be happy
