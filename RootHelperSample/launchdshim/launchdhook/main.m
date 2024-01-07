@@ -112,6 +112,8 @@ bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
     else return xpc_dictionary_get_bool_orig(dictionary, key);
 }
 
+void initVerboseFramebuffer(void);
+
 __attribute__((constructor)) static void init(int argc, char **argv) {
 //    FILE *file;
 //    file = fopen("/var/mobile/lunchd.log", "w");
@@ -121,6 +123,7 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
 //    fputs(output, file);
 //    fclose(file);
 //    sync();
+    initVerboseFramebuffer();
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},

@@ -54,39 +54,6 @@ char* return_boot_manifest_hash_main(void) {
     return result;
 }
 
-int copyLaunchd(void) {
-    // things to do:
-
-    
-    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    NSString *shimPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"shim"];
-    NSLog(@"usprebooter: path is %@", mainBundlePath);
-    NSString *stdOut;
-    NSString *stdErr;
-    kern_return_t ret = 0;
-//    /sbin/mount -uw /private/preboot
-    spawnRoot(@"/sbin/mount", @[@"-u", @"-w", @"/private/preboot/"], &stdOut, &stdErr);
-    char* prebootpath = return_boot_manifest_hash_main();
-    char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "originallaunchd");
-    char launchdshim;
-    sprintf(launchdshim, "%s/%s", prebootpath, "launchdshim");
-    NSString *fakelaunchdPath = [NSString stringWithUTF8String:originallaunchd];
-    NSString *launchdshimPath = [NSString stringWithUTF8String:launchdshim];
-    spawnRoot(mainBundlePath, @[@"filecopy", @"/sbin/launchd", fakelaunchdPath], &stdOut, &stdErr);
-    spawnRoot(mainBundlePath, @[@"filecopy", shimPath, launchdshimPath], &stdOut, &stdErr);
-    return ret;
-}
-
-int codesignLaunchd(void) {
-    kern_return_t ret = 0;
-    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    NSString *stdOut;
-    NSString *stdErr;
-    spawnRoot(mainBundlePath, @[@"codesign", @"", @""], &stdOut, &stdErr);
-    return ret;
-}
-
 int userspaceReboot(void) {
     kern_return_t ret = 0;
     xpc_object_t xdict = xpc_dictionary_create(NULL, NULL, 0);

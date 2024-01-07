@@ -108,17 +108,18 @@ struct CoolerContentView: View {
                                 Text("\(Int(staticHeadroomMB)) MB")
                                     .font(.caption.monospacedDigit())
                             }
-                            Group {
-                                Toggle("Custom Reboot Logo", systemImage: "applelogo", isOn: $customReboot)
-                                Toggle("Load Launch Daemons", systemImage: "restart.circle", isOn: $loadLaunch)
-                            }
-                            .disabled(true)
+//                            Group {
+//                                Toggle("Custom Reboot Logo", systemImage: "applelogo", isOn: $customReboot) // soon
+//                                Toggle("Load Launch Daemons", systemImage: "restart.circle", isOn: $loadLaunch)
+//                            }
+//                            .disabled(true)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
-                            Group {
-                                Toggle("Enable untether", systemImage: "slash.circle", isOn: $untether)
-                                Toggle("Hide environment", systemImage: "eye.slash", isOn: $hide)
-                            }
-                            .disabled(true)
+                                .disabled(true)
+//                            Group {
+//                                Toggle("Enable untether", systemImage: "slash.circle", isOn: $untether)
+//                                Toggle("Hide environment", systemImage: "eye.slash", isOn: $hide)
+//                            }
+//                            .disabled(true)
                             Toggle("Show output (recommended)", systemImage: "terminal", isOn: $showStdout)
                         }
                         .toggleStyle(SwitchToggleStyle())
@@ -222,7 +223,7 @@ struct CoolerContentView: View {
                             Text("Serotonin") // apex?????
                                 .multilineTextAlignment(.leading)
                                 .font(.system(.largeTitle, design: .rounded).weight(.bold))
-                            Text("(Not-)jailbreak for iOS 15.5-16.6.1")
+                            Text("(Not/Semi-)jailbreak for iOS 16.2-16.6.1")
                         }
                         .padding(.top, geo.size.height / 50)
                         .padding(.leading, 5)
@@ -486,8 +487,13 @@ struct LinkCell: View {
 struct CreditsView: View {
     var body: some View {
         List {
-            LinkCell(title: "hrtowii/sacrosanctuary", detail: "dev", link: "https://twitter.com/hrtowii", imageName: "https://pbs.twimg.com/profile_images/1369924696653762560/DW1_IBEv_400x400.jpg")
-            LinkCell(title: "BomberFish", detail: "UI Design", link: "https://bomberfish.ca", imageName: "fish")
+            LinkCell(title: "hrtowii/sacrosanctuary", detail: "Main dev", link: "https://twitter.com/htrowii", imageName: "htrowii")
+            LinkCell(title: "DuyTranKhanh", detail: "Contributed SpringBoard hooks and launchd hooks", link: "https://twitter.com/TranKha50277352", imageName: "duy")
+            LinkCell(title: "NSBedtime", detail: "launchd hax, helped out a ton!", link: "https://twitter.com/NSBedtime", imageName: "bedtime")
+            LinkCell(title: "Nick Chan", detail: "Helped out a lot!", link: "https://twitter.com/riscv64", imageName: "alfienick")
+            LinkCell(title: "Alfie CG", detail: "insert_dylib, name, helped out a lot", link: "https://twitter.com/alfiecg_dev", imageName: "alfienick")
+            LinkCell(title: "BomberFish", detail: "Main UI", link: "https://bomberfish.ca", imageName: "fish")
+            LinkCell(title: "haxi0", detail: "Added initial log", link: "https://bomberfish.ca", imageName: "haxi0")
         }
         .navigationTitle("Credits")
     }

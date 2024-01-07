@@ -7,7 +7,6 @@
 
 #ifndef troller_h
 #define troller_h
-int copyLaunchd(void);
 int userspaceReboot(void);
 int go(void);
 int get_boot_manifest_hash(char hash[97]);

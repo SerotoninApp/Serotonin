@@ -5,9 +5,9 @@ MACOSX_SYSROOT = $(shell xcrun -sdk macosx --show-sdk-path)
 TARGET_SYSROOT = $(shell xcrun -sdk iphoneos --show-sdk-path)
 
 
-all: FUCK.tipa
+all: Serotonin.tipa
 
-FUCK.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
+Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	echo "Building IPA"
 	xcodebuild clean build -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
 	echo "done building"
@@ -22,7 +22,7 @@ FUCK.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/usprebooter.app/{fastPathSign,ldid,trolltoolsroothelper}
 	$(LDID) -Sent.xml -Cadhoc Payload/usprebooter.app/usprebooter
-	zip -vr9 FUCK.tipa Payload/ -x "*.DS_Store"
+	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"
 
 apple-include:
 	mkdir -p apple-include/{bsm,objc,os/internal,sys,firehose,CoreFoundation,FSEvents,IOSurface,IOKit/kext,libkern,kern,arm,{mach/,}machine,CommonCrypto,Security,CoreSymbolication,Kernel/{kern,IOKit,libkern},rpc,rpcsvc,xpc/private,ktrace,mach-o,dispatch}

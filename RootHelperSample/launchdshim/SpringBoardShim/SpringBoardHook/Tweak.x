@@ -116,9 +116,13 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
     return WEXITSTATUS(status);
 }
 
+%hook CSStatusTextView
+- (void)setInternalLegalText:(NSString *)string {
+    %orig(@":troll:");
+}
+%end
+
 bool OpenedTweaks = false;
-
-
 bool os_variant_has_internal_content(const char* subsystem);
 %hookf(bool, os_variant_has_internal_content, const char* subsystem) {
     if (OpenedTweaks == false) {
