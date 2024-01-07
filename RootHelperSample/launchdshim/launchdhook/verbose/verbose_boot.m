@@ -123,7 +123,7 @@ void initVerboseFramebuffer() {
   pthread_create(&logger, 0, logger_thread, 0);
   pthread_detach(logger);
   for (int i = 0; i < 4; i++) {
-    printf("Notch offset\n");
+    printf(" \n");
   }
   printf("Done: initVerboseFramebuffer\n");
 }

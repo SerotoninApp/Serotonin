@@ -350,7 +350,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     replaceByte([usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"], 8, "\x00\x00\x00\x00");
                     insert_dylib_main("@loader_path/launchdhook.dylib", [[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] UTF8String]);
                 sleep(1);
-                NSLog(@"sign launchd over");
+                NSLog(@"sign launchd over and out");
                     spawnRoot(rootHelperPath(), @[@"codesign", source, @""], nil, nil);
                     //                3. copy over workinglaunchd to your jbroot/lunchd
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"lunchd") error:nil];
