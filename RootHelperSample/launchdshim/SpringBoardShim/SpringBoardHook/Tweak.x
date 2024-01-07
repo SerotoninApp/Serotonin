@@ -122,24 +122,24 @@ bool OpenedTweaks = false;
 bool os_variant_has_internal_content(const char* subsystem);
 %hookf(bool, os_variant_has_internal_content, const char* subsystem) {
     if (OpenedTweaks == false) {
-    const char* path = jbroot("/Library/MobileSubstrate/DynamicLibraries");
-    DIR *dir;
-    struct dirent *ent;
-        if ((dir = opendir(path)) != NULL) {
-            while ((ent = readdir(dir)) != NULL) {
-                if (ent->d_type == DT_REG && strstr(ent->d_name, ".dylib")) {
-                    char filePath[256];
-                    snprintf(filePath, sizeof(filePath), "%s/%s", path, ent->d_name);
-                    dlopen(filePath, RTLD_NOW | RTLD_GLOBAL);
-            }
-        }
+        //const char* path = jbroot("/Library/MobileSubstrate/DynamicLibraries");
+        //DIR *dir;
+        //struct dirent *ent;
+        //    if ((dir = opendir(path)) != NULL) {
+        //        while ((ent = readdir(dir)) != NULL) {
+        //            if (ent->d_type == DT_REG && strstr(ent->d_name, ".dylib")) {
+        //                char filePath[256];
+        //                snprintf(filePath, sizeof(filePath), "%s/%s", path, ent->d_name);
+        //                dlopen(filePath, RTLD_NOW | RTLD_GLOBAL);
+        //        }
+        //    }
         spawnRoot(jbroot(@"/basebin/bootstrapd"), @[@"daemon",@"-f"], nil, nil);
         dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
         OpenedTweaks = true;
+        return true;
+    } else {
+        return true;
     }
-    return true;
-}
-return true;
 }
 
 #define CS_DEBUGGED 0x10000000

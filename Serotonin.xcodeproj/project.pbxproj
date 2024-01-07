@@ -702,7 +702,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C81122952B15E7BB00AD077B /* Build configuration list for PBXProject "usprebooter" */;
+			buildConfigurationList = C81122952B15E7BB00AD077B /* Build configuration list for PBXProject "Serotonin" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -944,6 +944,7 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = usprebooter/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Serotonin;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -984,6 +985,7 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = usprebooter/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Serotonin;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1014,7 +1016,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C81122952B15E7BB00AD077B /* Build configuration list for PBXProject "usprebooter" */ = {
+		C81122952B15E7BB00AD077B /* Build configuration list for PBXProject "Serotonin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C81122C22B15E7BD00AD077B /* Debug */,
