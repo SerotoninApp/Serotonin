@@ -133,7 +133,6 @@
 		C84002E52B4A547B00C73950 /* insert_dylib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = insert_dylib.h; sourceTree = "<group>"; };
 		C84002E82B4A55A300C73950 /* springboardshimsignedinjected */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = springboardshimsignedinjected; path = RootHelperSample/launchdshim/SpringBoardShim/springboardshimsignedinjected; sourceTree = SOURCE_ROOT; };
 		C84002EC2B4A64E200C73950 /* launchdentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = launchdentitlements.plist; path = RootHelperSample/launchdshim/launchdentitlements.plist; sourceTree = SOURCE_ROOT; };
-		C84002EE2B4A80EE00C73950 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = fastPathSign; path = ../../ChOma/output/ios/tests/fastPathSign; sourceTree = "<group>"; };
 		C8BFCC782B3FFE560008D8FD /* cs_blobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cs_blobs.h; sourceTree = "<group>"; };
 		C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
 		C8BFCC7A2B3FFE560008D8FD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -265,7 +264,6 @@
 				C8BFCC772B3FFE560008D8FD /* fun */,
 				C8BFCC902B3FFE560008D8FD /* libkfd */,
 				C8BFCCA32B3FFE570008D8FD /* libkfd.h */,
-				C84002EE2B4A80EE00C73950 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
 				D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */,
