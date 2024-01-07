@@ -36,6 +36,6 @@ To use this app, you need to be on a supported version (mentioned above), and ha
 - [NSBedtime](https://twitter.com/NSBedtime) - initial launchdhax, helped out a ton!
 - [AlfieCG](https://github.com/alfiecg24) - helped out a ton!
 - [Nick Chan](https://github.com/asdfugil) - helped out a ton!
-- [BomberFish](https://github.com/BomberFish) - new UI, `lunchd` name idea :trollface:
+- [BomberFish](https://github.com/BomberFish) - Icon, new UI, `lunchd` name idea :trollface:
 - [haxi0](https://github.com/haxi0) - old UI
 - [Evelyne](https://github.com/evelyneee) for showing it was possible. 
