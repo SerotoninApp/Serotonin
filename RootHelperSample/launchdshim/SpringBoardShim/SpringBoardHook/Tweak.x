@@ -118,13 +118,13 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
 
 bool OpenedTweaks = false;
 
-const char* path = jbroot("/Library/MobileSubstrate/DynamicLibraries");
-DIR *dir;
-struct dirent *ent;
 
 bool os_variant_has_internal_content(const char* subsystem);
 %hookf(bool, os_variant_has_internal_content, const char* subsystem) {
     if (OpenedTweaks == false) {
+    const char* path = jbroot("/Library/MobileSubstrate/DynamicLibraries");
+    DIR *dir;
+    struct dirent *ent;
         if ((dir = opendir(path)) != NULL) {
             while ((ent = readdir(dir)) != NULL) {
                 if (ent->d_type == DT_REG && strstr(ent->d_name, ".dylib")) {
@@ -138,6 +138,8 @@ bool os_variant_has_internal_content(const char* subsystem);
         OpenedTweaks = true;
     }
     return true;
+}
+return true;
 }
 
 #define CS_DEBUGGED 0x10000000

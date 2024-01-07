@@ -7,7 +7,7 @@ TOOL_NAME = trolltoolsroothelper
 
 trolltoolsroothelper_FILES = $(wildcard *.m) Exploits/fastPathSign/src/coretrust_bug.c Exploits/fastPathSign/src/codesign.m
 trolltoolsroothelper_LDFLAGS = -Lexternal/lib -lcrypto -lchoma
-trolltoolsroothelper_CFLAGS = -fobjc-arc $(shell pkg-config --cflags libcrypto) -Iexternal/include -IExploits/fastPathSign/src
+trolltoolsroothelper_CFLAGS = -fobjc-arc $(shell pkg-config --cflags libcrypto) -Iexternal/include -Wmissing-braces -IExploits/fastPathSign/src
 trolltoolsroothelper_CODESIGN_FLAGS = -Sentitlements.plist
 trolltoolsroothelper_INSTALL_PATH = /usr/local/bin
 trolltoolsroothelper_LIBRARIES = archive

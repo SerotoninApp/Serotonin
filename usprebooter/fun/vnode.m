@@ -517,13 +517,13 @@ uint64_t funVnodeOverwriteFileUnlimitSize(char* to, char* from) {
 }
 
 uint64_t getVnodeAtPathByChdir(char *path) {
-    NSLog(@"get vnode of %s", path);
+    printf("get vnode of %s", path);
     if(access(path, F_OK) == -1) {
         NSLog(@"accessing not OK");
         return -1;
     }
     if(chdir(path) == -1) {
-        NSLog(@"chdir not OK");
+        printf("chdir not OK");
         return -1;
     }
     uint64_t fd_cdir_vp = kread64(getProc(getpid()) + off_p_pfd + off_fd_cdir);
@@ -572,7 +572,7 @@ int SwitchSysBin(uint64_t vnode, char* what, char* with)
         
         char vp_name[256];
         kreadbuf(kread64(vp_namecache + 96), &vp_name, 256);
-        NSLog(@"vp_name: %s\n", vp_name);
+//        printf("vp_name: %s\n", vp_name);
         
         if(strcmp(vp_name, what) == 0)
         {
@@ -580,7 +580,7 @@ int SwitchSysBin(uint64_t vnode, char* what, char* with)
             uint32_t with_vnd_id = kread64(with_vnd + 116);
             uint64_t patient = kread64(vp_namecache + 80);        // vnode the name refers
             uint32_t patient_vid = kread64(vp_namecache + 64);    // name vnode id
-            NSLog(@"patient: %llx vid:%llx -> %llx\n", patient, patient_vid, with_vnd_id);
+            printf("patient: %llx vid:%llx -> %llx\n", patient, patient_vid, with_vnd_id);
 
             kwrite64(vp_namecache + 80, with_vnd);
             kwrite32(vp_namecache + 64, with_vnd_id);

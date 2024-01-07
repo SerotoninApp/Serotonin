@@ -18,6 +18,7 @@
 #import <choma/Host.h>
 
 #include <sys/types.h>
+#include "insert_dylib.h"
 /* Attach to a process that is already running. */
 //PTRACE_ATTACH = 16,
 #define PT_ATTACH 16
@@ -28,6 +29,76 @@
 #define PT_ATTACHEXC    14    /* attach to running process with signal exception */
 #define PT_TRACE_ME 0
 int ptrace(int, pid_t, caddr_t, int);
+
+#define JB_ROOT_PREFIX ".jbroot-"
+#define JB_RAND_LENGTH  (sizeof(uint64_t)*sizeof(char)*2)
+
+int is_jbrand_value(uint64_t value)
+{
+   uint8_t check = value>>8 ^ value >> 16 ^ value>>24 ^ value>>32 ^ value>>40 ^ value>>48 ^ value>>56;
+   return check == (uint8_t)value;
+}
+
+int is_jbroot_name(const char* name)
+{
+    if(strlen(name) != (sizeof(JB_ROOT_PREFIX)-1+JB_RAND_LENGTH))
+        return 0;
+    
+    if(strncmp(name, JB_ROOT_PREFIX, sizeof(JB_ROOT_PREFIX)-1) != 0)
+        return 0;
+    
+    char* endp=NULL;
+    uint64_t value = strtoull(name+sizeof(JB_ROOT_PREFIX)-1, &endp, 16);
+    if(!endp || *endp!='\0')
+        return 0;
+    
+    if(!is_jbrand_value(value))
+        return 0;
+    
+    return 1;
+}
+
+uint64_t resolve_jbrand_value(const char* name)
+{
+    if(strlen(name) != (sizeof(JB_ROOT_PREFIX)-1+JB_RAND_LENGTH))
+        return 0;
+    
+    if(strncmp(name, JB_ROOT_PREFIX, sizeof(JB_ROOT_PREFIX)-1) != 0)
+        return 0;
+    
+    char* endp=NULL;
+    uint64_t value = strtoull(name+sizeof(JB_ROOT_PREFIX)-1, &endp, 16);
+    if(!endp || *endp!='\0')
+        return 0;
+    
+    if(!is_jbrand_value(value))
+        return 0;
+    
+    return value;
+}
+
+
+NSString* find_jbroot()
+{
+    //jbroot path may change when re-randomize it
+    NSString * jbroot = nil;
+    NSArray *subItems = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:@"/var/containers/Bundle/Application/" error:nil];
+    for (NSString *subItem in subItems) {
+        if (is_jbroot_name(subItem.UTF8String))
+        {
+            NSString* path = [@"/var/containers/Bundle/Application/" stringByAppendingPathComponent:subItem];
+            jbroot = path;
+            break;
+        }
+    }
+    return jbroot;
+}
+
+NSString *jbroot(NSString *path)
+{
+    NSString* jbroot = find_jbroot();
+    return [jbroot stringByAppendingPathComponent:path];
+}
 
 
 NSString* usprebooterPath()
@@ -222,7 +293,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 @"get-task-allow": [NSNumber numberWithBool:YES],
                 @"platform-application": [NSNumber numberWithBool:YES],
             };
-            NSString* patchedLaunchdCopy = [NSString stringWithUTF8String: getPatchedLaunchdCopy()];
+            NSString* patchedLaunchdCopy = [usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"];
             signAdhoc(patchedLaunchdCopy, entitlements); // source file, NSDictionary with entitlements
             NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
             NSString *stdOut;
@@ -245,6 +316,42 @@ int main(int argc, char *argv[], char *envp[]) {
             ptrace(PT_ATTACH, pidInt, 0, 0);
             ptrace(PT_DETACH, pidInt, 0, 0);
             NSLog(@"Done ptracing!");
+        } else if ([action isEqual: @"bootstrap"]) {
+            NSLog(@"installing");
+            if (!jbroot(@"")) {
+                NSLog(@"jbroot not found...");
+            } else {
+//                if (!jbroot(@"lunchd")) {
+                    //                1. install roothide bootstrap
+                    //                2. copy over launchd to your macos from your phone
+                sleep(1);
+                NSLog(@"copy launchd over");
+                    [[NSFileManager defaultManager] copyItemAtPath:@"/sbin/launchd" toPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
+                    // remove cpu subtype, insert_dylib, then
+//                    replaceByte([usprebooterPath() stringByAppendingPathComponent:@"launchd"], 8, "\x00\x00\x00\x00");
+                    insert_dylib_main("@loader_path/launchdhook.dylib", [[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] UTF8String]);
+                sleep(1);
+                NSLog(@"sign launchd over");
+                    spawnRoot(rootHelperPath(), @[@"codesign", source, @""], nil, nil);
+                    //                3. copy over workinglaunchd to your jbroot/lunchd
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"lunchd") error:nil];
+                    //                4. copy over launchdhooksigned.dylib as jbroot/launchdhook.dylib
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbroot(@"launchdhook.dylib") error:nil];
+                    //                5. copy over your regular SpringBoard.app to jbroot/System/Library/CoreServices/SpringBoard.app
+                    
+                    [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/System/Library/CoreServices/SpringBoard.app") withIntermediateDirectories:YES attributes:nil error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:@"/System/Library/CoreServices/SpringBoard.app" toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app") error:nil];
+                        
+                    //                6. replace the regular SpringBoard in your jbroot/System/Library/CoreServices/SpringBoard.app/SpringBoard with springboardshimsignedinjected
+                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardshimsignedinjected"] toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
+                     
+                    //                7. place springboardhooksigned.dylib as jbroot/SpringBoard.app/springboardhook.dylib
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
+//                } else {
+//                    NSLog(@"lunchd was found, you've already installed");
+//                }
+            }
         }
         return 0;
     }

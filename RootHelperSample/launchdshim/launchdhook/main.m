@@ -76,18 +76,13 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
     change_launchtype(attrp, path);
-    const char *launchdPath = "/sbin/launchd";
-    const char *coolerLaunchd = jbroot("lunchd");
-    // hook userspace reboot to prevent the namecache holdcount -ve panic
-    if (!strncmp(path, launchdPath, strlen(launchdPath))) {
-        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//        FILE *file = fopen("/var/mobile/lunchd.log", "a");
-//        char output[1024];
-//        sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
-//        fputs(output, file);
-        path = coolerLaunchd;
-        return posix_spawn(pid, path, file_actions, attrp, argv, envp);
-    }
+//    const char *launchdPath = "/sbin/launchd";
+//    const char *coolerLaunchd = jbroot("lunchd");
+//    if (!strncmp(path, launchdPath, strlen(launchdPath))) {
+//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+//        path = coolerLaunchd;
+//        return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
+//    }
     return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
 }
 

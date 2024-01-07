@@ -15,9 +15,11 @@
 		C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEEF2B175A270070EA49 /* ContentView.swift */; };
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
 		C82AFF432B17AA6D0070EA49 /* ldid in Resources */ = {isa = PBXBuildFile; fileRef = C82AFF422B17AA6C0070EA49 /* ldid */; };
-		C83594CD2B18E94D00346F80 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C83594CC2B18E94D00346F80 /* fastPathSign */; };
 		C83594CF2B18F70700346F80 /* overwriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C83594CE2B18F70700346F80 /* overwriter.m */; };
 		C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */; };
+		C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C84002E82B4A55A300C73950 /* springboardshimsignedinjected */; };
+		C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C84002EC2B4A64E200C73950 /* launchdentitlements.plist */; };
+		C84002EF2B4A80EE00C73950 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C84002EE2B4A80EE00C73950 /* fastPathSign */; };
 		C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC7F2B3FFE560008D8FD /* fun.m */; };
 		C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC822B3FFE560008D8FD /* dir.m */; };
 		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
@@ -122,11 +124,15 @@
 		C82AFF3D2B179A880070EA49 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		C82AFF422B17AA6C0070EA49 /* ldid */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ldid; sourceTree = "<group>"; };
 		C83594C32B17AC8500346F80 /* MobileContainerManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileContainerManager.framework; path = ../theos/sdks/iPhoneOS15.5.sdk/System/Library/PrivateFrameworks/MobileContainerManager.framework; sourceTree = "<group>"; };
-		C83594CC2B18E94D00346F80 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = fastPathSign; sourceTree = "<group>"; };
 		C83594CE2B18F70700346F80 /* overwriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = overwriter.m; sourceTree = "<group>"; };
 		C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_unaligned_copy_switch_race.h; sourceTree = "<group>"; };
 		C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vm_unaligned_copy_switch_race.c; sourceTree = "<group>"; };
 		C83594D32B18F80300346F80 /* overwriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = overwriter.h; sourceTree = "<group>"; };
+		C84002E32B4A545400C73950 /* insert_dylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = insert_dylib.m; sourceTree = "<group>"; };
+		C84002E52B4A547B00C73950 /* insert_dylib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = insert_dylib.h; sourceTree = "<group>"; };
+		C84002E82B4A55A300C73950 /* springboardshimsignedinjected */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = springboardshimsignedinjected; path = RootHelperSample/launchdshim/SpringBoardShim/springboardshimsignedinjected; sourceTree = SOURCE_ROOT; };
+		C84002EC2B4A64E200C73950 /* launchdentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = launchdentitlements.plist; path = RootHelperSample/launchdshim/launchdentitlements.plist; sourceTree = SOURCE_ROOT; };
+		C84002EE2B4A80EE00C73950 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = fastPathSign; path = ../../ChOma/output/ios/tests/fastPathSign; sourceTree = "<group>"; };
 		C8BFCC782B3FFE560008D8FD /* cs_blobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cs_blobs.h; sourceTree = "<group>"; };
 		C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
 		C8BFCC7A2B3FFE560008D8FD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -249,10 +255,12 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
+				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
 				C8BFCC772B3FFE560008D8FD /* fun */,
 				C8BFCC902B3FFE560008D8FD /* libkfd */,
 				C8BFCCA32B3FFE570008D8FD /* libkfd.h */,
-				C83594CC2B18E94D00346F80 /* fastPathSign */,
+				C84002EE2B4A80EE00C73950 /* fastPathSign */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
 				D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */,
@@ -286,6 +294,8 @@
 				C82AFF2D2B1762CE0070EA49 /* TSUtil.m */,
 				C82AFF2E2B1762CE0070EA49 /* RootHelperSample.xcodeproj */,
 				C82AFF312B1762CE0070EA49 /* main.m */,
+				C84002E32B4A545400C73950 /* insert_dylib.m */,
+				C84002E52B4A547B00C73950 /* insert_dylib.h */,
 				C82AFF332B1762CE0070EA49 /* TSUtil.h */,
 				C82AFF342B1762CE0070EA49 /* CoreServices.h */,
 				C82AFF352B1762CE0070EA49 /* RemoteLog.h */,
@@ -724,8 +734,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
+				C84002EF2B4A80EE00C73950 /* fastPathSign in Resources */,
+				C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */,
+				C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
-				C83594CD2B18E94D00346F80 /* fastPathSign in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,6 +955,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
+					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -977,6 +994,11 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
+					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;

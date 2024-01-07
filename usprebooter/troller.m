@@ -56,9 +56,8 @@ char* return_boot_manifest_hash_main(void) {
 
 int copyLaunchd(void) {
     // things to do:
-    // 1: symlink /var/jb/ to preboot/path/jb/
-    // 2: remove the shim and whatever, now we need lunchd in /preboot/path/lunchd
-    // 3: copy over launchdhook.dylib over to /var/jb/launchdhook.dylib
+
+    
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
     NSString *shimPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"shim"];
     NSLog(@"usprebooter: path is %@", mainBundlePath);
@@ -130,6 +129,8 @@ int go(void) {
     printf("[*] Hammer time.\n");
     kern_return_t ret = 0;
 //    copyLaunchd();
+    NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
+    spawnRoot(mainBundlePath, @[@"bootstrap", @"", @""], nil, nil);
     overwrite_patchedlaunchd_kfd();
 //    codesignLaunchd();
     return ret;

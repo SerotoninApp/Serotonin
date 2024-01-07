@@ -17,8 +17,8 @@ NSString* getLunchd(void) {
 bool overwrite_patchedlaunchd_kfd(void) {
     // ayo whats this – bomberfish
 //    SwitchSysBin(getVnodeAtPathByChdir("/System/Library/CoreServices/SpringBoard.app"), "SpringBoard", "/var/jb/SprangBoard");
-    printf("[i] Right. Hmm. I'm gonna have to hack launchd so we can get at it. Technical. Ummm... you'll need to turn around while I do this.\n");
+    printf("[i] performing launchd hax\n");
     SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd().UTF8String);
-    printf("[√] Done! Hacked.\n");
+    printf("[i] launchd haxed\n");
     return true;
 }
