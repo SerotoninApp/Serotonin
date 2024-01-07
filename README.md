@@ -11,9 +11,9 @@
 To use this app, you need to be on a supported version (mentioned above), and have [TrollStore](https://github.com/opa334/TrollStore/) installed. You can follow [this guide](https://ios.cfw.guide/installing-trollstore/) to install it on your device. Please note that this tool doesn't support iOS 17.0 despite of it having TrollStore.
 
 1. Download and install [Bootstrap from RootHide](https://github.com/RootHide/Bootstrap)
-2. Download the `.tipa` file from latest release of this repository
-3. Open the downloaded file in TrollStore
-4. Open the app and press Jailbreak button. Your device should userspace Reboot.
+2. Download the `.tipa` file from the [latest release](https://github.com/hrtowii/Serotonin/releases/latest)
+3. Install the downloaded file in TrollStore
+4. Open the app and press the Jelbrek button. Your device should userspace reboot, and you should be (not/semi) jailbroken!
 
    
 ## How was this done? 
@@ -35,6 +35,6 @@ This tool uses a mix of different techniques and exploits available for most Tro
 - [NSBedtime](https://twitter.com/NSBedtime) - initial launchdhax, helped out a ton!
 - [AlfieCG](https://github.com/alfiecg24) - helped out a ton!
 - [Nick Chan](https://github.com/asdfugil) - helped out a ton!
-- [BomberFish](https://github.com/BomberFish) - new UI, `lunchd` name idea
+- [BomberFish](https://github.com/BomberFish) - new UI, `lunchd` name idea :trollface:
 - [haxi0](https://github.com/haxi0) - old UI
 - [Evelyne](https://github.com/evelyneee) for showing it was possible. 
