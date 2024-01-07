@@ -192,34 +192,35 @@ int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
     return WEXITSTATUS(status);
 }
 
-int signAdhoc(NSString *filePath, NSDictionary *entitlements) // lets just assume ldid is included ok
+int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ldid is included ok
 {
 //        if(!isLdidInstalled()) return 173;
 
-        NSString *entitlementsPath = nil;
-        NSString *signArg = @"-s";
+//        NSString *entitlementsPath = nil;
+        NSString *signArg = @"-S";
         NSString* errorOutput;
-        if(entitlements)
-        {
-            NSData *entitlementsXML = [NSPropertyListSerialization dataWithPropertyList:entitlements format:NSPropertyListXMLFormat_v1_0 options:0 error:nil];
-            if (entitlementsXML) {
-                entitlementsPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"plist"];
-                [entitlementsXML writeToFile:entitlementsPath atomically:NO];
-                signArg = [@"-S" stringByAppendingString:entitlementsPath];
-                signArg = [@"-M" stringByAppendingString:@"/sbin/launchd"];
-            }
-            
+        if(entitlements) {
+//            NSData *entitlementsXML = [NSPropertyListSerialization dataWithPropertyList:entitlements format:NSPropertyListXMLFormat_v1_0 options:0 error:nil];
+//            if (entitlementsXML) {
+//                entitlementsPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"plist"];
+//                [entitlementsXML writeToFile:entitlementsPath atomically:NO];
+                signArg = [signArg stringByAppendingString:entitlements];
+//                signArg = [signArg stringByAppendingString:@" -Cadhoc"];
+//                signArg = [signArg stringByAppendingString:@" -M"];
+//                signArg = [signArg stringByAppendingString:@"/sbin/launchd"];
+//            }
         }
         NSLog(@"roothelper: running ldid");
-        int ldidRet = runLdid(@[signArg, filePath], nil, &errorOutput);
-        if (entitlementsPath) {
-            [[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
-        }
+        int ldidRet = runLdid(@[signArg, @"-Cadhoc", filePath], nil, &errorOutput);
+//        if (entitlementsPath) {
+//            [[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
+//        }
 
         NSLog(@"roothelper: ldid exited with status %d", ldidRet);
 
         NSLog(@"roothelper: - ldid error output start -");
-
+    
+        printMultilineNSString(signArg);
         printMultilineNSString(errorOutput);
 
         NSLog(@"roothelper: - ldid error output end -");
@@ -255,6 +256,22 @@ NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 	return systemAppIdentifiers.copy;
 }
 
+void replaceByte(NSString *filePath, int offset, const char *replacement) {
+    const char *fileCString = [filePath UTF8String];
+    
+    FILE *file = fopen(fileCString, "r+");
+
+    if (file == NULL) {
+        NSLog(@"Error opening workinglaunchd");
+        perror("Error opening file");
+        return;
+    }
+
+    fseek(file, offset, SEEK_SET);
+    fwrite(replacement, sizeof(char), 4, file);
+
+    fclose(file);
+}
 
 int main(int argc, char *argv[], char *envp[]) {
     @autoreleasepool {
@@ -289,12 +306,13 @@ int main(int argc, char *argv[], char *envp[]) {
             //            killall(@"backboardd");
         } else if ([action isEqual: @"codesign"]) {
             NSLog(@"roothelper: adhoc sign + fastsign");
-            NSDictionary* entitlements = @{
-                @"get-task-allow": [NSNumber numberWithBool:YES],
-                @"platform-application": [NSNumber numberWithBool:YES],
-            };
+//            NSDictionary* entitlements = @{
+//                @"get-task-allow": [NSNumber numberWithBool:YES],
+//                @"platform-application": [NSNumber numberWithBool:YES],
+//            };
+            NSString* launchdents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
             NSString* patchedLaunchdCopy = [usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"];
-            signAdhoc(patchedLaunchdCopy, entitlements); // source file, NSDictionary with entitlements
+            signAdhoc(patchedLaunchdCopy, launchdents); // source file, NSDictionary with entitlements
             NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
             NSString *stdOut;
             NSString *stdErr;
@@ -318,17 +336,16 @@ int main(int argc, char *argv[], char *envp[]) {
             NSLog(@"Done ptracing!");
         } else if ([action isEqual: @"bootstrap"]) {
             NSLog(@"installing");
-            if (!jbroot(@"")) {
+            if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
             } else {
 //                if (!jbroot(@"lunchd")) {
                     //                1. install roothide bootstrap
                     //                2. copy over launchd to your macos from your phone
-                sleep(1);
                 NSLog(@"copy launchd over");
                     [[NSFileManager defaultManager] copyItemAtPath:@"/sbin/launchd" toPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
                     // remove cpu subtype, insert_dylib, then
-//                    replaceByte([usprebooterPath() stringByAppendingPathComponent:@"launchd"], 8, "\x00\x00\x00\x00");
+                    replaceByte([usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"], 8, "\x00\x00\x00\x00");
                     insert_dylib_main("@loader_path/launchdhook.dylib", [[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] UTF8String]);
                 sleep(1);
                 NSLog(@"sign launchd over");
@@ -339,7 +356,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbroot(@"launchdhook.dylib") error:nil];
                     //                5. copy over your regular SpringBoard.app to jbroot/System/Library/CoreServices/SpringBoard.app
                     
-                    [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/System/Library/CoreServices/SpringBoard.app") withIntermediateDirectories:YES attributes:nil error:nil];
+                    [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/System/Library/CoreServices/") withIntermediateDirectories:YES attributes:nil error:nil];
                     [[NSFileManager defaultManager] copyItemAtPath:@"/System/Library/CoreServices/SpringBoard.app" toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app") error:nil];
                         
                     //                6. replace the regular SpringBoard in your jbroot/System/Library/CoreServices/SpringBoard.app/SpringBoard with springboardshimsignedinjected
@@ -348,6 +365,8 @@ int main(int argc, char *argv[], char *envp[]) {
                      
                     //                7. place springboardhooksigned.dylib as jbroot/SpringBoard.app/springboardhook.dylib
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
+                    // last step: create a symlink to jbroot named .jbroot
+                    [[NSFileManager defaultManager] createSymbolicLinkAtPath:@".jbroot" withDestinationPath:jbroot(@"/") error:nil];
 //                } else {
 //                    NSLog(@"lunchd was found, you've already installed");
 //                }

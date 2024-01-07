@@ -387,23 +387,6 @@ bool insert_dylib(FILE *f, size_t header_offset, const char *dylib_path, off_t *
     return true;
 }
 
-void replaceByte(NSString *filePath, int offset, const char *replacement) {
-    const char *fileCString = [filePath UTF8String];
-    
-    FILE *file = fopen(fileCString, "r+");
-
-    if (file == NULL) {
-        NSLog(@"Error opening workinglaunchd");
-        perror("Error opening file");
-        return;
-    }
-
-    fseek(file, offset, SEEK_SET);
-    fwrite(replacement, sizeof(char), 4, file);
-
-    fclose(file);
-}
-
 int insert_dylib_main(const char *dylib_path, const char *binary_path) {
 
     struct stat s;
@@ -435,7 +418,6 @@ int insert_dylib_main(const char *dylib_path, const char *binary_path) {
         case MH_MAGIC:
         case MH_CIGAM:
             if(insert_dylib(f, 0, dylib_path, &file_size)) {
-//                replaceByte((__bridge NSString *)(f), 8, "\x00\x00\x00\x00");
                 ftruncate(fileno(f), file_size);
                 NSLogC("[kfdHaxx] insert_dylib: Added load command to %s\n", binary_path);
             } else {
