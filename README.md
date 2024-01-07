@@ -12,7 +12,7 @@
 To use this app, you need to be on a supported version (mentioned above), and have [TrollStore](https://github.com/opa334/TrollStore/) installed. You can follow [this guide](https://ios.cfw.guide/installing-trollstore/) to install it on your device. Please note that this tool doesn't support iOS 17.0 despite of it having TrollStore.
 
 1. Download and install [Bootstrap from RootHide](https://github.com/RootHide/Bootstrap)
-2. Install Ellekit in Sileo
+2. Install ElleKit from Sileo
 3. Download the `.tipa` file from the [latest release](https://github.com/hrtowii/Serotonin/releases/latest)
 4. Install the downloaded file in TrollStore
 5. Open the app and press the Jelbrek button. Your device should userspace reboot, and you should be (not/semi) jailbroken!
