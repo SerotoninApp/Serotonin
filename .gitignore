@@ -5,7 +5,8 @@ Payload
 .DS_Store
 usprebooter.xcodeproj/xcuserdata
 usprebooter.xcodeproj/project.xcworkspace/xcuserdata
-FUCK.tipa
+*.ipa
+*.tipa
 RootHelperSample/RootHelperSample.xcodeproj/xcuserdata
 RootHelperSample/build
 RootHelperSample/launchdshim/launchdhook/.theos

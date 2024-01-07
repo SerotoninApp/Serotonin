@@ -19,7 +19,6 @@
 		C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */; };
 		C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C84002E82B4A55A300C73950 /* springboardshimsignedinjected */; };
 		C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C84002EC2B4A64E200C73950 /* launchdentitlements.plist */; };
-		C84002EF2B4A80EE00C73950 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = C84002EE2B4A80EE00C73950 /* fastPathSign */; };
 		C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC7F2B3FFE560008D8FD /* fun.m */; };
 		C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC822B3FFE560008D8FD /* dir.m */; };
 		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
@@ -72,6 +71,8 @@
 		D6E0908E2B48E3A200AE49BF /* FluidGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E090892B48E3A200AE49BF /* FluidGradientView.swift */; };
 		D6E0908F2B48E3A200AE49BF /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E0908A2B48E3A200AE49BF /* CGPoint+Extensions.swift */; };
 		D6E090902B48E3A200AE49BF /* FluidGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E0908B2B48E3A200AE49BF /* FluidGradient.swift */; };
+		D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF3E2B4B2F7D00274803 /* ct_bypass */; };
+		D6F9CF412B4B306400274803 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF402B4B306400274803 /* fastPathSign */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -220,6 +221,8 @@
 		D6E0909C2B48E60300AE49BF /* activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = activity.h; sourceTree = "<group>"; };
 		D6E0909D2B48E60300AE49BF /* launch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = launch.h; sourceTree = "<group>"; };
 		D6E0909E2B48E60300AE49BF /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
+		D6F9CF3E2B4B2F7D00274803 /* ct_bypass */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ct_bypass; path = ChOma/output/ios/tests/ct_bypass; sourceTree = "<group>"; };
+		D6F9CF402B4B306400274803 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = fastPathSign; path = RootHelperSample/Exploits/fastPathSign/fastPathSign; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +240,8 @@
 		C81122912B15E7BB00AD077B = {
 			isa = PBXGroup;
 			children = (
+				D6F9CF402B4B306400274803 /* fastPathSign */,
+				D6F9CF3E2B4B2F7D00274803 /* ct_bypass */,
 				C82AFF0A2B1762CE0070EA49 /* RootHelperSample */,
 				C811229C2B15E7BB00AD077B /* usprebooter */,
 				C811229B2B15E7BB00AD077B /* Products */,
@@ -733,8 +738,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6F9CF412B4B306400274803 /* fastPathSign in Resources */,
+				D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */,
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
-				C84002EF2B4A80EE00C73950 /* fastPathSign in Resources */,
 				C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */,
 				C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
@@ -938,7 +944,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = usprebooter/usprebooter.entitlements;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -979,7 +985,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = usprebooter/usprebooter.entitlements;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";

@@ -8,12 +8,20 @@ TARGET_SYSROOT = $(shell xcrun -sdk iphoneos --show-sdk-path)
 all: Serotonin.tipa
 
 Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
-	echo "Building IPA"
-	xcodebuild clean build -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
+	echo "[*] Building ChOma"
+	make -C ChOma TARGET=ios
+	echo "[*] Building fastPathSign"
+	make -C RootHelperSample/Exploits/fastPathSign
+	# jank workaround at best, can someone else please fix this weird file dependency? – bomberfish
+	echo "[*] Copying fastPathSign"
+	mkdir -p ChOma/output/ios/tests
+	cp RootHelperSample/Exploits/fastPathSign/fastPathSign ChOma/output/ios/tests
+	echo "[*] Building IPA"
+	xcodebuild clean build -project Serotonin.xcodeproj -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
 	echo "done building"
 	$(MAKE) -C RootHelperSample
 	rm -rf Payload
-	rm -rf FUCK.tipa
+	rm -rf Serotonin.tipa
 	mkdir Payload
 	cp -a build/Release-iphoneos/usprebooter.app Payload
 	cp RootHelperSample/.theos/obj/debug/arm64/trolltoolsroothelper Payload/usprebooter.app/trolltoolsroothelper
@@ -21,7 +29,7 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	install -m755 RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib Payload/usprebooter.app/springboardhooksigned.dylib
 	
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/usprebooter.app/{fastPathSign,ldid,trolltoolsroothelper}
-	$(LDID) -Sent.xml -Cadhoc Payload/usprebooter.app/usprebooter
+	$(LDID) -Sent.plist -Cadhoc Payload/usprebooter.app/usprebooter
 	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"
 
 apple-include:

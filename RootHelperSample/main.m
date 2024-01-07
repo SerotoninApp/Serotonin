@@ -313,6 +313,8 @@ int main(int argc, char *argv[], char *envp[]) {
             NSString* launchdents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
             NSString* patchedLaunchdCopy = [usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"];
             signAdhoc(patchedLaunchdCopy, launchdents); // source file, NSDictionary with entitlements
+            
+            // TODO: Use ct_bypass instead of fastPathSign, it's just better :trol:
             NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
             NSString *stdOut;
             NSString *stdErr;

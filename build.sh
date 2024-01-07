@@ -14,5 +14,5 @@ rm -rf Payload
 rm -rf FUCK.tipa
 mkdir Payload
 cp -r usprebooter.app Payload
-ldid -S../../ent.xml -Cadhoc Payload/usprebooter.app/usprebooter
+ldid -S../../ent.plist -Cadhoc Payload/usprebooter.app/usprebooter
 zip -vr FUCK.tipa Payload/ -x "*.DS_Store"
