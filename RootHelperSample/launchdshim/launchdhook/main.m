@@ -76,15 +76,20 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
     change_launchtype(attrp, path);
-//    const char *launchdPath = "/sbin/launchd";
-//    const char *coolerLaunchd = jbroot("lunchd");
-//    if (!strncmp(path, launchdPath, strlen(launchdPath))) {
-//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//        path = coolerLaunchd;
-//        return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
-//    }
-    return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
-}
+//    const char *coolerLaunchd = jbroot(@"lunchd").UTF8String;
+//    if (attrp) {
+//        short flags;
+//        if (!posix_spawnattr_getflags(attrp, &flags)) {
+//            if (flags & POSIX_SPAWN_SETEXEC) {
+//                if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *))
+//                    posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+//                }
+//                path = coolerLaunchd;
+//                return posix_spawn(pid, path, file_actions, attrp, argv, envp);
+//            }
+//        }
+        return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
+    }
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
@@ -112,8 +117,8 @@ bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
     else return xpc_dictionary_get_bool_orig(dictionary, key);
 }
 
-void initVerboseFramebuffer(void);
-
+//void initVerboseFramebuffer(void);
+int bootscreend_main();
 __attribute__((constructor)) static void init(int argc, char **argv) {
 //    FILE *file;
 //    file = fopen("/var/mobile/lunchd.log", "w");
@@ -124,20 +129,23 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
 //    fclose(file);
 //    sync();
 
-    bool verboseBoot = false;
-    NSString *verboseBootPath = @"/var/mobile/.serotonin_verbose";
-    NSString *happyMac = @"/var/mobile/boot-happy.jp2";
-    NSString *sadMac = @"/var/mobile/boot-sad.jp2";
-
-    if ([NSFileManager.defaultManager fileExistsAtPath:verboseBootPath]) {
-        verboseBoot = true;
-    }
-
-    if (verboseBoot) {
-        initVerboseFramebuffer();
-    } else {
-        // TODO: Boot splash
-    }
+//    bool verboseBoot = false;
+//    NSString *verboseBootPath = @"/var/mobile/.serotonin_verbose";
+////    NSString *happyMac = @"/var/mobile/boot-happy.jp2";
+////    NSString *sadMac = @"/var/mobile/boot-sad.jp2";
+//
+//    if ([NSFileManager.defaultManager fileExistsAtPath:verboseBootPath]) {
+//        verboseBoot = true;
+//    }
+//
+//    if (verboseBoot) {
+////        initVerboseFramebuffer();
+//        bootscreend_main();
+//    } else {
+//        bootscreend_main();
+//    }
+    // requires a jp2 image to be at /var/mobile/boot-happy.jp2. ideally, make the toggle in the app actually work and create .serotonin_verbose then let launchdhook decide from there
+    bootscreend_main();
 
     printf("[lunchd] launchdhook pid %d", getpid());
     if (getpid() == 1) {
