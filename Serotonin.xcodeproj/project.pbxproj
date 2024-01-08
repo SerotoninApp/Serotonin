@@ -30,6 +30,7 @@
 		C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC892B3FFE560008D8FD /* vnode.m */; };
 		C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC8A2B3FFE560008D8FD /* proc.c */; };
 		C8BFCCB42B427C0F0008D8FD /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCCB32B427C0F0008D8FD /* Log.swift */; };
+		D60109A22B4C675D005F026E /* Painting_With_Chocolate.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D60109A02B4C675D005F026E /* Painting_With_Chocolate.ttf */; };
 		D6E08F1E2B48B04E00AE49BF /* TheCoolerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E08F1D2B48B04E00AE49BF /* TheCoolerContentView.swift */; };
 		D6E08F4A2B48E24F00AE49BF /* UTTagClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E08F2E2B48E24E00AE49BF /* UTTagClass.swift */; };
 		D6E08F4B2B48E24F00AE49BF /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E08F2F2B48E24E00AE49BF /* CoreTypes.swift */; };
@@ -74,9 +75,8 @@
 		D6E090902B48E3A200AE49BF /* FluidGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E0908B2B48E3A200AE49BF /* FluidGradient.swift */; };
 		D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF3E2B4B2F7D00274803 /* ct_bypass */; };
 		D6F9CF412B4B306400274803 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF402B4B306400274803 /* fastPathSign */; };
-		D6F9CF492B4C50BC00274803 /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF472B4C50BC00274803 /* Serotonin.jp2 */; };
-		D6F9CF4A2B4C50BF00274803 /* boot-happy.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF432B4B7B5A00274803 /* boot-happy.jp2 */; };
-		D6F9CF4B2B4C50C200274803 /* boot-sad.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF422B4B7B5A00274803 /* boot-sad.jp2 */; };
+		D6F9CF4A2B4C50BF00274803 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		D6F9CF4B2B4C50C200274803 /* (null) in Resources */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -171,6 +171,7 @@
 		C8BFCCA22B3FFE560008D8FD /* info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = info.h; sourceTree = "<group>"; };
 		C8BFCCA32B3FFE570008D8FD /* libkfd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libkfd.h; sourceTree = "<group>"; };
 		C8BFCCB32B427C0F0008D8FD /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		D60109A02B4C675D005F026E /* Painting_With_Chocolate.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Painting_With_Chocolate.ttf; sourceTree = "<group>"; };
 		D6E08F1D2B48B04E00AE49BF /* TheCoolerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheCoolerContentView.swift; sourceTree = "<group>"; };
 		D6E08F2E2B48E24E00AE49BF /* UTTagClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UTTagClass.swift; sourceTree = "<group>"; };
 		D6E08F2F2B48E24E00AE49BF /* CoreTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreTypes.swift; sourceTree = "<group>"; };
@@ -227,7 +228,6 @@
 		D6E0909E2B48E60300AE49BF /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
 		D6F9CF3E2B4B2F7D00274803 /* ct_bypass */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ct_bypass; path = ChOma/output/ios/tests/ct_bypass; sourceTree = "<group>"; };
 		D6F9CF402B4B306400274803 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = fastPathSign; path = RootHelperSample/Exploits/fastPathSign/fastPathSign; sourceTree = "<group>"; };
-		D6F9CF472B4C50BC00274803 /* Serotonin.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Serotonin.jp2; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,6 +265,7 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+				D60109A02B4C675D005F026E /* Painting_With_Chocolate.ttf */,
 				C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */,
 				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
 				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
@@ -744,14 +745,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6F9CF412B4B306400274803 /* fastPathSign in Resources */,
+				D60109A22B4C675D005F026E /* Painting_With_Chocolate.ttf in Resources */,
 				C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */,
 				D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */,
-				D6F9CF4A2B4C50BF00274803 /* boot-happy.jp2 in Resources */,
+				D6F9CF4A2B4C50BF00274803 /* (null) in Resources */,
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
 				C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */,
 				C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
-				D6F9CF4B2B4C50C200274803 /* boot-sad.jp2 in Resources */,
+				D6F9CF4B2B4C50C200274803 /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

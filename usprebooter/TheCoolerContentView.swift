@@ -37,6 +37,7 @@ struct CoolerContentView: View {
 
     @AppStorage("headroom") var staticHeadroomMB: Double = 384.0
     @AppStorage("pages") var pUaFPages: Double = 3072.0
+    @AppStorage("theme") var theme: Int = 0
 
     public func openConsolePipe() {
         setvbuf(stdout, nil, _IONBF, 0)
@@ -166,6 +167,22 @@ struct CoolerContentView: View {
                                 .foregroundColor(color)
                             }
                             Toggle("Swag Mode", systemImage: "flame", isOn: $swag)
+                            if #available(iOS 16.0, *) {
+                                Picker("Theme", selection: $theme, content: {
+                                    Text("Default")
+                                        .tag(0)
+                                    Text("Unveil")
+                                        .tag(1)
+                                })
+                                .pickerStyle(.navigationLink)
+                            } else {
+                                Picker("Theme", selection: $theme, content: {
+                                    Text("Default")
+                                        .tag(0)
+                                    Text("Unveil")
+                                        .tag(1)
+                                })
+                            }
                         }
                         .padding(15)
 
@@ -222,21 +239,37 @@ struct CoolerContentView: View {
                 ZStack {
                     Color.black
                         .ignoresSafeArea(.all)
-                    if showingGradient {
-                        FluidGradient(blobs: [color, color, color, color, color, color, color, color, color], speed: 0.35, blur: 0.7) // swag alert #420blazeit
+                    if theme == 1 {
+                        Image("uncoverPissEditionReal")
+                            .resizable()
+                            .scaledToFill()
                             .ignoresSafeArea(.all)
                     }
-                    Rectangle()
-                        .fill(.clear)
-                        .background(.black.opacity(0.8))
-                        .ignoresSafeArea(.all)
+                    
+                    if showingGradient && theme != 1 {
+                        FluidGradient(blobs: [color, color, color, color, color, color, color, color, color], speed: 0.35, blur: 0.7) // swag alert #420blazeit
+                            .ignoresSafeArea(.all)
+                    } else if theme == 1 {
+                        Color(UIColor.systemBackground)
+                            .opacity(0.925)
+                            .ignoresSafeArea(.all)
+                    }
+                    
+                    if theme != 1 {
+                        Rectangle()
+                            .fill(.clear)
+                            .background(.black.opacity(0.8))
+                            .ignoresSafeArea(.all)
+                    }
+                    
                     VStack(spacing: 15) {
                         VStack(alignment: .leading) {
                             Text("Serotonin") // apex?????
                                 .multilineTextAlignment(.leading)
-                                .font(.system(.largeTitle, design: .rounded).weight(.bold))
+                                .font(theme != 1 ? .system(.largeTitle, design: .rounded).weight(.bold) : .custom("PaintingWithChocolate", size: 34.0))
                             Text("(Not/Semi-)jailbreak for iOS 16.2-16.6.1")
                         }
+                        .foregroundColor(.primary)
                         .padding(.top, geo.size.height / 50)
                         .padding(.leading, 5)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
