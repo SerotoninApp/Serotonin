@@ -32,7 +32,9 @@ jobs:
         brew install ldid-procursus
 
     - name: Compile IPA
-      run: make
+      run: |
+        export THEOS=/Users/runner/theos
+        make
 
     - name: Upload IPA
       uses: actions/upload-artifact@v2
