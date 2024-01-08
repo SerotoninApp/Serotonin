@@ -194,7 +194,7 @@ int init_display(void) {
     return 0;
 }
 
-#define BOOT_IMAGE_PATH "/var/mobile/boot-happy.jp2"
+#define BOOT_IMAGE_PATH "/var/mobile/Serotonin.jp2"
 int bootscreend_main(void) {
     init_display();
     for (int i = 0; i < height; i++) {

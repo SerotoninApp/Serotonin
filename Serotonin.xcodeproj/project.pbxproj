@@ -10,6 +10,7 @@
 		013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 013141FE2B445B26006BEBE9 /* memoryControl.m */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
+		C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */; };
 		C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82AFEF32B175AB80070EA49 /* Assets.xcassets */; };
 		C82AFF392B17688E0070EA49 /* usprebooterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */; };
 		C82AFF3A2B1768990070EA49 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82AFEEF2B175A270070EA49 /* ContentView.swift */; };
@@ -88,6 +89,7 @@
 		C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "usprebooter-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81122DD2B16C9CB00AD077B /* troller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = troller.h; sourceTree = "<group>"; };
 		C81122DE2B16C9CC00AD077B /* troller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = troller.m; sourceTree = "<group>"; };
+		C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Serotonin.jp2; sourceTree = "<group>"; };
 		C82AFEEF2B175A270070EA49 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = usprebooterApp.swift; sourceTree = "<group>"; };
 		C82AFEF32B175AB80070EA49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -225,9 +227,12 @@
 		D6E0909E2B48E60300AE49BF /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
 		D6F9CF3E2B4B2F7D00274803 /* ct_bypass */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ct_bypass; path = ChOma/output/ios/tests/ct_bypass; sourceTree = "<group>"; };
 		D6F9CF402B4B306400274803 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = fastPathSign; path = RootHelperSample/Exploits/fastPathSign/fastPathSign; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		D6F9CF422B4B7B5A00274803 /* boot-sad.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "boot-sad.jp2"; sourceTree = "<group>"; };
 		D6F9CF432B4B7B5A00274803 /* boot-happy.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "boot-happy.jp2"; sourceTree = "<group>"; };
 		D6F9CF472B4C50BC00274803 /* Serotonin.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Serotonin.jp2; sourceTree = "<group>"; };
+=======
+>>>>>>> 8837dce (copy over bootscreen image, thx alfie)
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,9 +270,13 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				D6F9CF472B4C50BC00274803 /* Serotonin.jp2 */,
 				D6F9CF432B4B7B5A00274803 /* boot-happy.jp2 */,
 				D6F9CF422B4B7B5A00274803 /* boot-sad.jp2 */,
+=======
+				C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */,
+>>>>>>> 8837dce (copy over bootscreen image, thx alfie)
 				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
 				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
 				C8BFCC772B3FFE560008D8FD /* fun */,
@@ -746,7 +755,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6F9CF412B4B306400274803 /* fastPathSign in Resources */,
+<<<<<<< HEAD
 				D6F9CF492B4C50BC00274803 /* Serotonin.jp2 in Resources */,
+=======
+				C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */,
+>>>>>>> 8837dce (copy over bootscreen image, thx alfie)
 				D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */,
 				D6F9CF4A2B4C50BF00274803 /* boot-happy.jp2 in Resources */,
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
