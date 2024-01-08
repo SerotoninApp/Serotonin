@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/mineek/Serotonin/A12restart/artwork/serotonin-precomposed.png" height="128" width="128" style="border-radius:25%">
+<img src="https://raw.githubusercontent.com/mineek/Serotonin/main/artwork/serotonin-precomposed.png" height="128" width="128" style="border-radius:25%">
    <h1> Serotonin 
       <br/> not/semi-jailbreak
    </h1>
