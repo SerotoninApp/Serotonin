@@ -21,7 +21,6 @@
 //#include "grant_wallpaper_access.h"
 #include "thanks_opa334dev_htrowii.h"
 #include "utils.h"
-#include "cs_blobs.h"
 //#include "helpers.h"
 #include "common.h"
 

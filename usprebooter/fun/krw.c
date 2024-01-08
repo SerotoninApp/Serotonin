@@ -17,8 +17,11 @@
 uint64_t _kfd = 0;
 void NSLog(CFStringRef, ...);
 
+int find_offsets_wrapper(void);
+
 __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method, size_t headroom, bool use_headroom)
 {
+    find_offsets_wrapper();
     if (use_headroom) {
         size_t STATIC_HEADROOM = (headroom * (size_t)1024 * (size_t)1024);
         uint64_t* memory_hog = NULL;

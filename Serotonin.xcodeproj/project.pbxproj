@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 013141FE2B445B26006BEBE9 /* memoryControl.m */; };
+		6F379D022B4C6BBD00020008 /* liblibiospatchfinder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */; };
+		6F379D042B4C6BD700020008 /* patchfinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F379D032B4C6BD600020008 /* patchfinder.m */; };
+		6FCA3ADD2B4C702E00E50872 /* libcompression.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
 		C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */; };
@@ -24,7 +27,6 @@
 		C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC822B3FFE560008D8FD /* dir.m */; };
 		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
 		C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */; };
-		C8BFCCAA2B3FFE570008D8FD /* cs_blobs.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC862B3FFE560008D8FD /* cs_blobs.m */; };
 		C8BFCCAB2B3FFE570008D8FD /* krw.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC872B3FFE560008D8FD /* krw.c */; };
 		C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC882B3FFE560008D8FD /* offsets.m */; };
 		C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC892B3FFE560008D8FD /* vnode.m */; };
@@ -82,6 +84,9 @@
 /* Begin PBXFileReference section */
 		013141FE2B445B26006BEBE9 /* memoryControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = memoryControl.m; sourceTree = "<group>"; };
 		013142012B445B48006BEBE9 /* memoryControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoryControl.h; sourceTree = "<group>"; };
+		6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibiospatchfinder.a; sourceTree = "<group>"; };
+		6F379D032B4C6BD600020008 /* patchfinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = patchfinder.m; sourceTree = "<group>"; };
+		6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcompression.tbd; path = usr/lib/libcompression.tbd; sourceTree = SDKROOT; };
 		C805CA442B1719C1005157BA /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* usprebooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = usprebooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,7 +143,6 @@
 		C84002E52B4A547B00C73950 /* insert_dylib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = insert_dylib.h; sourceTree = "<group>"; };
 		C84002E82B4A55A300C73950 /* springboardshimsignedinjected */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = springboardshimsignedinjected; path = RootHelperSample/launchdshim/SpringBoardShim/springboardshimsignedinjected; sourceTree = SOURCE_ROOT; };
 		C84002EC2B4A64E200C73950 /* launchdentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = launchdentitlements.plist; path = RootHelperSample/launchdshim/launchdentitlements.plist; sourceTree = SOURCE_ROOT; };
-		C8BFCC782B3FFE560008D8FD /* cs_blobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cs_blobs.h; sourceTree = "<group>"; };
 		C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
 		C8BFCC7A2B3FFE560008D8FD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		C8BFCC7B2B3FFE560008D8FD /* vnode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vnode.h; sourceTree = "<group>"; };
@@ -149,7 +153,6 @@
 		C8BFCC822B3FFE560008D8FD /* dir.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dir.m; sourceTree = "<group>"; };
 		C8BFCC842B3FFE560008D8FD /* utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = utils.m; sourceTree = "<group>"; };
 		C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thanks_opa334dev_htrowii.m; sourceTree = "<group>"; };
-		C8BFCC862B3FFE560008D8FD /* cs_blobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cs_blobs.m; sourceTree = "<group>"; };
 		C8BFCC872B3FFE560008D8FD /* krw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = krw.c; sourceTree = "<group>"; };
 		C8BFCC882B3FFE560008D8FD /* offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
 		C8BFCC892B3FFE560008D8FD /* vnode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vnode.m; sourceTree = "<group>"; };
@@ -235,6 +238,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FCA3ADD2B4C702E00E50872 /* libcompression.tbd in Frameworks */,
+				6F379D022B4C6BBD00020008 /* liblibiospatchfinder.a in Frameworks */,
 				C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,6 +247,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F379D002B4C6B6A00020008 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
 		C81122912B15E7BB00AD077B = {
 			isa = PBXGroup;
 			children = (
@@ -266,32 +279,34 @@
 			isa = PBXGroup;
 			children = (
 				D60109A02B4C675D005F026E /* Painting_With_Chocolate.ttf */,
-				C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */,
-				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
-				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
+				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
+				C82AFEEF2B175A270070EA49 /* ContentView.swift */,
+				D6E08F2B2B48E24400AE49BF /* External */,
 				C8BFCC772B3FFE560008D8FD /* fun */,
+				C81122AB2B15E7BD00AD077B /* Info.plist */,
+				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
+				C82AFF422B17AA6C0070EA49 /* ldid */,
+				6F379D002B4C6B6A00020008 /* lib */,
 				C8BFCC902B3FFE560008D8FD /* libkfd */,
 				C8BFCCA32B3FFE570008D8FD /* libkfd.h */,
-				C82AFF422B17AA6C0070EA49 /* ldid */,
-				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
-				D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */,
-				C82AFEEF2B175A270070EA49 /* ContentView.swift */,
-				D6E08F1D2B48B04E00AE49BF /* TheCoolerContentView.swift */,
-				C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */,
-				D6E08F2B2B48E24400AE49BF /* External */,
-				C81122AB2B15E7BD00AD077B /* Info.plist */,
-				C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */,
-				C81122DD2B16C9CB00AD077B /* troller.h */,
-				C81122DE2B16C9CC00AD077B /* troller.m */,
-				C805CA442B1719C1005157BA /* util.m */,
-				C805CA462B1719D5005157BA /* util.h */,
+				C8BFCCB32B427C0F0008D8FD /* Log.swift */,
+				013142012B445B48006BEBE9 /* memoryControl.h */,
+				013141FE2B445B26006BEBE9 /* memoryControl.m */,
 				C83594D32B18F80300346F80 /* overwriter.h */,
 				C83594CE2B18F70700346F80 /* overwriter.m */,
-				C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */,
+				6F379D032B4C6BD600020008 /* patchfinder.m */,
+				D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */,
+				C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */,
+				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
+				D6E08F1D2B48B04E00AE49BF /* TheCoolerContentView.swift */,
+				C81122DD2B16C9CB00AD077B /* troller.h */,
+				C81122DE2B16C9CC00AD077B /* troller.m */,
+				C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */,
+				C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */,
+				C805CA462B1719D5005157BA /* util.h */,
+				C805CA442B1719C1005157BA /* util.m */,
 				C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */,
-				C8BFCCB32B427C0F0008D8FD /* Log.swift */,
-				013141FE2B445B26006BEBE9 /* memoryControl.m */,
-				013142012B445B48006BEBE9 /* memoryControl.h */,
+				C83594D02B18F74600346F80 /* vm_unaligned_copy_switch_race.h */,
 			);
 			path = usprebooter;
 			sourceTree = "<group>";
@@ -404,6 +419,7 @@
 		C82AFF3B2B1796D90070EA49 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */,
 				C83594C32B17AC8500346F80 /* MobileContainerManager.framework */,
 				C82AFF3D2B179A880070EA49 /* IOKit.framework */,
 				C82AFF3C2B1796D90070EA49 /* IOKit.tbd */,
@@ -414,7 +430,6 @@
 		C8BFCC772B3FFE560008D8FD /* fun */ = {
 			isa = PBXGroup;
 			children = (
-				C8BFCC782B3FFE560008D8FD /* cs_blobs.h */,
 				C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */,
 				C8BFCC7A2B3FFE560008D8FD /* utils.h */,
 				C8BFCC842B3FFE560008D8FD /* utils.m */,
@@ -426,7 +441,6 @@
 				C8BFCC7F2B3FFE560008D8FD /* fun.m */,
 				C8BFCC822B3FFE560008D8FD /* dir.m */,
 				C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */,
-				C8BFCC862B3FFE560008D8FD /* cs_blobs.m */,
 				C8BFCC872B3FFE560008D8FD /* krw.c */,
 				C8BFCC882B3FFE560008D8FD /* offsets.m */,
 				C8BFCC8A2B3FFE560008D8FD /* proc.c */,
@@ -766,7 +780,6 @@
 			files = (
 				D6E08F552B48E24F00AE49BF /* URL+Transferable.swift in Sources */,
 				C805CA452B1719C1005157BA /* util.m in Sources */,
-				C8BFCCAA2B3FFE570008D8FD /* cs_blobs.m in Sources */,
 				C81122DF2B16C9CC00AD077B /* troller.m in Sources */,
 				C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */,
 				D6E08F4B2B48E24F00AE49BF /* CoreTypes.swift in Sources */,
@@ -776,6 +789,7 @@
 				D6E08F542B48E24F00AE49BF /* Data+Transferable.swift in Sources */,
 				C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */,
 				D6E090162B48E26000AE49BF /* VisualEffect+iOS.swift in Sources */,
+				6F379D042B4C6BD700020008 /* patchfinder.m in Sources */,
 				D6E08F562B48E24F00AE49BF /* String+Transferable.swift in Sources */,
 				D6E08F522B48E24F00AE49BF /* _ConditionalRepresentation.swift in Sources */,
 				C83594CF2B18F70700346F80 /* overwriter.m in Sources */,
@@ -976,6 +990,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
+					"$(PROJECT_DIR)/usprebooter/lib",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
@@ -1016,6 +1031,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
+					"$(PROJECT_DIR)/usprebooter/lib",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;

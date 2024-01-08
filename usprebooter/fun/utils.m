@@ -69,3 +69,7 @@ void HexDump(uint64_t addr, size_t size) {
     }
     free(data);
 }
+
+const char* get_version_objc(void) {
+    return [[[UIDevice currentDevice] systemVersion] UTF8String];
+}

@@ -17,7 +17,9 @@ void NSLog(CFStringRef, ...);
 /*
  * Note that these macros assume that the kfd pointer is in scope.
  */
-#define kfd_offset(field_name) (kern_versions[kfd->info.env.vid].field_name)
+//#define kfd_offset(field_name) (kern_versions[kfd->info.env.vid].field_name)
+const struct dynamic_info* current_kern_version_info;
+#define kfd_offset(field_name) (current_kern_version_info->field_name)
 
 #define kget_u64(field_name, object_kaddr)                                        \
     ({                                                                            \
@@ -49,6 +51,9 @@ void NSLog(CFStringRef, ...);
 
 const char info_copy_sentinel[] = "p0up0u was here";
 const u64 info_copy_sentinel_size = sizeof(info_copy_sentinel);
+
+const struct dynamic_info* get_kern_version(const char* version);
+const char* get_version_objc(void);
 
 void info_init(struct kfd* kfd)
 {
@@ -89,57 +94,36 @@ void info_init(struct kfd* kfd)
     struct rlimit rlim = { .rlim_cur = kfd->info.env.maxfilesperproc, .rlim_max = kfd->info.env.maxfilesperproc };
     assert_bsd(setrlimit(RLIMIT_NOFILE, &rlim));
 
-    usize size2 = sizeof(kfd->info.env.kern_version);
-    assert_bsd(sysctlbyname("kern.version", &kfd->info.env.kern_version, &size2, NULL, 0));
-    print_string(kfd->info.env.kern_version);
+    current_kern_version_info = get_kern_version(get_version_objc());
 
     /*
      * Initialize the kfd->info.env.build_version substructure.
      */
-    usize size3 = sizeof(kfd->info.env.build_version);
-        assert_bsd(sysctlbyname("kern.osversion", &kfd->info.env.build_version, &size3, NULL, 0));
-        print_string(kfd->info.env.build_version);
+    char current_kern_version[256] = {};
+    size_t size2 = sizeof(current_kern_version);
+    assert_bsd(sysctlbyname("kern.version", current_kern_version, &size2, NULL, 0));
+    print_string(current_kern_version);
 
-        NSLog(CFSTR("kern.osversion: %s"), kfd->info.env.build_version);
-    
-    usize size4 = sizeof(kfd->info.env.device_id);
-        assert_bsd(sysctlbyname("hw.machine", &kfd->info.env.device_id, &size4, NULL, 0));
-        print_string(kfd->info.env.device_id);
-    
-    NSLog(CFSTR("Device ID: %s"), kfd->info.env.device_id);
+    char current_device_id[256] = {};
+    size_t size4 = sizeof(current_device_id);
+    assert_bsd(sysctlbyname("hw.machine", current_device_id, &size4, NULL, 0));
+    print_string(current_device_id);
 
-    const u64 number_of_kern_versions = sizeof(kern_versions) / sizeof(kern_versions[0]);
-    NSLog(CFSTR("number_of_kern_version: %llu"), number_of_kern_versions);
-       for (u64 i = 0; i < number_of_kern_versions; i++) {
-           const char* current_kern_version = kern_versions[i].kern_version;
-           const char* current_build_version = kern_versions[i].build_version;
-           const char* current_device_id = kern_versions[i].device_id;
-           // NSLog(CFSTR("Placed at: %llu  "), i); /* Too much spam! */
-
-           if (strcmp(kfd->info.env.kern_version, current_kern_version) == 0 &&
-               strcmp(kfd->info.env.build_version, current_build_version) == 0 &&
-               strcmp(kfd->info.env.device_id, current_device_id) == 0) {
-               NSLog(CFSTR("Checking done, totally fine! (Placed at %llu)"), i);
-               kfd->info.env.vid = i;
-               print_u64(kfd->info.env.vid);
-               t1sz_boot = strstr(current_kern_version, "T8120") != NULL ? 17ull : 25ull;
-               base_pac_mask = 0xffffff8000000000;
-               if (strstr(current_device_id, "iPad") != NULL) {
-                   const char *stringList[] = {"T8103", "T8101", "T8112", "T8030", "T8020", "T8110"};
-                   for (int i = 0; i < sizeof(stringList) / sizeof(stringList[0]); i++) {
-                       if (strstr(current_kern_version, stringList[i]) != NULL) {
-                           t1sz_boot = 17ull;
-                           base_pac_mask =  0xffff800000000000;
-                           break;
-                       }
-                   }
-               }
-               return;
-           }
-       }
-
-       assert_false("unsupported osversion");
-   }
+    t1sz_boot = strstr(current_kern_version, "T8120") != NULL ? 17ull : 25ull;
+    base_pac_mask = 0xffffff8000000000;
+    if (strstr(current_device_id, "iPad") != NULL) {
+        const char *stringList[] = {"T8103", "T8101", "T8112", "T8030", "T8020", "T8110"};
+        for (int i = 0; i < sizeof(stringList) / sizeof(stringList[0]); i++) {
+            if (strstr(current_kern_version, stringList[i]) != NULL) {
+                t1sz_boot = 17ull;
+                base_pac_mask =  0xffff800000000000;
+                break;
+            }
+        }
+    }
+    print_u64(t1sz_boot);
+    print_u64(base_pac_mask);
+}
 
 void info_run(struct kfd* kfd)
 {

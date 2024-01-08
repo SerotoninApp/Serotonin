@@ -43,6 +43,8 @@ struct CoolerContentView: View {
         setvbuf(stdout, nil, _IONBF, 0)
         dup2(pipe.fileHandleForWriting.fileDescriptor,
              STDOUT_FILENO)
+        dup2(pipe.fileHandleForWriting.fileDescriptor,
+             STDERR_FILENO)
         // listening on the readabilityHandler
         pipe.fileHandleForReading.readabilityHandler = { handle in
             let data = handle.availableData
@@ -391,30 +393,26 @@ struct CoolerContentView: View {
                                     logItems.append("[i] \(UIDevice.current.localizedModel), iOS \(UIDevice.current.systemVersion)")
                                 }
 
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-//                                        logItems.append("[*] Doing kopen")
-                                        setProgress(0.1)
-                                        do_kopen(UInt64(pUaFPages), 2, 1, 1, Int(staticHeadroomMB), true)
-                                        setProgress(0.25)
-//                                        logItems.append("[*] Exploit fixup")
-                                        setProgress(0.3)
-                                        fix_exploit()
-                                        setProgress(0.5)
-//                                        logItems.append("[*] Hammer time.")
-                                        setProgress(0.6)
-                                        
-                                        setProgress(0.75)
-//                                        logItems.append("[*] All done, kclosing")
-                                        go()
-                                        setProgress(0.9)
-                                        do_kclose()
-                                    }
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                                DispatchQueue.global(qos: .default).async {
+                                    //                                        logItems.append("[*] Doing kopen")
+                                    setProgress(0.1)
+                                    do_kopen(UInt64(pUaFPages), 2, 1, 1, Int(staticHeadroomMB), true)
+                                    setProgress(0.25)
+                                    //                                        logItems.append("[*] Exploit fixup")
+                                    setProgress(0.3)
+                                    fix_exploit()
+                                    setProgress(0.5)
+                                    //                                        logItems.append("[*] Hammer time.")
+                                    setProgress(0.6)
+                                    
+                                    setProgress(0.75)
+                                    //                                        logItems.append("[*] All done, kclosing")
+                                    go()
+                                    setProgress(0.9)
+                                    do_kclose()
                                     logItems.append("[√] All done!")
                                     setProgress(1.0)
                                 }
-                                
                             }
                         }, label: {
                             if isRunning {

