@@ -3,8 +3,8 @@ build/
 .theos
 Payload
 .DS_Store
-usprebooter.xcodeproj/xcuserdata
-usprebooter.xcodeproj/project.xcworkspace/xcuserdata
+Serotonin.xcodeproj/xcuserdata
+Serotonin.xcodeproj/project.xcworkspace/xcuserdata
 *.ipa
 *.tipa
 RootHelperSample/RootHelperSample.xcodeproj/xcuserdata

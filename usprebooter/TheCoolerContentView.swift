@@ -271,7 +271,7 @@ struct CoolerContentView: View {
                             Text("Serotonin") // apex?????
                                 .multilineTextAlignment(.leading)
                                 .font(theme != 1 ? .system(.largeTitle, design: .rounded).weight(.bold) : .custom("PaintingWithChocolate", size: 34.0))
-                            Text("(Not/Semi-)jailbreak for iOS 16.2-16.6.1")
+                            Text("Semi-jailbreak for iOS 16.0-16.6.1")
                         }
                         .foregroundColor(.primary)
                         .padding(.top, geo.size.height / 50)

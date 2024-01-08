@@ -349,7 +349,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     // remove cpu subtype, insert_dylib, then
                     replaceByte([usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"], 8, "\x00\x00\x00\x00");
                     insert_dylib_main("@loader_path/launchdhook.dylib", [[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] UTF8String]);
-                sleep(1);
+//                sleep(1);
                 NSLog(@"sign launchd over and out");
                     spawnRoot(rootHelperPath(), @[@"codesign", source, @""], nil, nil);
                     //                3. copy over workinglaunchd to your jbroot/lunchd
