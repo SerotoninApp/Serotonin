@@ -35,7 +35,7 @@ struct CoolerContentView: View {
     
     @State var shouldShowLog = true
 
-    @AppStorage("headroom") var staticHeadroomMB: Double = 1280.0
+    @AppStorage("headroom") var staticHeadroomMB: Double = 512.0
     @AppStorage("pages") var pUaFPages: Double = 3072.0
     @AppStorage("theme") var theme: Int = 0
 
