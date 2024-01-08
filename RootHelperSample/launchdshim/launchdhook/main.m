@@ -123,13 +123,29 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
 //    fputs(output, file);
 //    fclose(file);
 //    sync();
-    initVerboseFramebuffer();
+
+    bool verboseBoot = false;
+    NSString *verboseBootPath = @"/var/mobile/.serotonin_verbose";
+    NSString *happyMac = @"/var/mobile/boot-happy.jp2";
+    NSString *sadMac = @"/var/mobile/boot-sad.jp2";
+
+    if ([NSFileManager.defaultManager fileExistsAtPath:verboseBootPath]) {
+        verboseBoot = true;
+    }
+
+    if (verboseBoot) {
+        initVerboseFramebuffer();
+    } else {
+        // TODO: Boot splash
+    }
+
     printf("[lunchd] launchdhook pid %d", getpid());
     if (getpid() == 1) {
         printf("============\n");
         printf("== WE ARE ==\n");
-        printf("== PID 1  ==\n");
-        printf("============\n");
+        printf("==  PID1  ==\n");
+        printf("============\n\n");
+        printf("Also, my parent is %d\n", getppid());
     }
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},

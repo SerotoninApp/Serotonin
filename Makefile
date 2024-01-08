@@ -8,17 +8,37 @@ TARGET_SYSROOT = $(shell xcrun -sdk iphoneos --show-sdk-path)
 all: Serotonin.tipa
 
 Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
-	echo "[*] Building ChOma"
-	make -C ChOma TARGET=ios
+	echo "[*] Building ChOma for host"
+	$(MAKE) -C ChOma
+	cp -r ChOma ChOma_host
+	
+	echo "[*] Building ChOma for target"
+	$(MAKE) -C ChOma TARGET=ios
+	
 	echo "[*] Building fastPathSign"
-	make -C RootHelperSample/Exploits/fastPathSign
+	$(MAKE) -C RootHelperSample/Exploits/fastPathSign
+	
+	echo "[*] Building lunchd hook"
+	$(MAKE) -C RootHelperSample/launchdshim/launchdhook
+	
+	echo "[*] Signing lunchd hook"
+	$(shell test -f RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib  || ./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/launchdhook.dylib -o RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib)
+	
+	echo "[*] Building SpringBoard Hook"
+	$(MAKE) -C RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook
+	
+	echo "[*] Signing SB hook"
+	$(shell test -f RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib || ./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/.theos/obj/debug/SpringBoardHook.dylib -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib)
+	
 	# jank workaround at best, can someone else please fix this weird file dependency? – bomberfish
 	echo "[*] Copying fastPathSign"
 	mkdir -p ChOma/output/ios/tests
 	cp RootHelperSample/Exploits/fastPathSign/fastPathSign ChOma/output/ios/tests
-	echo "[*] Building IPA"
+	
+	echo "[*] Building Serotonin"
 	xcodebuild clean build -project Serotonin.xcodeproj -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
-	echo "done building"
+	
+	echo "[*] Done building. Packaging for TS..."
 	$(MAKE) -C RootHelperSample
 	rm -rf Payload
 	rm -rf Serotonin.tipa

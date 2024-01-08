@@ -114,7 +114,19 @@ struct CoolerContentView: View {
 //                            }
 //                            .disabled(true)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
-                                .disabled(true)
+                                .onChange(of: verboseBoot) {_ in
+                                    if verboseBoot {
+                                        if !(FileManager.default.createFile(atPath: "/var/mobile/.serotonin_verbose", contents: nil)) {
+                                            verboseBoot = false
+                                        }
+                                    } else {
+                                        do {
+                                            try FileManager.default.removeItem(atPath: "/var/mobile/.serotonin_verbose")
+                                        } catch {
+                                            verboseBoot = true
+                                        }
+                                    }
+                                }
 //                            Group {
 //                                Toggle("Enable untether", systemImage: "slash.circle", isOn: $untether)
 //                                Toggle("Hide environment", systemImage: "eye.slash", isOn: $hide)

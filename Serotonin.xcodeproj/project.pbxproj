@@ -222,6 +222,8 @@
 		D6E0909E2B48E60300AE49BF /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
 		D6F9CF3E2B4B2F7D00274803 /* ct_bypass */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ct_bypass; path = ChOma/output/ios/tests/ct_bypass; sourceTree = "<group>"; };
 		D6F9CF402B4B306400274803 /* fastPathSign */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = fastPathSign; path = RootHelperSample/Exploits/fastPathSign/fastPathSign; sourceTree = "<group>"; };
+		D6F9CF422B4B7B5A00274803 /* boot-sad.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "boot-sad.jp2"; sourceTree = "<group>"; };
+		D6F9CF432B4B7B5A00274803 /* boot-happy.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "boot-happy.jp2"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -259,6 +261,8 @@
 		C811229C2B15E7BB00AD077B /* usprebooter */ = {
 			isa = PBXGroup;
 			children = (
+				D6F9CF432B4B7B5A00274803 /* boot-happy.jp2 */,
+				D6F9CF422B4B7B5A00274803 /* boot-sad.jp2 */,
 				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
 				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
 				C8BFCC772B3FFE560008D8FD /* fun */,
@@ -972,7 +976,6 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "usprebooter/usprebooter-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = "apple-include";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1012,7 +1015,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "usprebooter/usprebooter-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = "apple-include";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
