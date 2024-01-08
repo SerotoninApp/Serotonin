@@ -14,9 +14,9 @@ To use this app, you need to be on a supported version (mentioned above), and ha
 1. Build and install [Bootstrap from RootHide](https://github.com/dleovl/RootHideBootstrapUnofficialFAQ#how-do-i-build-the-roothide-bootstrap-no-pcmac-required)
 2. Press Bootstrap within the Bootstrap app
 3. Install ElleKit from within Sileo
-3. Download the `.tipa` from the [latest release](https://github.com/mineek/Serotonin/releases/latest)
-4. Install the downloaded `.tipa` in TrollStore
-5. Open the app and press the Jelbrek button. Your device should userspace reboot, and you should be (not/semi) jailbroken!
+4. Download the `.tipa` from the [latest release](https://github.com/mineek/Serotonin/releases/latest)
+5. Install the downloaded `.tipa` in TrollStore
+6. Open the app and press the Jelbrek button. Your device should userspace reboot, and you should be (not/semi) jailbroken!
    
 ## How was this done? 
  - It replaces launchd by searching through /sbin's vp_namecache, finds launchd's name cache and kwrites it with a patch to `lunchd`, our patched `launchd` (*you can have a look at a better explanation from AlfieCG [here](https://www.reddit.com/r/jailbreak/comments/18zehl2/comment/kgi5ya3/)*)
