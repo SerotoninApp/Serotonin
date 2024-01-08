@@ -5,7 +5,7 @@
    </h1>
 </div>
 
-<h6 align="center"> Supports iOS/iPadOS 16.2 - 16.6.1  </h6>
+<h6 align="center"> Should Support iOS/iPadOS 16.0 - 16.6.1  </h6>
 
 
 ## How do I use this?
