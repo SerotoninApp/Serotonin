@@ -251,7 +251,7 @@ struct CoolerContentView: View {
                             .ignoresSafeArea(.all)
                     } else if theme == 1 {
                         Color(UIColor.systemBackground)
-                            .opacity(0.925)
+                            .opacity(0.9)
                             .ignoresSafeArea(.all)
                     }
                     
