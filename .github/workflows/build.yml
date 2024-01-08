@@ -1,0 +1,36 @@
+name: Build Serotonin
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-13
+
+    steps:
+    - uses: actions/checkout@v3
+      
+    - name: Switch to Xcode 15
+      run: sudo xcode-select -s /Applications/Xcode_15.0.app
+
+    - name: Install theos
+      run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+
+    - name: Download ct_bypass to /usr/local/bin
+      run: |
+        curl -L -o /usr/local/bin/ct_bypass https://cdn.mineek.dev/serotonin/action_deps/ct_bypass
+        chmod +x /usr/local/bin/ct_bypass
+
+    - name: Install ldid
+      run: brew install ldid-procursus
+
+    - name: Compile IPA
+      run: make
+
+    - name: Upload IPA
+      uses: actions/upload-artifact@v2
+      with:
+        name: Serotonin.tipa
+        path: Serotonin.tipa

@@ -589,6 +589,38 @@ int SwitchSysBin(uint64_t vnode, char* what, char* with)
         }
         vp_namecache = kread64(vp_namecache + off_namecache_nc_child_tqe_prev);
     }
+    return 0;
+}
 
+uint64_t SwitchSysBin160(char* to, char* from, uint64_t* orig_to_vnode, uint64_t* orig_nc_vp)
+{
+    uint64_t to_vnode = getVnodeAtPath(to);
+    if(to_vnode == -1) {
+        NSString *to_dir = [[NSString stringWithUTF8String:to] stringByDeletingLastPathComponent];
+        NSString *to_file = [[NSString stringWithUTF8String:to] lastPathComponent];
+        uint64_t to_dir_vnode = getVnodeAtPathByChdir(to_dir.UTF8String);
+        to_vnode = findChildVnodeByVnode(to_dir_vnode, to_file.UTF8String);
+        if(to_vnode == 0) {
+            printf("[-] Couldn't find file (to): %s", to);
+            return -1;
+        }
+    }
+
+    uint64_t from_vnode = getVnodeAtPath(from);
+    if(from_vnode == -1) {
+        NSString *from_dir = [[NSString stringWithUTF8String:from] stringByDeletingLastPathComponent];
+        NSString *from_file = [[NSString stringWithUTF8String:from] lastPathComponent];
+        uint64_t from_dir_vnode = getVnodeAtPathByChdir(from_dir.UTF8String);
+        from_vnode = findChildVnodeByVnode(from_dir_vnode, from_file.UTF8String);
+        if(from_vnode == 0) {
+            printf("[-] Couldn't find file (from): %s", from);
+            return -1;
+        }
+    }
+
+    uint64_t to_vnode_nc = kread64(to_vnode + off_vnode_v_nclinks_lh_first);
+    *orig_nc_vp = kread64(to_vnode_nc + off_namecache_nc_vp);
+    *orig_to_vnode = to_vnode;
+    kwrite64(to_vnode_nc + off_namecache_nc_vp, from_vnode);
     return 0;
 }

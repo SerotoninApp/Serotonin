@@ -136,8 +136,8 @@ bool OpenedTweaks = false;
 bool os_variant_has_internal_content(const char* subsystem);
 %hookf(bool, os_variant_has_internal_content, const char* subsystem) {
     if (OpenedTweaks == false) {
+        spawnRoot(jbroot(@"/basebin/bootstrapd"), @[@"daemon",@"-f"], nil, nil);
         if (isarm64e()) {
-            spawnRoot(jbroot(@"/basebin/bootstrapd"), @[@"daemon",@"-f"], nil, nil);
             dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
         } else {
             NSLog(@"[mineek's supporttweak] loading actual tweaks");
@@ -164,7 +164,6 @@ bool os_variant_has_internal_content(const char* subsystem);
                     }
 			    }
             }
-            spawnRoot(jbroot(@"/basebin/bootstrapd"), @[@"daemon",@"-f"], nil, nil);
         }
         OpenedTweaks = true;
         return true;
