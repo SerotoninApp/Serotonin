@@ -24,7 +24,9 @@ jobs:
         chmod +x /usr/local/bin/ct_bypass
 
     - name: Install ldid
-      run: brew install ldid-procursus
+      run: |
+        brew unlink ldid
+        brew install ldid-procursus
 
     - name: Compile IPA
       run: make
