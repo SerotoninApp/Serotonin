@@ -177,6 +177,7 @@ struct CoolerContentView: View {
                                         .tag(1)
                                 })
                                 .pickerStyle(.navigationLink)
+                                .padding(5)
                             } else {
                                 Picker("Theme", selection: $theme, content: {
                                     Text("Default")
@@ -184,6 +185,7 @@ struct CoolerContentView: View {
                                     Text("Unveil")
                                         .tag(1)
                                 })
+                                .padding(5)
                             }
                         }
                         .padding(15)
