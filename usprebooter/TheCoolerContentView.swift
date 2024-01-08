@@ -499,6 +499,7 @@ struct LinkCell: View {
 struct CreditsView: View {
     var body: some View {
         List {
+            LinkCell(title: "mineek", detail: "Main dev", link: "https://twitter.com/mineekdev", imageName: "mineek")
             LinkCell(title: "hrtowii/sacrosanctuary", detail: "Main dev", link: "https://twitter.com/htrowii", imageName: "htrowii")
             LinkCell(title: "DuyTranKhanh", detail: "Contributed SpringBoard hooks and launchd hooks", link: "https://twitter.com/TranKha50277352", imageName: "duy")
             LinkCell(title: "NSBedtime", detail: "launchd hax, helped out a ton!", link: "https://twitter.com/NSBedtime", imageName: "bedtime")
