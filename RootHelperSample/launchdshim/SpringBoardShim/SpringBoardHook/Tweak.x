@@ -6,6 +6,7 @@
 #include <Foundation/Foundation.h>
 #include <dirent.h>
 #include <roothide.h>
+#include <sys/sysctl.h>
 
 #define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
 

@@ -22,13 +22,13 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	$(MAKE) -C RootHelperSample/launchdshim/launchdhook
 	
 	echo "[*] Signing lunchd hook"
-	$(shell test -f RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib  || ./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/launchdhook.dylib -o RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib)
+	ct_bypass -i RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/launchdhook.dylib -r -o RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib
 	
 	echo "[*] Building SpringBoard Hook"
 	$(MAKE) -C RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook
 	
 	echo "[*] Signing SB hook"
-	$(shell test -f RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib || ./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/.theos/obj/debug/SpringBoardHook.dylib -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib)
+	ct_bypass -i RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/.theos/obj/debug/SpringBoardHook.dylib -r -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib
 	
 	# jank workaround at best, can someone else please fix this weird file dependency? – bomberfish
 	echo "[*] Copying fastPathSign"
