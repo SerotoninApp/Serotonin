@@ -133,7 +133,7 @@ void perf_run(struct kfd* kfd)
     
     kfd->perf.kernel_slide = kernel_slide;
     print_x64(kernel_base);
-    print_x64(kfd->perf.kernel_slide);usprebooter/libkfd/perf.h
+    print_x64(kfd->perf.kernel_slide);
 
     if (kfd->kread.krkw_method_ops.kread == kread_sem_open_kread) {
         u32 mh_header[2] = {};
