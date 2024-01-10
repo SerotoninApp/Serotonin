@@ -11,7 +11,7 @@
 ## How do I use this?
 To use this app, you need to be on a supported version (mentioned above), and have [TrollStore](https://github.com/opa334/TrollStore/) installed. You can follow [this guide](https://ios.cfw.guide/installing-trollstore/) to install it on your device. Please note that this tool doesn't support iOS 17.0 despite of it having TrollStore.
 
-1. Build and install [Bootstrap from RootHide](https://github.com/dleovl/Bootstrap/blob/faq/README.md#how-do-i-build-the-roothide-bootstrap-no-pcmac-required)
+1. Build and install [Bootstrap from roothide](https://github.com/dleovl/Bootstrap/blob/faq/README.md#how-do-i-build-the-roothide-bootstrap-no-pcmac-required)
 2. Press Bootstrap within the Bootstrap app
 3. Install ElleKit from within Sileo
 4. Download the `.tipa` from the [latest release](https://github.com/mineek/Serotonin/releases/latest)
