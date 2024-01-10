@@ -10,6 +10,8 @@
 
 signed long long t1sz_boot = 25ull;
 signed long long base_pac_mask = 0xffffff8000000000;
+unsigned long long kernel_base_unslid = 0xfffffff007004000;
+
 #define ptr_mask ((1ull << (64ull - t1sz_boot)) - 1ull)
 #define pac_mask (~ptr_mask)
 #define unsign_kaddr(kaddr) ((kaddr) | (pac_mask))

@@ -84,6 +84,7 @@
 /* Begin PBXFileReference section */
 		013141FE2B445B26006BEBE9 /* memoryControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = memoryControl.m; sourceTree = "<group>"; };
 		013142012B445B48006BEBE9 /* memoryControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoryControl.h; sourceTree = "<group>"; };
+		01F0A8582B4F3A5D0091592F /* landa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = landa.h; sourceTree = "<group>"; };
 		6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibiospatchfinder.a; sourceTree = "<group>"; };
 		6F379D032B4C6BD600020008 /* patchfinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = patchfinder.m; sourceTree = "<group>"; };
 		6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcompression.tbd; path = usr/lib/libcompression.tbd; sourceTree = SDKROOT; };
@@ -505,6 +506,7 @@
 			isa = PBXGroup;
 			children = (
 				C8BFCC9F2B3FFE560008D8FD /* smith.h */,
+				01F0A8582B4F3A5D0091592F /* landa.h */,
 				C8BFCCA02B3FFE560008D8FD /* physpuppet.h */,
 			);
 			path = puaf;

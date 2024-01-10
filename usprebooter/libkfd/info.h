@@ -109,6 +109,15 @@ void info_init(struct kfd* kfd)
     assert_bsd(sysctlbyname("hw.machine", current_device_id, &size4, NULL, 0));
     print_string(current_device_id);
 
+    {
+        const char *stringList[] = {"T8103", "T8112"};
+        for (int i = 0; i < sizeof(stringList) / sizeof(stringList[0]); i++) {
+            if (strstr(current_kern_version, stringList[i]) != NULL) {
+                kernel_base_unslid = 0xfffffe0007004000;
+            }
+        }
+    }
+
     t1sz_boot = strstr(current_kern_version, "T8120") != NULL ? 17ull : 25ull;
     base_pac_mask = 0xffffff8000000000;
     if (strstr(current_device_id, "iPad") != NULL) {
