@@ -9,7 +9,7 @@
 //#include "fun/helpers.h"
 #include <stdint.h>
 
-void do_kclose(void);
+
 void fix_exploit(void);
 int go(void);
 int userspaceReboot(void);
