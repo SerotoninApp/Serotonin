@@ -190,5 +190,5 @@ error:
 
 
 const char* libgrabkernel_version(){
-    return "Libgrabkernel Version: " + LIBGRABKERNEL_VERSION_COMMIT_SHA + " - " + LIBGRABKERNEL_VERSION_COMMIT_COUNT;
+    return "Libgrabkernel Version: ";
 }
