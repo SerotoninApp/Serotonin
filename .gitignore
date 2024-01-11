@@ -5,6 +5,7 @@ Payload
 .DS_Store
 Serotonin.xcodeproj/xcuserdata/*
 Serotonin.xcodeproj/project.xcworkspace/xcuserdata/*
+Serotonin.xcodeproj/project.xcworkspace/xcuserdata/ibarahime.xcuserdatad
 *.ipa
 *.tipa
 RootHelperSample/RootHelperSample.xcodeproj/xcuserdata
