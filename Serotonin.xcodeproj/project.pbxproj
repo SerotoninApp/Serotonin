@@ -27,7 +27,6 @@
 		C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC822B3FFE560008D8FD /* dir.m */; };
 		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
 		C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */; };
-		C8BFCCAB2B3FFE570008D8FD /* krw.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC872B3FFE560008D8FD /* krw.c */; };
 		C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC882B3FFE560008D8FD /* offsets.m */; };
 		C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC892B3FFE560008D8FD /* vnode.m */; };
 		C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC8A2B3FFE560008D8FD /* proc.c */; };
