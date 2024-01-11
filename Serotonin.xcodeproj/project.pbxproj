@@ -3,15 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6E9204902B330FAB001D38E5 /* krw.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9204902B330FAB001D38E5 /* krw.m */; };
 		013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 013141FE2B445B26006BEBE9 /* memoryControl.m */; };
 		6F379D022B4C6BBD00020008 /* liblibiospatchfinder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */; };
 		6F379D042B4C6BD700020008 /* patchfinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F379D032B4C6BD600020008 /* patchfinder.m */; };
 		6FCA3ADD2B4C702E00E50872 /* libcompression.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */; };
+		9756F40B2B505A3000172EF9 /* krw.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9204902B330FAB001D38E5 /* krw.m */; };
+		9756F4112B505A9100172EF9 /* libfragmentzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F40F2B505A9100172EF9 /* libfragmentzip.a */; };
+		9756F4122B505A9100172EF9 /* libgrabkernel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F4102B505A9100172EF9 /* libgrabkernel.a */; };
+		9756F4142B505AA200172EF9 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F4132B505AA100172EF9 /* libcurl.a */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
 		C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */; };
@@ -76,19 +79,22 @@
 		D6E090902B48E3A200AE49BF /* FluidGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E0908B2B48E3A200AE49BF /* FluidGradient.swift */; };
 		D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF3E2B4B2F7D00274803 /* ct_bypass */; };
 		D6F9CF412B4B306400274803 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF402B4B306400274803 /* fastPathSign */; };
-		
 		D6F9CF4A2B4C50BF00274803 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		D6F9CF4B2B4C50C200274803 /* (null) in Resources */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6E9204902B330FAB001D38E5 /* krw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = krw.m; sourceTree = "<group>"; };
 		013141FE2B445B26006BEBE9 /* memoryControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = memoryControl.m; sourceTree = "<group>"; };
 		013142012B445B48006BEBE9 /* memoryControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoryControl.h; sourceTree = "<group>"; };
 		01F0A8582B4F3A5D0091592F /* landa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = landa.h; sourceTree = "<group>"; };
+		6E9204902B330FAB001D38E5 /* krw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = krw.m; sourceTree = "<group>"; };
 		6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibiospatchfinder.a; sourceTree = "<group>"; };
 		6F379D032B4C6BD600020008 /* patchfinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = patchfinder.m; sourceTree = "<group>"; };
 		6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcompression.tbd; path = usr/lib/libcompression.tbd; sourceTree = SDKROOT; };
+		9756F40C2B505A7700172EF9 /* deps */ = {isa = PBXFileReference; lastKnownFileType = folder; name = deps; path = usprebooter/fun/kpf/libgrabkernel/deps; sourceTree = "<group>"; };
+		9756F40F2B505A9100172EF9 /* libfragmentzip.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfragmentzip.a; path = usprebooter/fun/kpf/libgrabkernel/deps/libfragmentzip.a; sourceTree = "<group>"; };
+		9756F4102B505A9100172EF9 /* libgrabkernel.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgrabkernel.a; path = usprebooter/fun/kpf/libgrabkernel/deps/libgrabkernel.a; sourceTree = "<group>"; };
+		9756F4132B505AA100172EF9 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "usprebooter/fun/kpf/libgrabkernel/deps/curl-static/libcurl.a"; sourceTree = "<group>"; };
 		C805CA442B1719C1005157BA /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* usprebooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = usprebooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,7 +161,6 @@
 		C8BFCC822B3FFE560008D8FD /* dir.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dir.m; sourceTree = "<group>"; };
 		C8BFCC842B3FFE560008D8FD /* utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = utils.m; sourceTree = "<group>"; };
 		C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thanks_opa334dev_htrowii.m; sourceTree = "<group>"; };
-		C8BFCC872B3FFE560008D8FD /* krw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = krw.c; sourceTree = "<group>"; };
 		C8BFCC882B3FFE560008D8FD /* offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
 		C8BFCC892B3FFE560008D8FD /* vnode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vnode.m; sourceTree = "<group>"; };
 		C8BFCC8A2B3FFE560008D8FD /* proc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = proc.c; sourceTree = "<group>"; };
@@ -240,6 +245,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9756F4142B505AA200172EF9 /* libcurl.a in Frameworks */,
+				9756F4112B505A9100172EF9 /* libfragmentzip.a in Frameworks */,
+				9756F4122B505A9100172EF9 /* libgrabkernel.a in Frameworks */,
 				6FCA3ADD2B4C702E00E50872 /* libcompression.tbd in Frameworks */,
 				6F379D022B4C6BBD00020008 /* liblibiospatchfinder.a in Frameworks */,
 				C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */,
@@ -421,6 +429,10 @@
 		C82AFF3B2B1796D90070EA49 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9756F4132B505AA100172EF9 /* libcurl.a */,
+				9756F40F2B505A9100172EF9 /* libfragmentzip.a */,
+				9756F4102B505A9100172EF9 /* libgrabkernel.a */,
+				9756F40C2B505A7700172EF9 /* deps */,
 				6FCA3ADB2B4C702E00E50872 /* libcompression.tbd */,
 				C83594C32B17AC8500346F80 /* MobileContainerManager.framework */,
 				C82AFF3D2B179A880070EA49 /* IOKit.framework */,
@@ -731,7 +743,7 @@
 				};
 			};
 			buildConfigurationList = C81122952B15E7BB00AD077B /* Build configuration list for PBXProject "Serotonin" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -781,6 +793,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9756F40B2B505A3000172EF9 /* krw.m in Sources */,
 				D6E08F552B48E24F00AE49BF /* URL+Transferable.swift in Sources */,
 				C805CA452B1719C1005157BA /* util.m in Sources */,
 				C81122DF2B16C9CC00AD077B /* troller.m in Sources */,
@@ -811,13 +824,11 @@
 				D6E08F532B48E24F00AE49BF /* File+Representations.swift in Sources */,
 				D6E0908C2B48E3A200AE49BF /* BlobLayer.swift in Sources */,
 				D6E08F582B48E24F00AE49BF /* AttributedString+Transferable.swift in Sources */,
-				C8BFCCA62B3FFE570008D8FD /* dir.m in Sources */,
 				D6E0908F2B48E3A200AE49BF /* CGPoint+Extensions.swift in Sources */,
 				D6E0907C2B48E26000AE49BF /* Detents.swift in Sources */,
 				C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */,
 				D6E08F5C2B48E24F00AE49BF /* NSItemProvider+Transferable.swift in Sources */,
-				C8BFCCA42B3FFE570008D8FD /* fun.m 
-        6E9204902B330FAB001D38E5 /* krw.m in Sources */,
+				C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */,
 				D6E090152B48E26000AE49BF /* String+LocalizationKey.swift in Sources */,
 				D6E08F4C2B48E24F00AE49BF /* UTType.swift in Sources */,
 				D6E0900F2B48E26000AE49BF /* Environment.swift in Sources */,
@@ -994,6 +1005,8 @@
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
 					"$(PROJECT_DIR)/usprebooter/lib",
+					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps",
+					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps/curl-static",
 				);
 				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
@@ -1035,6 +1048,8 @@
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
 					"$(PROJECT_DIR)/usprebooter/lib",
+					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps",
+					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps/curl-static",
 				);
 				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
