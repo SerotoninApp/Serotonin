@@ -18,11 +18,11 @@
 #include <mach/mach.h>
 #include "proc.h"
 #include "vnode.h"
-#include "grant_full_disk_access.h"
+#include "mdc/grant_full_disk_access.h"
 #include "thanks_opa334dev_htrowii.h"
 #include "utils.h"
 #include "cs_blobs.h"
-#include "GPU_CoreSight.h"
+#include "ppl/GPU_CoreSight.h"
 #include "ppl/pplrw.h"
 #include "kpf/patchfinder.h"
 
