@@ -83,7 +83,7 @@ void perf_init(struct kfd* kfd)
     /*
      * Open a "/dev/aes_0" descriptor, then use it to find the kernel slide.
      */
-    kfd->perf.dev.fd = open("/dev/aes_0", O_RDWR);
+    kfd->perf.dev.fd = open("/dev/tty", O_RDWR);
     assert(kfd->perf.dev.fd > 0);
 }
 
