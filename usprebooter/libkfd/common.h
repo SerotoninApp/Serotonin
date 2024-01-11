@@ -112,24 +112,6 @@ typedef uintptr_t usize;
  * Helper assert macros.
  */
 
-#if CONFIG_ASSERT
-
-#define assert(condition)                                               \
-    do {                                                                \
-        if (!(condition)) {                                             \
-            print_failure("assertion failed: (%s)", #condition);        \
-            print_failure("file: %s, line: %d", __FILE__, __LINE__);    \
-            print_failure("... sleep(30) before exit(1) ...");          \
-            sleep(30);                                                  \
-            exit(1);                                                    \
-        }                                                               \
-    } while (0)
-
-#else /* CONFIG_ASSERT */
-
-#define assert(condition)
-
-#endif /* CONFIG_ASSERT */
 
 #define assert_false(message)                   \
     do {                                        \
