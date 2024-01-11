@@ -29,6 +29,7 @@ struct dynamic_info {
     u64 kernelcache__perfmon_devices;                 // "perfmon: %s: devfs_make_node_clone failed"
     u64 kernelcache__ptov_table;                      // "%s: illegal PA: 0x%llx; phys base 0x%llx, size 0x%llx"
     u64 kernelcache__vn_kqfilter;                     // "Invalid knote filter on a vnode!"
+    u64 kslide; // KSLIDE
 };
 
 struct dynamic_info kern_versions[] = {
