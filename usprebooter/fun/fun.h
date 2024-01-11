@@ -14,5 +14,5 @@
 uint64_t fun_ipc_entry_lookup(mach_port_name_t port_name);
 int do_fun(void);
 int do_unsandbox(void);
-
+void fix_exploit(void);
 #endif /* fun_h */
