@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6E92049F2B330FAB001D38E5 /* krw.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9204902B330FAB001D38E5 /* krw.m */; };
+		6E9204902B330FAB001D38E5 /* krw.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9204902B330FAB001D38E5 /* krw.m */; };
 		013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 013141FE2B445B26006BEBE9 /* memoryControl.m */; };
 		6F379D022B4C6BBD00020008 /* liblibiospatchfinder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */; };
 		6F379D042B4C6BD700020008 /* patchfinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F379D032B4C6BD600020008 /* patchfinder.m */; };
