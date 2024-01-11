@@ -285,8 +285,9 @@ struct CoolerContentView: View {
                                     .blur(radius: 16)
                                     .background(Color(UIColor.secondarySystemGroupedBackground).opacity(0.5))
                                 VStack {
-                                    Toggle("Reinstall bootstrap", isOn: $reinstall)
-                                        .disabled(true)
+                                                                        
+                                    Toggle("Reinstall jailbreak", isOn: $reinstall)
+//                                        .disabled(true)
                                         .onChange(of: reinstall) { _ in
                                             if reinstall {
                                                 withAnimation(fancyAnimation) {
@@ -295,8 +296,8 @@ struct CoolerContentView: View {
                                             }
                                         }
                                     Divider()
-                                    Toggle("Restore system", isOn: $resetfs)
-                                        .disabled(true)
+                                    Toggle("Remove jailbreak", isOn: $resetfs)
+//                                        .disabled(true)
                                         .onChange(of: resetfs) { _ in
                                             if resetfs {
                                                 withAnimation(fancyAnimation) {
@@ -372,6 +373,15 @@ struct CoolerContentView: View {
                         .padding(.top, 10)
 
                         Button(action: {
+                            let argument: String = {
+                                if reinstall {
+                                    return "reinstall"
+                                } else if resetfs {
+                                    return "uninstall"
+                                } else {
+                                    return "install"
+                                }
+                            }()
                             withAnimation(fancyAnimation) {
                                 shouldShowLog = true
                             }
@@ -409,7 +419,7 @@ struct CoolerContentView: View {
                                     
                                     setProgress(0.75)
                                     //                                        logItems.append("[*] All done, kclosing")
-                                    go()
+                                    go(argument)
                                     setProgress(0.9)
                                     do_kclose()
                                     logItems.append("[√] All done!")
