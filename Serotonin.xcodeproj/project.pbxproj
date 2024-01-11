@@ -94,7 +94,6 @@
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
 		C82AFF432B17AA6D0070EA49 /* ldid in Resources */ = {isa = PBXBuildFile; fileRef = C82AFF422B17AA6C0070EA49 /* ldid */; };
 		C83594CF2B18F70700346F80 /* overwriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C83594CE2B18F70700346F80 /* overwriter.m */; };
-		C83594D22B18F74600346F80 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C83594D12B18F74600346F80 /* vm_unaligned_copy_switch_race.c */; };
 		C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C84002E82B4A55A300C73950 /* springboardshimsignedinjected */; };
 		C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C84002EC2B4A64E200C73950 /* launchdentitlements.plist */; };
 		C8BFCCA42B3FFE570008D8FD /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC7F2B3FFE560008D8FD /* fun.m */; };
