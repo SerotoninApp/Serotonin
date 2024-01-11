@@ -817,7 +817,7 @@
 				C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */,
 				D6E08F5C2B48E24F00AE49BF /* NSItemProvider+Transferable.swift in Sources */,
 				C8BFCCA42B3FFE570008D8FD /* fun.m 
-        6E92049F2B330FAB001D38E5 /* krw.m in Sources */,
+        6E9204902B330FAB001D38E5 /* krw.m in Sources */,
 				D6E090152B48E26000AE49BF /* String+LocalizationKey.swift in Sources */,
 				D6E08F4C2B48E24F00AE49BF /* UTType.swift in Sources */,
 				D6E0900F2B48E26000AE49BF /* Environment.swift in Sources */,
