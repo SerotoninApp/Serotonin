@@ -398,7 +398,7 @@ struct CoolerContentView: View {
                                 DispatchQueue.global(qos: .default).async {
                                     //                                        logItems.append("[*] Doing kopen")
                                     setProgress(0.1)
-                                    do_kopen(UInt64(pUaFPages), 2, 1, 1, Int(staticHeadroomMB), true)
+                                    do_kopen(UInt64(pUaFPages), 2, 1, 1)
                                     setProgress(0.25)
                                     //                                        logItems.append("[*] Exploit fixup")
                                     setProgress(0.3)
