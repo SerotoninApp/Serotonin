@@ -4,7 +4,7 @@ build/
 Payload
 .DS_Store
 Serotonin.xcodeproj/xcuserdata/*
-Serotonin.xcodeproj/project.xcworkspace/xcuserdata
+Serotonin.xcodeproj/project.xcworkspace/xcuserdata/*
 *.ipa
 *.tipa
 RootHelperSample/RootHelperSample.xcodeproj/xcuserdata
