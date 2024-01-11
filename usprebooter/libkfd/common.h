@@ -112,7 +112,13 @@ typedef uintptr_t usize;
  * Helper assert macros.
  */
 
-
+#define assert(condition)                                               \
+    do {                                                                \
+        if (!(condition)) {                                             \
+            print_failure("assertion failed: (%s)", #condition);        \
+            print_failure("file: %s, line: %d", __FILE__, __LINE__);    \
+        }                                                               \
+    } while (0)
 #define assert_false(message)                   \
     do {                                        \
         print_failure("error: %s", message);    \
