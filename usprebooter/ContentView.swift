@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State var LogItems: [String.SubSequence] = [""]
     private let puaf_method_options = ["physpuppet", "smith", "landa"]
-    @AppStorage("puaf_method") private var puaf_method = 1.0
+    @AppStorage("puaf_method") private var puaf_method = 2.0
     private let kwrite_method_options = ["kqueue_workloop_ctl", "sem_open"];
     @AppStorage("kwrite_method") private var kwrite_method = 1.0;
     private let kread_method_options = ["dup"," sem_open"];
