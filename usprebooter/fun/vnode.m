@@ -562,3 +562,76 @@ uint64_t funVnodeUnRedirectFile(uint64_t orig_to_vnode, uint64_t orig_nc_vp)
     kwrite64(to_vnode_nc + off_namecache_nc_vp, orig_nc_vp);
     return 0;
 }
+// try reading through vp_ncchildren of /sbin/'s vnode to find launchd's namecache
+// after that, kwrite namecache, vnode id -> thx bedtime / misfortune
+
+int SwitchSysBin(uint64_t vnode, char* what, char* with)
+{
+    uint64_t vp_nameptr = kread64(vnode + off_vnode_v_name);
+    uint64_t vp_namecache = kread64(vnode + off_vnode_v_ncchildren_tqh_first);
+    if(vp_namecache == 0)
+        return 0;
+    
+    while(1) {
+        if(vp_namecache == 0)
+            break;
+        vnode = kread64(vp_namecache + off_namecache_nc_vp);
+        if(vnode == 0)
+            break;
+        vp_nameptr = kread64(vnode + off_vnode_v_name);
+        
+        char vp_name[256];
+        kreadbuf(kread64(vp_namecache + 96), &vp_name, 256);
+//        printf("vp_name: %s\n", vp_name);
+        
+        if(strcmp(vp_name, what) == 0)
+        {
+            uint64_t with_vnd = getVnodeAtPath(with);
+            uint32_t with_vnd_id = kread64(with_vnd + 116);
+            uint64_t patient = kread64(vp_namecache + 80);        // vnode the name refers
+            uint32_t patient_vid = kread64(vp_namecache + 64);    // name vnode id
+            printf("patient: %llx vid:%llx -> %llx\n", patient, patient_vid, with_vnd_id);
+
+            kwrite64(vp_namecache + 80, with_vnd);
+            kwrite32(vp_namecache + 64, with_vnd_id);
+            
+            return vnode;
+        }
+        vp_namecache = kread64(vp_namecache + off_namecache_nc_child_tqe_prev);
+    }
+    return 0;
+}
+
+uint64_t SwitchSysBin160(char* to, char* from, uint64_t* orig_to_vnode, uint64_t* orig_nc_vp)
+{
+    uint64_t to_vnode = getVnodeAtPath(to);
+    if(to_vnode == -1) {
+        NSString *to_dir = [[NSString stringWithUTF8String:to] stringByDeletingLastPathComponent];
+        NSString *to_file = [[NSString stringWithUTF8String:to] lastPathComponent];
+        uint64_t to_dir_vnode = getVnodeAtPathByChdir(to_dir.UTF8String);
+        to_vnode = findChildVnodeByVnode(to_dir_vnode, to_file.UTF8String);
+        if(to_vnode == 0) {
+            printf("[-] Couldn't find file (to): %s", to);
+            return -1;
+        }
+    }
+
+    uint64_t from_vnode = getVnodeAtPath(from);
+    if(from_vnode == -1) {
+        NSString *from_dir = [[NSString stringWithUTF8String:from] stringByDeletingLastPathComponent];
+        NSString *from_file = [[NSString stringWithUTF8String:from] lastPathComponent];
+        uint64_t from_dir_vnode = getVnodeAtPathByChdir(from_dir.UTF8String);
+        from_vnode = findChildVnodeByVnode(from_dir_vnode, from_file.UTF8String);
+        if(from_vnode == 0) {
+            printf("[-] Couldn't find file (from): %s", from);
+            return -1;
+        }
+    }
+
+    uint64_t to_vnode_nc = kread64(to_vnode + off_vnode_v_nclinks_lh_first);
+    *orig_nc_vp = kread64(to_vnode_nc + off_namecache_nc_vp);
+    *orig_to_vnode = to_vnode;
+    kwrite64(to_vnode_nc + off_namecache_nc_vp, from_vnode);
+    return 0;
+}
+
