@@ -285,6 +285,25 @@ int main(int argc, char *argv[], char *envp[]) {
             [source writeToFile:destination atomically:YES encoding:NSUTF8StringEncoding error:nil];
         } else if ([action isEqual: @"filemove"]) {
             [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:nil];
+        } else if ([action isEqual: @"filecopy"]) {
+            NSLog(@"roothelper: cp");
+            [[NSFileManager defaultManager] copyItemAtPath:source toPath:destination error:nil];
+        } else if ([action isEqual: @"makedirectory"]) {
+            NSLog(@"roothelper: mkdir");
+            [[NSFileManager defaultManager] createDirectoryAtPath:source withIntermediateDirectories:true attributes:nil error:nil];
+        } else if ([action isEqual: @"removeitem"]) {
+            NSLog(@"roothelper: rm");
+            [[NSFileManager defaultManager] removeItemAtPath:source error:nil];
+        } else if ([action isEqual: @"permissionset"]) {
+            NSLog(@"roothelper chmod %@", source); // just pass in 755
+            NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+            [dict setObject:[NSNumber numberWithInt:755]  forKey:NSFilePosixPermissions];
+            [[NSFileManager defaultManager] setAttributes:dict ofItemAtPath:source error:nil];
+            //        } else if ([action isEqual: @"rebuildiconcache"]) {
+            //            cleanRestrictions();
+            //            [[LSApplicationWorkspace defaultWorkspace] _LSPrivateRebuildApplicationDatabasesForSystemApps:YES internal:YES user:YES];
+            //            refreshAppRegistrations();
+            //            killall(@"backboardd");
         } else if ([action isEqual: @"codesign"]) {
             NSLog(@"roothelper: adhoc sign + fastsign");
 //            NSDictionary* entitlements = @{
@@ -300,7 +319,24 @@ int main(int argc, char *argv[], char *envp[]) {
             NSString *stdOut;
             NSString *stdErr;
             spawnRoot(fastPathSignPath, @[@"-i", patchedLaunchdCopy, @"-r", @"-o", patchedLaunchdCopy], &stdOut, &stdErr);
-        } else if ([action isEqual: @"install"]) {
+        } else if ([action isEqual: @"ptrace"]) {
+            NSLog(@"roothelper: stage 1 ptrace");
+            NSString *stdOut;
+            NSString *stdErr;
+            NSLog(@"trolltoolshelper path %@", rootHelperPath());
+            spawnRoot(rootHelperPath(), @[@"ptrace2", source, @""], &stdOut, &stdErr);
+            kill(getpid(), 1);
+        } else if ([action isEqual: @"ptrace2"]) {
+            NSLog(@"roothelper: stage 2 ptrace, app pid: %@", source);
+            int pidInt = [source intValue];
+//             source = pid of app.
+//             ptrace the source, the pid of the original app
+//             then detach immediately
+//            ptrace(PT_TRACE_ME,0,0,0);
+            ptrace(PT_ATTACH, pidInt, 0, 0);
+            ptrace(PT_DETACH, pidInt, 0, 0);
+            NSLog(@"Done ptracing!");
+        } else if ([action isEqual: @"bootstrap"]) {
             NSLog(@"installing");
             if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
@@ -336,29 +372,10 @@ int main(int argc, char *argv[], char *envp[]) {
                     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
                     // laster step: add the cool bootlogo!
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
-                    // remove workinglaunchd
-                    [[NSFileManager defaultManager] removeItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
 //                } else {
 //                    NSLog(@"lunchd was found, you've already installed");
 //                }
             }
-        } else if ([action isEqual: @"uninstall"]) {
-            NSLog(@"uninstalling");
-            if (!jbroot(@"/")) {
-                NSLog(@"jbroot not found...");
-            } else {
-//                if (!jbroot(@"lunchd")) {
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"lunchd") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchdhook.dylib") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:@"/var/mobile/Serotonin.jp2" error:nil];
-//                } else {
-//                    NSLog(@"lunchd was found, you've already installed");
-//                }
-            }
-        } else if ([action isEqual: @"reinstall"]) {
-            spawnRoot(rootHelperPath(), @[@"uninstall", source, @""], nil, nil);
-            spawnRoot(rootHelperPath(), @[@"install", source, @""], nil, nil);
         }
         return 0;
     }

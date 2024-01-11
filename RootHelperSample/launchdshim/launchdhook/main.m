@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include "fishhook.h"
 #include <spawn.h>
-#include <sys/spawn_internal.h>
-#include <spawn_private.h>
 #include <limits.h>
 #include <dirent.h>
 #include <stdbool.h>
@@ -93,8 +91,6 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
         return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
     }
 
-#define JETSAM_MULTIPLIER 3
-
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
     const char *springboardPath = "/System/Library/CoreServices/SpringBoard.app/SpringBoard";
@@ -102,22 +98,15 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
 
     if (!strncmp(path, springboardPath, strlen(springboardPath))) {
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-        if (attrp) {
-                    _posix_spawnattr_t attrStruct = *(_posix_spawnattr_t *)attrp;
-                    if (attrStruct) {
-                        int memlimit_active = attrStruct->psa_memlimit_active;
-                        if (memlimit_active != -1) {
-                            attrStruct->psa_memlimit_active = memlimit_active * JETSAM_MULTIPLIER;
-                        }
-                        int memlimit_inactive = attrStruct->psa_memlimit_inactive;
-                        if (memlimit_inactive != -1) {
-                            attrStruct->psa_memlimit_inactive = memlimit_inactive * JETSAM_MULTIPLIER;
-                        }
-                    }
-                }
+//        FILE *file = fopen("/var/mobile/lunchd.log", "a");
+//        char output[1024];
+//        sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
+//        fputs(output, file);
         path = coolerSpringboard;
+//        fclose(file);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
+            
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 
@@ -158,14 +147,14 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
     // requires a jp2 image to be at /var/mobile/boot-happy.jp2. ideally, make the toggle in the app actually work and create .serotonin_verbose then let launchdhook decide from there
     bootscreend_main();
 
-//    printf("[lunchd] launchdhook pid %d", getpid());
-//    if (getpid() == 1) {
-//        printf("============\n");
-//        printf("== WE ARE ==\n");
-//        printf("==  PID1  ==\n");
-//        printf("============\n\n");
-//        printf("Also, my parent is %d\n", getppid());
-//    }
+    printf("[lunchd] launchdhook pid %d", getpid());
+    if (getpid() == 1) {
+        printf("============\n");
+        printf("== WE ARE ==\n");
+        printf("==  PID1  ==\n");
+        printf("============\n\n");
+        printf("Also, my parent is %d\n", getppid());
+    }
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},

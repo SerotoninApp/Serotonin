@@ -12,5 +12,5 @@
 
 
 void fix_exploit(void);
-int go(NSString* argument);
+int go(void);
 int userspaceReboot(void);

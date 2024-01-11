@@ -26,11 +26,11 @@ To use this app, you need to be on a supported version (mentioned above), and ha
  - [KFD Exploit](https://github.com/felix-pb/kfd)
 
 ## TODO
+ - Try adding support for lower iOS versions by overwriting NSGetExecutablePath
  - Add support for arm64
+ - Add a boot splash screen (SOON)
  - Fix some Makefile jankiness
  - Fix `puaf_pages` picker crash in new UI
- - Add option and installer for Procursus (Rootless) bootstrap
- - Add system wide injection into daemons
 
 ## Credits
 - [DuyKhanhTran](https://github.com/khanhduytran0) - launchd and SpringBoard hooks
