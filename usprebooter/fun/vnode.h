@@ -130,3 +130,6 @@ Description:
   It needs orig_to_vnode and orig_nc_vp, ususally you can get value from funVnodeRedirectFile
 */
 uint64_t funVnodeUnRedirectFile(uint64_t orig_to_vnode, uint64_t orig_nc_vp);
+
+uint64_t SwitchSysBin160(char* to, char* from, uint64_t* orig_to_vnode, uint64_t* orig_nc_vp); // overwrite v_name to swap files
+int SwitchSysBin(uint64_t vnode, char* what, char* with); // overwrite v_name to swap files
