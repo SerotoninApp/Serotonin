@@ -26,6 +26,7 @@ IORegistryEntryFromPath(mach_port_t, const io_string_t);
 CFTypeRef
 IORegistryEntryCreateCFProperty(io_registry_entry_t entry, CFStringRef key, CFAllocatorRef allocator, IOOptionBits options);
 
+const char* get_kernversion(void);
 
 int do_static_patchfinder(void);
 
@@ -36,6 +37,8 @@ int do_dynamic_patchfinder(uint64_t kfd, uint64_t kbase);
 int import_kfd_offsets(void);
 
 int save_kfd_offsets(void);
+
+uint64_t get_vm_kernel_link_addr(void);
 
 extern uint64_t off_cdevsw;
 extern uint64_t off_gPhysBase;
