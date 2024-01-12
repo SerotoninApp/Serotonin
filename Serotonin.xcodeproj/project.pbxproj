@@ -77,7 +77,7 @@
 		9756F50A2B505F2600172EF9 /* lzfse_encode_base.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4C92B505F2500172EF9 /* lzfse_encode_base.c */; };
 		9756F50B2B505F2600172EF9 /* file.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4CA2B505F2500172EF9 /* file.c */; };
 		9756F50C2B505F2600172EF9 /* libhelper.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4D32B505F2500172EF9 /* libhelper.c */; };
-		9756F50D2B505F2600172EF9 /* libdimentio.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4D42B505F2500172EF9 /* libdimentio.c */; };
+		9756F50D2B505F2600172EF9 /* libdimentio.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4D42B505F2500172EF9 /* libdimentio.m */; };
 		9756F50E2B505F2600172EF9 /* libgrabkernel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4D62B505F2500172EF9 /* libgrabkernel.m */; };
 		9756F50F2B505F2600172EF9 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F4E52B505F2500172EF9 /* libcurl.a */; };
 		9756F5102B505F2600172EF9 /* libgrabkernel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F4E62B505F2500172EF9 /* libgrabkernel.a */; };
@@ -213,7 +213,7 @@
 		9756F4552B505EE000172EF9 /* lzvn_encode_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzvn_encode_base.h; sourceTree = "<group>"; };
 		9756F4562B505EE000172EF9 /* lzfse_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzfse_internal.h; sourceTree = "<group>"; };
 		9756F4572B505EE000172EF9 /* libhelper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libhelper.c; sourceTree = "<group>"; };
-		9756F4582B505EE000172EF9 /* libdimentio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libdimentio.c; sourceTree = "<group>"; };
+		9756F4582B505EE000172EF9 /* libdimentio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = libdimentio.m; sourceTree = "<group>"; };
 		9756F45A2B505EE000172EF9 /* libgrabkernel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = libgrabkernel.m; sourceTree = "<group>"; };
 		9756F45B2B505EE000172EF9 /* all_libgrabkernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all_libgrabkernel.h; sourceTree = "<group>"; };
 		9756F45C2B505EE000172EF9 /* libgrabkernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libgrabkernel.h; sourceTree = "<group>"; };
@@ -495,7 +495,7 @@
 				9756F4252B505EE000172EF9 /* libdimentio.h */,
 				9756F4262B505EE000172EF9 /* patchfinder.m */,
 				9756F4272B505EE000172EF9 /* libhelper */,
-				9756F4582B505EE000172EF9 /* libdimentio.c */,
+				9756F4582B505EE000172EF9 /* libdimentio.m */,
 				9756F4592B505EE000172EF9 /* libgrabkernel */,
 				9756F46D2B505EE000172EF9 /* patchfinder64.m */,
 				9756F46E2B505EE000172EF9 /* patchfinder.h */,
@@ -695,7 +695,7 @@
 				9756F4A12B505F2500172EF9 /* libdimentio.h */,
 				9756F4A22B505F2500172EF9 /* patchfinder.m */,
 				9756F4A32B505F2500172EF9 /* libhelper */,
-				9756F4D42B505F2500172EF9 /* libdimentio.c */,
+				9756F4D42B505F2500172EF9 /* libdimentio.m */,
 				9756F4D52B505F2500172EF9 /* libgrabkernel */,
 				9756F4E92B505F2500172EF9 /* patchfinder64.m */,
 				9756F4EA2B505F2500172EF9 /* patchfinder.h */,
@@ -1418,7 +1418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9756F50D2B505F2600172EF9 /* libdimentio.c in Sources */,
+				9756F50D2B505F2600172EF9 /* libdimentio.m in Sources */,
 				9756F4752B505EE000172EF9 /* asn1.c in Sources */,
 				9756F4F32B505F2600172EF9 /* devtree.c in Sources */,
 				9756F4702B505EE000172EF9 /* img4.c in Sources */,
@@ -1475,7 +1475,7 @@
 				D6E08F502B48E24F00AE49BF /* Codable+Representation.swift in Sources */,
 				9756F5082B505F2600172EF9 /* lzfse_fse.c in Sources */,
 				9756F4F42B505F2600172EF9 /* img4.c in Sources */,
-				9756F4892B505EE100172EF9 /* libdimentio.c in Sources */,
+				9756F4892B505EE100172EF9 /* libdimentio.m in Sources */,
 				9756F50C2B505F2600172EF9 /* libhelper.c in Sources */,
 				9756F4FE2B505F2600172EF9 /* load-commands.c in Sources */,
 				D6E0908D2B48E3A200AE49BF /* ResizableLayer.swift in Sources */,
