@@ -6,6 +6,7 @@
 #define kread_sem_open_h
 
 #include "../../../fun/kpf/libdimentio.h"
+#include "../../../fun/kpf/patchfinder.h"
 
 const char* kread_sem_open_name = "kfd-posix-semaphore";
 
@@ -141,7 +142,8 @@ void kread_sem_open_find_proc(struct kfd* kfd)
             }
             kerntask_tte_page -= 0x1000;
         }
-        printf("defeated kaslr, kbase: 0x%llx, kslide: 0x%llx\n", kbase, kbase - 0xFFFFFFF007004000);
+        uint64_t vm_kernel_link_addr = get_vm_kernel_link_addr();
+        printf("defeated kaslr, kbase: 0x%llx, kslide: 0x%llx\n", kbase, kbase - vm_kernel_link_addr);
         
         //Step 2. run dynamic patchfinder
         do_dynamic_patchfinder((u64)kfd, kbase);
