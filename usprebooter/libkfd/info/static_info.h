@@ -9,7 +9,8 @@
  * makedefs/MakeInc.def
  */
 
-#define ARM64_LINK_ADDR    0xfffffff007004000
+uint64_t arm64_link_addr = 0;
+#define ARM64_LINK_ADDR    arm64_link_addr
 
 /*
  * osfmk/arm64/proc_reg.h
