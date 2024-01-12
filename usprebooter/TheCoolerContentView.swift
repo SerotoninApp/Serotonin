@@ -287,7 +287,6 @@ struct CoolerContentView: View {
                                 VStack {
                                                                         
                                     Toggle("Reinstall jailbreak", isOn: $reinstall)
-//                                        .disabled(true)
                                         .onChange(of: reinstall) { _ in
                                             if reinstall {
                                                 withAnimation(fancyAnimation) {
@@ -295,16 +294,16 @@ struct CoolerContentView: View {
                                                 }
                                             }
                                         }
+                                        .disabled(resetfs);
                                     Divider()
                                     Toggle("Remove jailbreak", isOn: $resetfs)
-//                                        .disabled(true)
                                         .onChange(of: resetfs) { _ in
                                             if resetfs {
                                                 withAnimation(fancyAnimation) {
                                                     reinstall = false
                                                 }
                                             }
-                                        }
+                                        }.disabled(reinstall);
                                     Divider()
                                     Button("More Settings", systemImage: "gear") {
                                         UIImpactFeedbackGenerator(style: .medium).impactOccurred(intensity: 200)

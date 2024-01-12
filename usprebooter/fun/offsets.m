@@ -240,6 +240,8 @@ void _offsets_init(void) {
         
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.41.9/bsd/sys/vnode_internal.h#L158
         off_vnode_v_ncchildren_tqh_first = 0x30;
+        // hmm..
+        off_vnode_v_nclinks_lh_first = 0x40;
         off_vnode_v_iocount = 0x64;
         off_vnode_v_usecount = 0x60;
         off_vnode_v_flag = 0x54;

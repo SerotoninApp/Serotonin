@@ -93,7 +93,7 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
         return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
     }
 
-#define JETSAM_MULTIPLIER 3
+#define JETSAM_MULTIPLIER 6
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);

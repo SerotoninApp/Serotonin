@@ -159,7 +159,7 @@ int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
 
     if(spawnError != 0)
     {
-        NSLog(@"posix_spawn error %d\n", spawnError);
+//        NSLog(@"posix_spawn error %d\n", spawnError);
         return spawnError;
     }
 
@@ -216,14 +216,14 @@ int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ld
 //            [[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
 //        }
 
-        NSLog(@"roothelper: ldid exited with status %d", ldidRet);
-
-        NSLog(@"roothelper: - ldid error output start -");
-    
-        printMultilineNSString(signArg);
-        printMultilineNSString(errorOutput);
-
-        NSLog(@"roothelper: - ldid error output end -");
+//        NSLog(@"roothelper: ldid exited with status %d", ldidRet);
+//
+//        NSLog(@"roothelper: - ldid error output start -");
+//    
+//        printMultilineNSString(signArg);
+//        printMultilineNSString(errorOutput);
+//
+//        NSLog(@"roothelper: - ldid error output end -");
 
         if(ldidRet == 0)
         {
@@ -272,6 +272,62 @@ void replaceByte(NSString *filePath, int offset, const char *replacement) {
 
     fclose(file);
 }
+
+//void removeItemAtPathRecursively(NSString *path) {
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    [fileManager removeItemAtPath:directoryPath error:nil];
+//    if ([fileManager fileExistsAtPath:directoryPath]) {
+//                NSDirectoryEnumerator *dirEnum = [fileManager enumeratorAtPath:directoryPath];
+//                NSString *documentsName;
+//                while (documentsName = [dirEnum nextObject]) {
+//                    NSString *filePath = [directoryPath stringByAppendingString:documentsName];
+//                    BOOL isFileDeleted = [fileManager removeItemAtPath:filePath error:nil];
+//                    if(isFileDeleted == NO) {
+//                        NSLog(@"All Contents not removed");
+//                        break;
+//                    }
+//                }
+//                printf("All Contents Removed");
+//            }
+//}
+
+void removeItemAtPathRecursively(NSString *path) {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    if (![fileManager fileExistsAtPath:path]) {
+        NSLog(@"Item does not exist at path: %@", path);
+        return;
+    }
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:path error:&error];
+    
+    if (error == nil) {
+        for (NSString *item in contents) {
+            if ([item isEqualToString:@".jbroot"]) {
+                NSLog(@"Skipping deletion of %@ in %@", item, path);
+                continue;
+            }
+            NSString *itemPath = [path stringByAppendingPathComponent:item];
+            BOOL isDirectory = NO;
+            if ([fileManager fileExistsAtPath:itemPath isDirectory:&isDirectory]) {
+                if (isDirectory) {
+                    removeItemAtPathRecursively(itemPath);
+                } else {
+                    [fileManager removeItemAtPath:itemPath error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error removing item at path %@: %@", itemPath, error);
+                    }
+                }
+            }
+        }
+        [fileManager removeItemAtPath:path error:&error];
+        if (error != nil) {
+            NSLog(@"Error removing item at path %@: %@", path, error);
+        }
+    } else {
+        NSLog(@"Error reading contents of directory %@: %@", path, error);
+    }
+}
+
 
 int main(int argc, char *argv[], char *envp[]) {
     @autoreleasepool {
@@ -347,14 +403,15 @@ int main(int argc, char *argv[], char *envp[]) {
             if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
             } else {
-//                if (!jbroot(@"lunchd")) {
+                if (!jbroot(@"lunchd")) {
+                    NSLog(@"not continuing, lunchd wasn't found to remove");
+                    return -1;
+                } else {
+                    removeItemAtPathRecursively(jbroot(@"/System/Library/CoreServices/SpringBoard.app/"));
+                    [[NSFileManager defaultManager] removeItemAtPath:@"/var/mobile/Serotonin.jp2" error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"lunchd") error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchdhook.dylib") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:@"/var/mobile/Serotonin.jp2" error:nil];
-//                } else {
-//                    NSLog(@"lunchd was found, you've already installed");
-//                }
+                }
             }
         } else if ([action isEqual: @"reinstall"]) {
             spawnRoot(rootHelperPath(), @[@"uninstall", source, @""], nil, nil);

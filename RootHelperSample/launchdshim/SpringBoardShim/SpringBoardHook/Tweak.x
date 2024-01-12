@@ -117,12 +117,6 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
     return WEXITSTATUS(status);
 }
 
-%hook CSStatusTextView
-- (void)setInternalLegalText:(NSString *)string {
-    %orig(@":troll:");
-}
-%end
-
 bool isarm64e(void) {
     int ptrAuthVal = 0;
     size_t len = sizeof(ptrAuthVal);
