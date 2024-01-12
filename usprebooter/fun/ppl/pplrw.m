@@ -579,7 +579,7 @@ int test_kttr(void)
     uint64_t ucreds = kread64(proc_ro + off_p_ro_p_ucred);
     
     uint64_t cr_label_pac = kread64(ucreds + off_u_cr_label);
-    uint64_t cr_label = cr_label_pac | 0xffffff8000000000;
+    uint64_t cr_label = unsign_kptr(cr_label_pac);
     printf("[i] self ucred->cr_label: 0x%llx\n", cr_label);
     
     uint64_t cr_posix_p = ucreds + off_u_cr_posix;

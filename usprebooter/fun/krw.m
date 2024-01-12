@@ -11,6 +11,15 @@
 #include "kpf/patchfinder.h"
 
 uint64_t _kfd = 0;
+uint64_t unsign_kptr(uint64_t pac_kaddr) {
+    if ((pac_kaddr & 0xFFFFFF0000000000) == 0xFFFFFF0000000000) {
+        return pac_kaddr;
+    }
+    if(T1SZ_BOOT != 0) {
+        return pac_kaddr |= ~((1ULL << (64U - T1SZ_BOOT)) - 1U);
+    }
+    return pac_kaddr;
+}
 
 uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method)
 {
@@ -116,7 +125,7 @@ uint64_t kread64(uint64_t where) {
 
 //Thanks @jmpews
 uint64_t kread64_smr(uint64_t where) {
-    uint64_t value = kread64(where) | 0xffffff8000000000;
+    uint64_t value = unsign_kptr(kread64(where));
     if((value & 0x400000000000) != 0)
         value &= 0xFFFFFFFFFFFFFFE0;
     return value;
@@ -167,7 +176,7 @@ uint64_t do_phystokv(uint64_t what) {
 uint64_t kread64_ptr(uint64_t kaddr) {
     uint64_t ptr = kread64(kaddr);
     if ((ptr >> 55) & 1) {
-        return ptr | 0xFFFFFF8000000000;
+        return unsign_kptr(ptr);
     }
 
     return ptr;

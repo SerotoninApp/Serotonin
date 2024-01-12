@@ -29,7 +29,7 @@ uint64_t getTask(void) {
 uint64_t kread_ptr(uint64_t kaddr) {
     uint64_t ptr = kread64(kaddr);
     if ((ptr >> 55) & 1) {
-        return ptr | 0xFFFFFF8000000000;
+        return unsign_kptr(ptr);
     }
 
     return ptr;

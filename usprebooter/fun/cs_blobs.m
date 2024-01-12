@@ -62,7 +62,7 @@ NSMutableDictionary *DEREntitlementsDecode(uint8_t *start, uint8_t *end)
 
 uint64_t fun_cs_blobs(char *execPath) {
     
-    uint64_t ubc_info = kread64(getVnodeAtPath(execPath) + off_vnode_vu_ubcinfo) | 0xffffff8000000000;
+    uint64_t ubc_info = unsign_kptr(kread64(getVnodeAtPath(execPath) + off_vnode_vu_ubcinfo));
     uint32_t cs_add_gen = kread32(ubc_info + off_ubc_info_cs_add_gen);
 //    cs_add_gen += 1;
     printf("cs_add_gen: 0x%x\n", cs_add_gen);
@@ -86,7 +86,7 @@ uint64_t fun_proc_dump_entitlements(uint64_t proc) {
     uint64_t ucreds = kread64(proc_ro + off_p_ro_p_ucred);
     
     uint64_t cr_label_pac = kread64(ucreds + off_u_cr_label);
-    uint64_t cr_label = cr_label_pac | 0xffffff8000000000;
+    uint64_t cr_label = unsign_kptr(cr_label_pac);
     printf("[i] ucred->cr_label: 0x%llx\n", cr_label);
     
     
@@ -137,7 +137,7 @@ uint64_t fun_vnode_dump_entitlements(const char* path) {
     uint64_t vnode = getVnodeAtPath(path);
     
     uint64_t ubc_info_pac = kread64(vnode + off_vnode_vu_ubcinfo);
-    uint64_t ubc_info = ubc_info_pac | 0xffffff8000000000;
+    uint64_t ubc_info = unsign_kptr(ubc_info_pac);
     
     uint64_t csblobs = kread64(ubc_info + off_ubc_info_cs_blobs);
     if(csblobs == 0) {
