@@ -106,7 +106,7 @@ uint64_t off_ptov__table = 0;
 
 void _offsets_init(void) {
     if (SYSTEM_VERSION_EQUAL_TO(@"16.1.2")) {
-        printf("[i] offsets selected for iOS 16.1.2\n");
+        print("%s","[i] offsets selected for iOS 16.1.2\n");
         //iPhone 14 Pro 16.1.2 offsets
         
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.41.9/bsd/sys/proc_internal.h#L273
