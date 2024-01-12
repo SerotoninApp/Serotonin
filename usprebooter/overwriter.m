@@ -26,7 +26,9 @@ bool overwrite_patchedlaunchd_kfd(void) {
         uint64_t orig_to_vnode = 0;
         SwitchSysBin160("/sbin/launchd", getLunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
     } else {
-        SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd().UTF8String);
+        uint64_t orig_nc_vp = 0;
+        uint64_t orig_to_vnode = 0;
+        SwitchSysBin160("/sbin/launchd", getLunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
     }
     printf("[i] launchd haxed\n");
     return true;
