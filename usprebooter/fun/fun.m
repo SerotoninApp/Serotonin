@@ -504,7 +504,7 @@ Overwrite tccd:
     return 0;
 }
 void fix_exploit(void) {
-    printf("[*] Exploit fixup");
+    print("%s","[*] Exploit fixup");
     _offsets_init();
     pid_t myPid = getpid();
     uint64_t selfProc = getProc(myPid);
