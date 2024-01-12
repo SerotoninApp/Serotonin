@@ -41,7 +41,7 @@
 		9756F4862B505EE100172EF9 /* lzfse_encode_base.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F44D2B505EE000172EF9 /* lzfse_encode_base.c */; };
 		9756F4872B505EE100172EF9 /* file.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F44E2B505EE000172EF9 /* file.c */; };
 		9756F4882B505EE100172EF9 /* libhelper.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4572B505EE000172EF9 /* libhelper.c */; };
-		9756F4892B505EE100172EF9 /* libdimentio.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4582B505EE000172EF9 /* libdimentio.c */; };
+		9756F4892B505EE100172EF9 /* libdimentio.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4582B505EE000172EF9 /* libdimentio.m */; };
 		9756F48A2B505EE100172EF9 /* libgrabkernel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F45A2B505EE000172EF9 /* libgrabkernel.m */; };
 		9756F48B2B505EE100172EF9 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F4692B505EE000172EF9 /* libcurl.a */; };
 		9756F48C2B505EE100172EF9 /* libgrabkernel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F46A2B505EE000172EF9 /* libgrabkernel.a */; };
