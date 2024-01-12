@@ -6,6 +6,7 @@
 //
 
 #include "offsets.h"
+#include "../libkfd/commmon.h"
 #include <UIKit/UIKit.h>
 #include <Foundation/Foundation.h>
 
@@ -239,7 +240,7 @@ void _offsets_init(void) {
         off_ptov__table = 0xFFFFFFF0077FFA18;
         
     } else {
-        printf("[-] No matching offsets.\n");
+        print("%s","[-] No matching offsets.\n");
         exit(EXIT_FAILURE);
     }
 }
