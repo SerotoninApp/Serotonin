@@ -173,7 +173,8 @@ int do_static_patchfinder(void) {
 int do_dynamic_patchfinder(uint64_t kfd, uint64_t kbase) {
     printf("[!] Starting dynamic patchfinder (Thanks 0x7ff)\n");
     
-    uint64_t kslide = kbase - 0xFFFFFFF007004000;
+    uint64_t vm_kernel_link_addr = get_vm_kernel_link_addr();
+    uint64_t kslide = kbase - vm_kernel_link_addr;
     set_kbase(kbase);
     set_kfd(kfd);
     pfinder_t pfinder;
@@ -304,4 +305,12 @@ int save_kfd_offsets(void) {
     printf("saved offsets for kfd: %s\n", save_path.UTF8String);
     
     return 0;
+}
+
+uint64_t get_vm_kernel_link_addr(void) {
+    const char* kernversion = get_kernversion();
+    if(strstr(kernversion, "T8103") != NULL || strstr(kernversion, "T8112") != NULL)
+        return 0xFFFFFE0007004000;
+    else
+        return 0xFFFFFFF007004000;
 }
