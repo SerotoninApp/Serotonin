@@ -25,7 +25,7 @@
 #include "ppl/GPU_CoreSight.h"
 #include "ppl/pplrw.h"
 #include "kpf/patchfinder.h"
-
+#include "../libkfd/common.h"
 int funUcred(uint64_t proc) {
     uint64_t proc_ro = kread64(proc + off_p_proc_ro);
     uint64_t ucreds = kread64(proc_ro + off_p_ro_p_ucred);
