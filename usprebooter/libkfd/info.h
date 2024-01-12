@@ -103,7 +103,15 @@ void info_init(struct kfd* kfd)
 //    kern_versions[kfd->info.env.vid].kernelcache__vn_kqfilter = off_vn_kqfilter;
 //    kern_versions[kfd->info.env.vid].proc__object_size = off_proc_object_size;
     
-    t1sz_boot = 25;
+    //T8120(A16), T8103(M1), T8112(M2): t1sz_boot = 17;
+    //others: t1sz_boot = 25;
+    //Source: https://www.reddit.com/r/jailbreak/comments/15b9l7n/comment/jtssz14/?utm_source=share&utm_medium=web2x&context=3
+    if(strstr(get_kernversion(), "T8120") != NULL || strstr(get_kernversion(), "T8103") != NULL || strstr(get_kernversion(), "T8112") != NULL)
+        t1sz_boot = 17;
+    else
+        t1sz_boot = 25;
+    
+    arm64_link_addr = get_vm_kernel_link_addr();
     
     print_u64(kfd->info.env.vid);
 
