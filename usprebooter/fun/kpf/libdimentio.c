@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "patchfinder.h"
 #include "libdimentio.h"
 #include <compression.h>
 #include <dlfcn.h>
@@ -742,6 +743,8 @@ kern_return_t
 pfinder_init(pfinder_t *pfinder) {
     kern_return_t ret = KERN_FAILURE;
     
+    vm_kernel_link_addr = get_vm_kernel_link_addr();
+    
     pfinder_reset(pfinder);
     
     if(kernel_path != NULL && access(kernel_path, F_OK) == 0) {
@@ -1248,7 +1251,7 @@ pfinder_vn_kqfilter(pfinder_t pfinder)
         }
     }
     if(!found)
-        return 0;
+        return pfinder_vn_kqfilter_2(pfinder);
     
     ref = pfinder_bof64(pfinder, pfinder.sec_text.s64.addr, ref);
     
