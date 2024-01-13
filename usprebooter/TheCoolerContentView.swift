@@ -30,6 +30,7 @@ struct CoolerContentView: View {
     @AppStorage("hide") var hide = false
     @AppStorage("loadd") var loadLaunch = false
     @AppStorage("showStdout") var showStdout = true
+    @AppStorage("isBeta") var isBeta = false
     @State var reinstall = false
     @State var resetfs = false
     
