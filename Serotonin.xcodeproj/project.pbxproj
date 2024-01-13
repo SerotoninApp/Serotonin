@@ -47,9 +47,6 @@
 		9756F48D2B505EE100172EF9 /* libfragmentzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9756F46B2B505EE000172EF9 /* libfragmentzip.a */; };
 		9756F48E2B505EE100172EF9 /* patchfinder64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F46D2B505EE000172EF9 /* patchfinder64.m */; };
 		9756F4902B505F1900172EF9 /* cs_blobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F48F2B505F1900172EF9 /* cs_blobs.m */; };
-		9756F4F02B505F2600172EF9 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4922B505F2500172EF9 /* vm_unaligned_copy_switch_race.c */; };
-		9756F4F12B505F2600172EF9 /* grant_full_disk_access.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4932B505F2500172EF9 /* grant_full_disk_access.m */; };
-		9756F4F22B505F2600172EF9 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4942B505F2500172EF9 /* helpers.m */; };
 		9756F5132B505F2600172EF9 /* GPU_CoreSight.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4EC2B505F2600172EF9 /* GPU_CoreSight.m */; };
 		9756F5142B505F2600172EF9 /* pplrw.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4EE2B505F2600172EF9 /* pplrw.m */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
@@ -201,12 +198,6 @@
 		9756F46D2B505EE000172EF9 /* patchfinder64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = patchfinder64.m; sourceTree = "<group>"; };
 		9756F46E2B505EE000172EF9 /* patchfinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchfinder.h; sourceTree = "<group>"; };
 		9756F48F2B505F1900172EF9 /* cs_blobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cs_blobs.m; sourceTree = "<group>"; };
-		9756F4922B505F2500172EF9 /* vm_unaligned_copy_switch_race.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vm_unaligned_copy_switch_race.c; sourceTree = "<group>"; };
-		9756F4932B505F2500172EF9 /* grant_full_disk_access.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = grant_full_disk_access.m; sourceTree = "<group>"; };
-		9756F4942B505F2500172EF9 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
-		9756F4952B505F2500172EF9 /* vm_unaligned_copy_switch_race.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vm_unaligned_copy_switch_race.h; sourceTree = "<group>"; };
-		9756F4962B505F2500172EF9 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
-		9756F4972B505F2500172EF9 /* grant_full_disk_access.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = grant_full_disk_access.h; sourceTree = "<group>"; };
 		9756F4EC2B505F2600172EF9 /* GPU_CoreSight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPU_CoreSight.m; sourceTree = "<group>"; };
 		9756F4ED2B505F2600172EF9 /* pplrw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pplrw.h; sourceTree = "<group>"; };
 		9756F4EE2B505F2600172EF9 /* pplrw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pplrw.m; sourceTree = "<group>"; };
@@ -569,19 +560,6 @@
 			path = curl;
 			sourceTree = "<group>";
 		};
-		9756F4912B505F2500172EF9 /* mdc */ = {
-			isa = PBXGroup;
-			children = (
-				9756F4922B505F2500172EF9 /* vm_unaligned_copy_switch_race.c */,
-				9756F4932B505F2500172EF9 /* grant_full_disk_access.m */,
-				9756F4942B505F2500172EF9 /* helpers.m */,
-				9756F4952B505F2500172EF9 /* vm_unaligned_copy_switch_race.h */,
-				9756F4962B505F2500172EF9 /* helpers.h */,
-				9756F4972B505F2500172EF9 /* grant_full_disk_access.h */,
-			);
-			path = mdc;
-			sourceTree = "<group>";
-		};
 		9756F4EB2B505F2600172EF9 /* ppl */ = {
 			isa = PBXGroup;
 			children = (
@@ -770,7 +748,6 @@
 		C8BFCC772B3FFE560008D8FD /* fun */ = {
 			isa = PBXGroup;
 			children = (
-				9756F4912B505F2500172EF9 /* mdc */,
 				9756F4EB2B505F2600172EF9 /* ppl */,
 				9756F48F2B505F1900172EF9 /* cs_blobs.m */,
 				9756F41C2B505EE000172EF9 /* kpf */,
@@ -1129,7 +1106,6 @@
 				9756F4862B505EE100172EF9 /* lzfse_encode_base.c in Sources */,
 				D6E08F552B48E24F00AE49BF /* URL+Transferable.swift in Sources */,
 				9756F4782B505EE000172EF9 /* macho.c in Sources */,
-				9756F4F22B505F2600172EF9 /* helpers.m in Sources */,
 				9756F48A2B505EE100172EF9 /* libgrabkernel.m in Sources */,
 				C805CA452B1719C1005157BA /* util.m in Sources */,
 				9756F4732B505EE000172EF9 /* hslist.c in Sources */,
@@ -1156,7 +1132,6 @@
 				9756F4712B505EE000172EF9 /* asn1.c in Sources */,
 				9756F47C2B505EE000172EF9 /* symbol.c in Sources */,
 				D6E08F1E2B48B04E00AE49BF /* TheCoolerContentView.swift in Sources */,
-				9756F4F02B505F2600172EF9 /* vm_unaligned_copy_switch_race.c in Sources */,
 				9756F47B2B505EE000172EF9 /* macho32.c in Sources */,
 				D6E08F5D2B48E24F00AE49BF /* Transferable.swift in Sources */,
 				D6E08F502B48E24F00AE49BF /* Codable+Representation.swift in Sources */,
@@ -1185,7 +1160,6 @@
 				9756F4852B505EE100172EF9 /* lzvn_encode_base.c in Sources */,
 				D6E090152B48E26000AE49BF /* String+LocalizationKey.swift in Sources */,
 				D6E08F4C2B48E24F00AE49BF /* UTType.swift in Sources */,
-				9756F4F12B505F2600172EF9 /* grant_full_disk_access.m in Sources */,
 				9756F4762B505EE000172EF9 /* hstring.c in Sources */,
 				D6E0900F2B48E26000AE49BF /* Environment.swift in Sources */,
 				D6E08F572B48E24F00AE49BF /* Never+Transferable.swift in Sources */,

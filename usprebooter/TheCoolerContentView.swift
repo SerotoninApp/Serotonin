@@ -120,20 +120,20 @@ struct CoolerContentView: View {
 //                            .disabled(true)
                             Toggle("Beta iOS",systemImage: "star",isOn: $isBeta)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
-                                .onChange(of: verboseBoot) { newValue in
-                                    if newValue {
+                                .onChange(of: verboseBoot) { a in
+//                                    if newValue {
                                         spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
-                                    } else {
-                                        spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
-                                    }
+//                                    } else {
+//                                        spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
+//                                    }
                                 }
                             Toggle("Hide confidential text", systemImage: "ladybug", isOn: $hideText)
-                                    .onChange(of: hideText) { newValue in
-                                        if newValue {
+                                    .onChange(of: hideText) { _ in
+//                                        if newValue {
+//                                            spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
+//                                        } else {
                                             spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
-                                        } else {
-                                            spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
-                                        }
+//                                        }
                                     }
 
 //                                .onChange(of: verboseBoot) {_ in

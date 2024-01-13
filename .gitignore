@@ -11,5 +11,7 @@ Serotonin.xcodeproj/project.xcworkspace/xcuserdata/ibarahime.xcuserdatad
 RootHelperSample/RootHelperSample.xcodeproj/xcuserdata
 RootHelperSample/build
 RootHelperSample/launchdshim/launchdhook/.theos
+RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib
+RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/hideConfidentialText.dylib
 apple-include
 ChOma_host
