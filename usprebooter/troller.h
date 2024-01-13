@@ -4,7 +4,7 @@
 //
 //  Created by LL on 29/11/23.
 //
-
+#include <stdbool.h>
 #ifndef troller_h
 #define troller_h
 int userspaceReboot(void);
