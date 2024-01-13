@@ -26,6 +26,7 @@ struct CoolerContentView: View {
     @State var blurScreen = false
     @AppStorage("cr") var customReboot = true
     @AppStorage("verbose") var verboseBoot = false
+    @AppStorage("hideText") var hideText = false
     @AppStorage("unthreded") var untether = true
     @AppStorage("hide") var hide = false
     @AppStorage("loadd") var loadLaunch = false
@@ -119,17 +120,33 @@ struct CoolerContentView: View {
 //                            .disabled(true)
                             Toggle("Beta iOS",systemImage: "star",isOn: $isBeta)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
-                                .onChange(of: verboseBoot) {_ in
-                                    if verboseBoot {
-                                        if ((spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)) == -1) {
-                                            verboseBoot = false
-                                        }
+                                .onChange(of: verboseBoot) { newValue in
+                                    if newValue {
+                                        spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
                                     } else {
-                                        if ((spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)) == 1) {
-                                            verboseBoot = true
-                                        }
+                                        spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
                                     }
                                 }
+                            Toggle("Hide confidential text", systemImage: "ladybug", isOn: $hideText)
+                                    .onChange(of: hideText) { newValue in
+                                        if newValue {
+                                            spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
+                                        } else {
+                                            spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
+                                        }
+                                    }
+
+//                                .onChange(of: verboseBoot) {_ in
+//                                    if verboseBoot {
+//                                        if ((spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)) == -1) {
+//                                            verboseBoot = false
+//                                        }
+//                                    } else {
+//                                        if ((spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)) == 1) {
+//                                            verboseBoot = true
+//                                        }
+//                                    }
+//                                }
 //                            Group {
 //                                Toggle("Enable untether", systemImage: "slash.circle", isOn: $untether)
 //                                Toggle("Hide environment", systemImage: "eye.slash", isOn: $hide)

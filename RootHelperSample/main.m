@@ -356,10 +356,13 @@ int main(int argc, char *argv[], char *envp[]) {
                     //                7. place springboardhooksigned.dylib as jbroot/SpringBoard.app/springboardhook.dylib
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/springboardhook.dylib") error:nil];
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
-                    // last step: create a symlink to jbroot named .jbroot
+                    // 8. create a symlink to jbroot named .jbroot
                     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
-                    // laster step: add the cool bootlogo!
+                    // 9. add the cool bootlogo!
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
+                    // 10. add our confidential text hider into regular TweakInject dir
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"hideconfidentialtext.plist"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"] error:nil];
                     // remove workinglaunchd
                     [[NSFileManager defaultManager] removeItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
 //                } else {
@@ -394,7 +397,17 @@ int main(int argc, char *argv[], char *envp[]) {
                     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
                     return -1;
                 }
+        } else if ([action isEqual: @"hideText"]) {
+            NSString *filePath = @"/var/mobile/.serotonin_hidetext";
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+            if (!fileExists) {
+                [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+                return 1;
             } else {
+                [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                return -1;
+            }
+        } else {
                 return 0;
             }
         }

@@ -30,6 +30,13 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	echo "[*] Signing SB hook"
 	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/.theos/obj/debug/SpringBoardHook.dylib -r -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib
 	
+	echo "[*] Building hideconfidentiatext"
+	$(MAKE) -C RootHelperSample/launchdshim/hideConfidentialText/
+
+	
+	echo "[*] Signing hideconfidentialtext"
+	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/hideConfidentialText/.theos/obj/debug/hideConfidentialText.dylib -r -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/hideConfidentialText.dylib
+	
 	# jank workaround at best, can someone else please fix this weird file dependency? – bomberfish
 	echo "[*] Copying fastPathSign"
 	cp RootHelperSample/Exploits/fastPathSign/fastPathSign ChOma/output/ios/tests
@@ -46,7 +53,8 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	cp RootHelperSample/.theos/obj/debug/arm64/trolltoolsroothelper Payload/usprebooter.app/trolltoolsroothelper
 	install -m755 RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib Payload/usprebooter.app/launchdhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib Payload/usprebooter.app/springboardhooksigned.dylib
-	
+	install -m755 RootHelperSample/launchdshim/hideConfidentialText/.theos/obj/debug/hideConfidentialText.dylib Payload/usprebooter.app/hideconfidentialtext.dylib
+	cp RootHelperSample/launchdshim/hideConfidentialText/hideconfidentialtext.plist Payload/usprebooter.app/hideconfidentialtext.plist
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/usprebooter.app/{fastPathSign,ldid,trolltoolsroothelper}
 	$(LDID) -Sent.plist -Cadhoc Payload/usprebooter.app/usprebooter
 	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"

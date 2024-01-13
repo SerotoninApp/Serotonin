@@ -55,7 +55,7 @@ struct ContentView: View {
                         ForEach(0 ..< LogItems.count, id: \.self) { LogItem in
                             Text("\(String(LogItems[LogItem]))")
                                 .textSelection(.enabled)
-                                .font(.custom("Menlo", size: 10))
+                                .font(.custom("Menlo", size: 9))
                                 .foregroundColor(.white)
                         }
                     }
