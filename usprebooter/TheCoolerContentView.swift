@@ -25,8 +25,8 @@ struct CoolerContentView: View {
     @State var showingGradient = false
     @State var blurScreen = false
     @AppStorage("cr") var customReboot = true
-    @AppStorage("verbose") var verboseBoot = false
-    @AppStorage("hideText") var hideText = false
+    @State var verboseBoot = false
+    @State var hideText = false
     @AppStorage("unthreded") var untether = true
     @AppStorage("hide") var hide = false
     @AppStorage("loadd") var loadLaunch = false
@@ -36,11 +36,9 @@ struct CoolerContentView: View {
     @State var resetfs = false
     let mainBundlePath = Bundle.main.bundlePath + "/trolltoolsroothelper"
     @State var shouldShowLog = true
-
     @AppStorage("headroom") var staticHeadroomMB: Double = 512.0
     @AppStorage("pages") var pUaFPages: Double = 3072.0
     @AppStorage("theme") var theme: Int = 0
-
     public func openConsolePipe() {
         setvbuf(stdout, nil, _IONBF, 0)
         dup2(pipe.fileHandleForWriting.fileDescriptor,
@@ -56,6 +54,20 @@ struct CoolerContentView: View {
                     logItems.append(str)
                 }
             }
+        }
+    }
+    public func updateVerboseHidden() {
+        if (spawnRoot(mainBundlePath, ["checkVerbose", "", ""], nil, nil) == 1) {
+            verboseBoot = true
+        } else {
+            verboseBoot = false
+        }
+    }
+    public func updateHiddenText() {
+        if (spawnRoot(mainBundlePath, ["checkHidden", "", ""], nil, nil) == 1) {
+            hideText = true
+        } else {
+            hideText = false
         }
     }
 
@@ -120,21 +132,45 @@ struct CoolerContentView: View {
 //                            .disabled(true)
                             Toggle("Beta iOS",systemImage: "star",isOn: $isBeta)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
-                                .onChange(of: verboseBoot) { a in
-//                                    if newValue {
-                                        spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
-//                                    } else {
-//                                        spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)
-//                                    }
-                                }
-                            Toggle("Hide confidential text", systemImage: "ladybug", isOn: $hideText)
-                                    .onChange(of: hideText) { _ in
-//                                        if newValue {
-//                                            spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
-//                                        } else {
-                                            spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil)
+                                .onChange(of: verboseBoot) { _ in
+                                    if verboseBoot {
+//                                        if !(FileManager.default.createFile(atPath: "/var/mobile/.serotonin_verbose", contents: nil)) {
+                                        if (spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil) != 1) {
+                                            verboseBoot = false
+                                        }
+                                    } else {
+//                                        do {
+//                                            try FileManager.default.removeItem(atPath: "/var/mobile/.serotonin_verbose")
+//                                        } catch {
+//                                            verboseBoot = true
 //                                        }
+                                        if (spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil) != 2) {
+                                            verboseBoot = true
+                                        }
                                     }
+                                }
+
+                            Toggle("Hide confidential text", systemImage: "ladybug", isOn: $hideText)
+//                                .onAppear(perform: {
+//                                    updateHiddenText()
+//                                })
+                                .onChange(of: hideText) { _ in
+                                    if hideText {
+//                                        if !(FileManager.default.createFile(atPath: "/var/mobile/.serotonin_verbose", contents: nil)) {
+                                        if (spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil) != 1) {
+                                            hideText = false
+                                        }
+                                    } else {
+//                                        do {
+//                                            try FileManager.default.removeItem(atPath: "/var/mobile/.serotonin_verbose")
+//                                        } catch {
+//                                            verboseBoot = true
+//                                        }
+                                        if (spawnRoot(mainBundlePath, ["hideText", "", ""], nil, nil) != 2) {
+                                            verboseBoot = true
+                                        }
+                                    }
+                                }
 
 //                                .onChange(of: verboseBoot) {_ in
 //                                    if verboseBoot {
@@ -377,6 +413,10 @@ struct CoolerContentView: View {
                                 }
                             }
                         }
+                        .onAppear(perform: {
+                            updateVerboseHidden()
+                            updateHiddenText()
+                        })
 
                         HStack {
                             if isRunning {

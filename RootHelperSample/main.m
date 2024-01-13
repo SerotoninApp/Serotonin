@@ -395,7 +395,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     return 1;
                 } else {
                     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-                    return -1;
+                    return 2;
                 }
         } else if ([action isEqual: @"hideText"]) {
             NSString *filePath = @"/var/mobile/.serotonin_hidetext";
@@ -405,8 +405,14 @@ int main(int argc, char *argv[], char *envp[]) {
                 return 1;
             } else {
                 [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-                return -1;
+                return 2;
             }
+        } else if ([action isEqual: @"checkVerbose"]) {
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/.serotonin_verbose"];
+            return fileExists;
+        } else if ([action isEqual: @"checkHidden"]) {
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/.serotonin_hidetext"];
+            return fileExists;
         } else {
                 return 0;
             }

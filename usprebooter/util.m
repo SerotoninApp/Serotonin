@@ -116,7 +116,7 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
     {
         pid_t waitpids = waitpid(task_pid, &status, 0);
         if (waitpids != -1) {
-            NSLog(@"Child status %d", WEXITSTATUS(status));
+//            NSLog(@"Child status %d", WEXITSTATUS(status));
         } else
         {
 //            perror("waitpid");
