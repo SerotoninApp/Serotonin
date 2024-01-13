@@ -9,8 +9,9 @@
 #include "memoryControl.h"
 //#include "fun/helpers.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 
 void fix_exploit(void);
-int go(void);
+int go(bool);
 int userspaceReboot(void);
