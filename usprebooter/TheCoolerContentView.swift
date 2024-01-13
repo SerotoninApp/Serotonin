@@ -117,6 +117,7 @@ struct CoolerContentView: View {
 //                                Toggle("Load Launch Daemons", systemImage: "restart.circle", isOn: $loadLaunch)
 //                            }
 //                            .disabled(true)
+                            Toggle("Beta iOS",systemImage: "star",isOn: $isBeta)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
                                 .onChange(of: verboseBoot) {_ in
                                     if verboseBoot {

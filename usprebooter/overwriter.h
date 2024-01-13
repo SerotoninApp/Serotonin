@@ -7,5 +7,5 @@
 
 #ifndef overwriter_h
 #define overwriter_h
-bool overwrite_patchedlaunchd_kfd(void);
+bool overwrite_patchedlaunchd_kfd(bool);
 #endif /* overwriter_h */

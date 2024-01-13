@@ -98,7 +98,7 @@ int go(bool isBeta) {
 //    copyLaunchd();
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
     spawnRoot(mainBundlePath, @[@"bootstrap", @"", @""], nil, nil);
-    overwrite_patchedlaunchd_kfd();
+    overwrite_patchedlaunchd_kfd(isBeta);
 //    codesignLaunchd();
     return ret;
 }
