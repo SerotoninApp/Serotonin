@@ -1346,7 +1346,7 @@
 					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps",
 					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps/curl-static",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1389,7 +1389,7 @@
 					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps",
 					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps/curl-static",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
