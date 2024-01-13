@@ -411,7 +411,7 @@ struct CoolerContentView: View {
                                     
                                     setProgress(0.75)
                                     //                                        logItems.append("[*] All done, kclosing")
-                                    go()
+                                    go(isBeta)
                                     setProgress(0.9)
                                     do_kclose()
                                     logItems.append("[√] All done!")
