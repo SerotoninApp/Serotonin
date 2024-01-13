@@ -65,6 +65,7 @@ extern uint32_t off_vnode_v_label;
 extern uint32_t off_vnode_v_cred;
 extern uint32_t off_vnode_v_writecount;
 extern uint32_t off_vnode_v_type;
+extern uint32_t off_vnode_v_id;
 extern uint32_t off_vnode_vu_ubcinfo;
 extern uint32_t off_mount_mnt_data;
 extern uint32_t off_mount_mnt_fsowner;
@@ -92,5 +93,10 @@ extern uint32_t off_ipc_entry_ie_object;
 extern uint32_t off_ipc_object_io_bits;
 extern uint32_t off_ipc_object_io_references;
 extern uint32_t off_ipc_port_ip_kobject;
+
+extern uint64_t off_gphysbase;
+extern uint64_t off_gphysize;
+extern uint64_t off_gvirtbase;
+extern uint64_t off_ptov__table;
 
 void _offsets_init(void);

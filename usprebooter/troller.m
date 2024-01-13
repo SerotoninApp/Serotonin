@@ -17,7 +17,6 @@
 #include "util.h"
 #include <IOKit/IOKitLib.h>
 #include "overwriter.h"
-#import <Foundation/Foundation.h>
 
 
 int get_boot_manifest_hash(char hash[97])
@@ -93,13 +92,13 @@ int userspaceReboot(void) {
     return -1;
 }
 
-int go(NSString* argument) {
+int go(bool isBeta) {
     printf("[*] Hammer time.\n");
     kern_return_t ret = 0;
 //    copyLaunchd();
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    spawnRoot(mainBundlePath, @[argument, @"", @""], nil, nil);
-    overwrite_patchedlaunchd_kfd();
+    spawnRoot(mainBundlePath, @[@"bootstrap", @"", @""], nil, nil);
+    overwrite_patchedlaunchd_kfd(isBeta);
 //    codesignLaunchd();
     return ret;
 }

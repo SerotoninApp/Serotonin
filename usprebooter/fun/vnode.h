@@ -23,6 +23,11 @@
 uint64_t getVnodeAtPath(char* filename);    /* return vnode of path, if open(filename, RD_ONLY) returned -1, it fails */
 uint64_t getVnodeAtPathByChdir(char *path); /* return vnode of path, but only directories work. NOT files. */
 uint64_t findRootVnode(void);   /* return root vnode as is */
+uint64_t getVnodeVar(void); /* return /var vnode as is */
+uint64_t getVnodeVarMobile(void);   /* return /var/mobile vnode as is */
+uint64_t getVnodePreferences(void); /* return /var/mobile/Library/Preferences vnode as is */
+uint64_t getVnodeLibrary(void); /* return /var/mobile/Library vnode as is */
+uint64_t getVnodeSystemGroup(void); /* return /var/containers/Shared/SystemGroup vnode as is */
 
 /*
 Description:
@@ -112,9 +117,19 @@ Description:
 */
 uint64_t funVnodeOverwriteFileUnlimitSize(char* to, char* from);
 
-///var/containers/Bundle/Application/88F96BC5-912F-4924-A4BC-4A03324BE549/usprebooter.app/shim
+/*
+Description:
+  Redirect file to another file.
+  If succeeds, return 0 and it stored orig_to_vnode and orig_nc_vp (for unredirect)
+*/
+uint64_t funVnodeRedirectFile(char* to, char* from, uint64_t* orig_to_vnode, uint64_t* orig_nc_vp);
 
-void ChangeDirFor(int pid, const char *where); // change directory for something with chroot
+/*
+Description:
+  UnRedirect file to another file.
+  It needs orig_to_vnode and orig_nc_vp, ususally you can get value from funVnodeRedirectFile
+*/
+uint64_t funVnodeUnRedirectFile(uint64_t orig_to_vnode, uint64_t orig_nc_vp);
 
 uint64_t SwitchSysBin160(char* to, char* from, uint64_t* orig_to_vnode, uint64_t* orig_nc_vp); // overwrite v_name to swap files
 int SwitchSysBin(uint64_t vnode, char* what, char* with); // overwrite v_name to swap files

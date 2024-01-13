@@ -23,7 +23,6 @@
 #ifndef __OBJC__
 void NSLog(CFStringRef, ...);
 #endif
-
 #define pages(number_of_pages) ((number_of_pages) * (ARM_PGBYTES))
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -206,6 +205,4 @@ typedef uintptr_t usize;
     } while (0)
 
 extern signed long long base_pac_mask;
-
-
 #endif /* common_h */

@@ -30,6 +30,7 @@ struct CoolerContentView: View {
     @AppStorage("hide") var hide = false
     @AppStorage("loadd") var loadLaunch = false
     @AppStorage("showStdout") var showStdout = true
+    @AppStorage("isBeta") var isBeta = false
     @State var reinstall = false
     @State var resetfs = false
     
@@ -116,6 +117,7 @@ struct CoolerContentView: View {
 //                                Toggle("Load Launch Daemons", systemImage: "restart.circle", isOn: $loadLaunch)
 //                            }
 //                            .disabled(true)
+                            Toggle("Beta iOS",systemImage: "star",isOn: $isBeta)
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
                                 .onChange(of: verboseBoot) {_ in
                                     if verboseBoot {
@@ -285,9 +287,8 @@ struct CoolerContentView: View {
                                     .blur(radius: 16)
                                     .background(Color(UIColor.secondarySystemGroupedBackground).opacity(0.5))
                                 VStack {
-                                                                        
-                                    Toggle("Reinstall jailbreak", isOn: $reinstall)
-//                                        .disabled(true)
+                                    Toggle("Reinstall bootstrap", isOn: $reinstall)
+                                        .disabled(true)
                                         .onChange(of: reinstall) { _ in
                                             if reinstall {
                                                 withAnimation(fancyAnimation) {
@@ -296,8 +297,8 @@ struct CoolerContentView: View {
                                             }
                                         }
                                     Divider()
-                                    Toggle("Remove jailbreak", isOn: $resetfs)
-//                                        .disabled(true)
+                                    Toggle("Restore system", isOn: $resetfs)
+                                        .disabled(true)
                                         .onChange(of: resetfs) { _ in
                                             if resetfs {
                                                 withAnimation(fancyAnimation) {
@@ -373,15 +374,6 @@ struct CoolerContentView: View {
                         .padding(.top, 10)
 
                         Button(action: {
-                            let argument: String = {
-                                if reinstall {
-                                    return "reinstall"
-                                } else if resetfs {
-                                    return "uninstall"
-                                } else {
-                                    return "install"
-                                }
-                            }()
                             withAnimation(fancyAnimation) {
                                 shouldShowLog = true
                             }
@@ -408,7 +400,7 @@ struct CoolerContentView: View {
                                 DispatchQueue.global(qos: .default).async {
                                     //                                        logItems.append("[*] Doing kopen")
                                     setProgress(0.1)
-                                    do_kopen(UInt64(pUaFPages), 2, 1, 1, Int(staticHeadroomMB), true)
+                                    do_kopen(UInt64(pUaFPages), 2, 1, 1)
                                     setProgress(0.25)
                                     //                                        logItems.append("[*] Exploit fixup")
                                     setProgress(0.3)
@@ -419,7 +411,7 @@ struct CoolerContentView: View {
                                     
                                     setProgress(0.75)
                                     //                                        logItems.append("[*] All done, kclosing")
-                                    go(argument)
+                                    go(isBeta)
                                     setProgress(0.9)
                                     do_kclose()
                                     logItems.append("[√] All done!")
