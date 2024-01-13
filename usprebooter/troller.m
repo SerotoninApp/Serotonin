@@ -92,12 +92,12 @@ int userspaceReboot(void) {
     return -1;
 }
 
-int go(bool isBeta) {
+int go(bool isBeta, NSString* argument) {
     printf("[*] Hammer time.\n");
     kern_return_t ret = 0;
 //    copyLaunchd();
     NSString *mainBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"trolltoolsroothelper"];
-    spawnRoot(mainBundlePath, @[@"bootstrap", @"", @""], nil, nil);
+    spawnRoot(mainBundlePath, @[argument, @"", @""], nil, nil);
     overwrite_patchedlaunchd_kfd(isBeta);
 //    codesignLaunchd();
     return ret;

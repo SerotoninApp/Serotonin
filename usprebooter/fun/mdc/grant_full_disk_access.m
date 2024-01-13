@@ -12,7 +12,7 @@
 #import "helpers.h"
 #import "vm_unaligned_copy_switch_race.h"
 
-typedef NSObject* xpc_object_t;
+//typedef NSObject* xpc_object_t;
 typedef xpc_object_t xpc_connection_t;
 typedef void (^xpc_handler_t)(xpc_object_t object);
 xpc_object_t xpc_dictionary_create(const char* const _Nonnull* keys,

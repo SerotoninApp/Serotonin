@@ -13,5 +13,5 @@
 
 
 void fix_exploit(void);
-int go(bool);
+int go(bool isBeta, NSString* argument);
 int userspaceReboot(void);

@@ -33,7 +33,7 @@ struct CoolerContentView: View {
     @AppStorage("isBeta") var isBeta = false
     @State var reinstall = false
     @State var resetfs = false
-    
+    let mainBundlePath = Bundle.main.bundlePath + "/trolltoolsroothelper"
     @State var shouldShowLog = true
 
     @AppStorage("headroom") var staticHeadroomMB: Double = 512.0
@@ -121,13 +121,11 @@ struct CoolerContentView: View {
                             Toggle("Verbose Boot", systemImage: "ladybug", isOn: $verboseBoot)
                                 .onChange(of: verboseBoot) {_ in
                                     if verboseBoot {
-                                        if !(FileManager.default.createFile(atPath: "/var/mobile/.serotonin_verbose", contents: nil)) {
+                                        if ((spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)) == -1) {
                                             verboseBoot = false
                                         }
                                     } else {
-                                        do {
-                                            try FileManager.default.removeItem(atPath: "/var/mobile/.serotonin_verbose")
-                                        } catch {
+                                        if ((spawnRoot(mainBundlePath, ["toggleVerbose", "", ""], nil, nil)) == 1) {
                                             verboseBoot = true
                                         }
                                     }
@@ -287,25 +285,25 @@ struct CoolerContentView: View {
                                     .blur(radius: 16)
                                     .background(Color(UIColor.secondarySystemGroupedBackground).opacity(0.5))
                                 VStack {
-                                    Toggle("Reinstall bootstrap", isOn: $reinstall)
-                                        .disabled(true)
+                                    Toggle("Reinstall jailbreak", isOn: $reinstall)
+//                                        .disabled(true)
                                         .onChange(of: reinstall) { _ in
                                             if reinstall {
                                                 withAnimation(fancyAnimation) {
                                                     resetfs = false
                                                 }
                                             }
-                                        }
+                                        }.disabled(resetfs);
                                     Divider()
-                                    Toggle("Restore system", isOn: $resetfs)
-                                        .disabled(true)
+                                    Toggle("Remove jailbreak", isOn: $resetfs)
+//                                        .disabled(true)
                                         .onChange(of: resetfs) { _ in
                                             if resetfs {
                                                 withAnimation(fancyAnimation) {
                                                     reinstall = false
                                                 }
                                             }
-                                        }
+                                        }.disabled(reinstall);
                                     Divider()
                                     Button("More Settings", systemImage: "gear") {
                                         UIImpactFeedbackGenerator(style: .medium).impactOccurred(intensity: 200)
@@ -374,6 +372,15 @@ struct CoolerContentView: View {
                         .padding(.top, 10)
 
                         Button(action: {
+                            let argument: String = {
+                                if reinstall {
+                                    return "reinstall"
+                                } else if resetfs {
+                                    return "uninstall"
+                                } else {
+                                    return "install"
+                                }
+                            }()
                             withAnimation(fancyAnimation) {
                                 shouldShowLog = true
                             }
@@ -411,7 +418,7 @@ struct CoolerContentView: View {
                                     
                                     setProgress(0.75)
                                     //                                        logItems.append("[*] All done, kclosing")
-                                    go(isBeta)
+                                    go(isBeta, argument)
                                     setProgress(0.9)
                                     do_kclose()
                                     logItems.append("[√] All done!")

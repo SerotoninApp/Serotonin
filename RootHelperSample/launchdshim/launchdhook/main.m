@@ -117,7 +117,7 @@ bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
     else return xpc_dictionary_get_bool_orig(dictionary, key);
 }
 
-//void initVerboseFramebuffer(void);
+void initVerboseFramebuffer(void);
 int bootscreend_main();
 __attribute__((constructor)) static void init(int argc, char **argv) {
 //    FILE *file;
@@ -129,23 +129,19 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
 //    fclose(file);
 //    sync();
 
-//    bool verboseBoot = false;
-//    NSString *verboseBootPath = @"/var/mobile/.serotonin_verbose";
-////    NSString *happyMac = @"/var/mobile/boot-happy.jp2";
-////    NSString *sadMac = @"/var/mobile/boot-sad.jp2";
-//
-//    if ([NSFileManager.defaultManager fileExistsAtPath:verboseBootPath]) {
-//        verboseBoot = true;
-//    }
-//
-//    if (verboseBoot) {
-////        initVerboseFramebuffer();
-//        bootscreend_main();
-//    } else {
-//        bootscreend_main();
-//    }
-    // requires a jp2 image to be at /var/mobile/boot-happy.jp2. ideally, make the toggle in the app actually work and create .serotonin_verbose then let launchdhook decide from there
-    bootscreend_main();
+    bool verboseBoot = false;
+    NSString *verboseBootPath = @"/var/mobile/.serotonin_verbose";
+
+    if ([NSFileManager.defaultManager fileExistsAtPath:verboseBootPath]) {
+        verboseBoot = true;
+    }
+
+    if (verboseBoot) {
+        initVerboseFramebuffer();
+    } else {
+        bootscreend_main();
+    }
+//    bootscreend_main();
 
     printf("[lunchd] launchdhook pid %d", getpid());
     if (getpid() == 1) {

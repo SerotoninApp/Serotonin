@@ -4,7 +4,6 @@
 
 #include <UIKit/UIKit.h>
 #import <mach-o/fixup-chains.h>
-#import "vm_unaligned_copy_switch_race.h"
 #import "overwriter.h"
 #import "troller.h"
 #import "fun/thanks_opa334dev_htrowii.h"
@@ -19,8 +18,6 @@ NSString* getLunchd(void) {
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 bool overwrite_patchedlaunchd_kfd(bool isBeta) {
-    // ayo whats this – bomberfish
-//    SwitchSysBin(getVnodeAtPathByChdir("/System/Library/CoreServices/SpringBoard.app"), "SpringBoard", "/var/jb/SprangBoard");
     printf("[i] performing launchd hax\n");
     if (SYSTEM_VERSION_LOWER_THAN(@"16.4")) {
         uint64_t orig_nc_vp = 0;

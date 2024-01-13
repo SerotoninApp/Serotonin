@@ -19,16 +19,6 @@
 
 #include <sys/types.h>
 #include "insert_dylib.h"
-/* Attach to a process that is already running. */
-//PTRACE_ATTACH = 16,
-#define PT_ATTACH 16
-
-/* Detach from a process attached to with PTRACE_ATTACH.  */
-//PTRACE_DETACH = 17,
-#define PT_DETACH 17
-#define PT_ATTACHEXC    14    /* attach to running process with signal exception */
-#define PT_TRACE_ME 0
-int ptrace(int, pid_t, caddr_t, int);
 
 #define JB_ROOT_PREFIX ".jbroot-"
 #define JB_RAND_LENGTH  (sizeof(uint64_t)*sizeof(char)*2)
@@ -159,7 +149,7 @@ int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
 
     if(spawnError != 0)
     {
-        NSLog(@"posix_spawn error %d\n", spawnError);
+//        NSLog(@"posix_spawn error %d\n", spawnError);
         return spawnError;
     }
 
@@ -216,14 +206,14 @@ int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ld
 //            [[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
 //        }
 
-        NSLog(@"roothelper: ldid exited with status %d", ldidRet);
-
-        NSLog(@"roothelper: - ldid error output start -");
-    
-        printMultilineNSString(signArg);
-        printMultilineNSString(errorOutput);
-
-        NSLog(@"roothelper: - ldid error output end -");
+//        NSLog(@"roothelper: ldid exited with status %d", ldidRet);
+//
+//        NSLog(@"roothelper: - ldid error output start -");
+//
+//        printMultilineNSString(signArg);
+//        printMultilineNSString(errorOutput);
+//
+//        NSLog(@"roothelper: - ldid error output end -");
 
         if(ldidRet == 0)
         {
@@ -238,22 +228,22 @@ int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ld
 
 NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 {
-	NSMutableSet* systemAppIdentifiers = [NSMutableSet new];
+    NSMutableSet* systemAppIdentifiers = [NSMutableSet new];
 
-	LSEnumerator* enumerator = [LSEnumerator enumeratorForApplicationProxiesWithOptions:0];
-	LSApplicationProxy* appProxy;
-	while(appProxy = [enumerator nextObject])
-	{
-		if(appProxy.installed)
-		{
-			if(![appProxy.bundleURL.path hasPrefix:@"/private/var/containers"])
-			{
-				[systemAppIdentifiers addObject:appProxy.bundleIdentifier.lowercaseString];
-			}
-		}
-	}
+    LSEnumerator* enumerator = [LSEnumerator enumeratorForApplicationProxiesWithOptions:0];
+    LSApplicationProxy* appProxy;
+    while(appProxy = [enumerator nextObject])
+    {
+        if(appProxy.installed)
+        {
+            if(![appProxy.bundleURL.path hasPrefix:@"/private/var/containers"])
+            {
+                [systemAppIdentifiers addObject:appProxy.bundleIdentifier.lowercaseString];
+            }
+        }
+    }
 
-	return systemAppIdentifiers.copy;
+    return systemAppIdentifiers.copy;
 }
 
 void replaceByte(NSString *filePath, int offset, const char *replacement) {
@@ -273,38 +263,53 @@ void replaceByte(NSString *filePath, int offset, const char *replacement) {
     fclose(file);
 }
 
+void removeItemAtPathRecursively(NSString *path) {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    if (![fileManager fileExistsAtPath:path]) {
+        NSLog(@"Item does not exist at path: %@", path);
+        return;
+    }
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:path error:&error];
+    
+    if (error == nil) {
+        for (NSString *item in contents) {
+            if ([item isEqualToString:@".jbroot"]) {
+                NSLog(@"Skipping deletion of %@ in %@", item, path);
+                continue;
+            }
+            NSString *itemPath = [path stringByAppendingPathComponent:item];
+            BOOL isDirectory = NO;
+            if ([fileManager fileExistsAtPath:itemPath isDirectory:&isDirectory]) {
+                if (isDirectory) {
+                    removeItemAtPathRecursively(itemPath);
+                } else {
+                    [fileManager removeItemAtPath:itemPath error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error removing item at path %@: %@", itemPath, error);
+                    }
+                }
+            }
+        }
+        [fileManager removeItemAtPath:path error:&error];
+        if (error != nil) {
+            NSLog(@"Error removing item at path %@: %@", path, error);
+        }
+    } else {
+        NSLog(@"Error reading contents of directory %@: %@", path, error);
+    }
+}
+
+
 int main(int argc, char *argv[], char *envp[]) {
     @autoreleasepool {
 //        NSLog(@"Hello from the other side! our uid is %u and our pid is %d", getuid(), getpid());
         loadMCMFramework();
         NSString* action = [NSString stringWithUTF8String:argv[1]];
         NSString* source = [NSString stringWithUTF8String:argv[2]];
-        NSString* destination = [NSString stringWithUTF8String:argv[3]];
+//        NSString* destination = [NSString stringWithUTF8String:argv[3]];  
         
-        if ([action isEqual: @"writedata"]) {
-            [source writeToFile:destination atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        } else if ([action isEqual: @"filemove"]) {
-            [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:nil];
-        } else if ([action isEqual: @"filecopy"]) {
-            NSLog(@"roothelper: cp");
-            [[NSFileManager defaultManager] copyItemAtPath:source toPath:destination error:nil];
-        } else if ([action isEqual: @"makedirectory"]) {
-            NSLog(@"roothelper: mkdir");
-            [[NSFileManager defaultManager] createDirectoryAtPath:source withIntermediateDirectories:true attributes:nil error:nil];
-        } else if ([action isEqual: @"removeitem"]) {
-            NSLog(@"roothelper: rm");
-            [[NSFileManager defaultManager] removeItemAtPath:source error:nil];
-        } else if ([action isEqual: @"permissionset"]) {
-            NSLog(@"roothelper chmod %@", source); // just pass in 755
-            NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-            [dict setObject:[NSNumber numberWithInt:755]  forKey:NSFilePosixPermissions];
-            [[NSFileManager defaultManager] setAttributes:dict ofItemAtPath:source error:nil];
-            //        } else if ([action isEqual: @"rebuildiconcache"]) {
-            //            cleanRestrictions();
-            //            [[LSApplicationWorkspace defaultWorkspace] _LSPrivateRebuildApplicationDatabasesForSystemApps:YES internal:YES user:YES];
-            //            refreshAppRegistrations();
-            //            killall(@"backboardd");
-        } else if ([action isEqual: @"codesign"]) {
+        if ([action isEqual: @"codesign"]) {
             NSLog(@"roothelper: adhoc sign + fastsign");
 //            NSDictionary* entitlements = @{
 //                @"get-task-allow": [NSNumber numberWithBool:YES],
@@ -319,24 +324,7 @@ int main(int argc, char *argv[], char *envp[]) {
             NSString *stdOut;
             NSString *stdErr;
             spawnRoot(fastPathSignPath, @[@"-i", patchedLaunchdCopy, @"-r", @"-o", patchedLaunchdCopy], &stdOut, &stdErr);
-        } else if ([action isEqual: @"ptrace"]) {
-            NSLog(@"roothelper: stage 1 ptrace");
-            NSString *stdOut;
-            NSString *stdErr;
-            NSLog(@"trolltoolshelper path %@", rootHelperPath());
-            spawnRoot(rootHelperPath(), @[@"ptrace2", source, @""], &stdOut, &stdErr);
-            kill(getpid(), 1);
-        } else if ([action isEqual: @"ptrace2"]) {
-            NSLog(@"roothelper: stage 2 ptrace, app pid: %@", source);
-            int pidInt = [source intValue];
-//             source = pid of app.
-//             ptrace the source, the pid of the original app
-//             then detach immediately
-//            ptrace(PT_TRACE_ME,0,0,0);
-            ptrace(PT_ATTACH, pidInt, 0, 0);
-            ptrace(PT_DETACH, pidInt, 0, 0);
-            NSLog(@"Done ptracing!");
-        } else if ([action isEqual: @"bootstrap"]) {
+        } else if ([action isEqual: @"install"]) {
             NSLog(@"installing");
             if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
@@ -372,11 +360,42 @@ int main(int argc, char *argv[], char *envp[]) {
                     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
                     // laster step: add the cool bootlogo!
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
+                    // remove workinglaunchd
+                    [[NSFileManager defaultManager] removeItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
 //                } else {
 //                    NSLog(@"lunchd was found, you've already installed");
 //                }
             }
+        } else if ([action isEqual: @"uninstall"]) {
+            NSLog(@"uninstalling");
+            if (!jbroot(@"/")) {
+                NSLog(@"jbroot not found...");
+            } else {
+                if (!jbroot(@"lunchd")) {
+                    NSLog(@"not continuing, lunchd wasn't found to remove");
+                    return -1;
+                } else {
+                    removeItemAtPathRecursively(jbroot(@"/System/Library/CoreServices/SpringBoard.app/"));
+                    [[NSFileManager defaultManager] removeItemAtPath:@"/var/mobile/Serotonin.jp2" error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"lunchd") error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchdhook.dylib") error:nil];
+                }
+            }
+        } else if ([action isEqual: @"reinstall"]) {
+            spawnRoot(rootHelperPath(), @[@"uninstall", source, @""], nil, nil);
+            spawnRoot(rootHelperPath(), @[@"install", source, @""], nil, nil);
+        } else if ([action isEqual: @"toggleVerbose"]) {
+                NSString *filePath = @"/var/mobile/.serotonin_verbose";
+                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+                if (!fileExists) {
+                    [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+                    return 1;
+                } else {
+                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                    return -1;
+                }
+            } else {
+                return 0;
+            }
         }
-        return 0;
     }
-}
