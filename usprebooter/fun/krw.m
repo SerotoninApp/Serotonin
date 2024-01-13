@@ -7,7 +7,7 @@
 
 #include "krw.h"
 #include "libkfd.h"
-#include "mdc/helpers.h"
+//#include "mdc/helpers.h"
 #include "kpf/patchfinder.h"
 
 uint64_t _kfd = 0;

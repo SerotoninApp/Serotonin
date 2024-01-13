@@ -13,7 +13,7 @@
 #import "proc.h"
 #import "vnode.h"
 #import "krw.h"
-#import "mdc/helpers.h"
+//#import "mdc/helpers.h"
 #import "offsets.h"
 #import "thanks_opa334dev_htrowii.h"
 #import "utils.h"
@@ -74,8 +74,8 @@ int ResSet16(NSInteger height, NSInteger width) {
     //3. xpc restart
     do_kclose();
     sleep(1);
-    xpc_crasher("com.apple.cfprefsd.daemon");
-    xpc_crasher("com.apple.backboard.TouchDeliveryPolicyServer");
+//    xpc_crasher("com.apple.cfprefsd.daemon");
+//    xpc_crasher("com.apple.backboard.TouchDeliveryPolicyServer");
     
     return 0;
 }
