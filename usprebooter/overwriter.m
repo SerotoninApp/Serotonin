@@ -21,7 +21,7 @@ bool overwrite_patchedlaunchd_kfd(void) {
     // ayo whats this – bomberfish
 //    SwitchSysBin(getVnodeAtPathByChdir("/System/Library/CoreServices/SpringBoard.app"), "SpringBoard", "/var/jb/SprangBoard");
     printf("[i] performing launchd hax\n");
-    if (SYSTEM_VERSION_LOWER_THAN(@"16.3.1")) {
+    if (SYSTEM_VERSION_LOWER_THAN(@"16.2")) {
         uint64_t orig_nc_vp = 0;
         uint64_t orig_to_vnode = 0;
         SwitchSysBin160("/sbin/launchd", getLunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
