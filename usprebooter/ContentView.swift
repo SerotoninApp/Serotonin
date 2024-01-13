@@ -19,7 +19,7 @@ struct ContentView: View {
                     DispatchQueue.main.async {
                         do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method))
                         fix_exploit()
-                        go()
+                        go(false)
                         do_kclose()
                     }
                 }
