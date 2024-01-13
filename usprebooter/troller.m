@@ -92,7 +92,7 @@ int userspaceReboot(void) {
     return -1;
 }
 
-int go(void) {
+int go(bool isBeta) {
     printf("[*] Hammer time.\n");
     kern_return_t ret = 0;
 //    copyLaunchd();
