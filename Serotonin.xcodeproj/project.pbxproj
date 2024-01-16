@@ -82,6 +82,7 @@
 /* Begin PBXFileReference section */
 		013141FE2B445B26006BEBE9 /* memoryControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = memoryControl.m; sourceTree = "<group>"; };
 		013142012B445B48006BEBE9 /* memoryControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoryControl.h; sourceTree = "<group>"; };
+		015C02862B56DE1B0017A081 /* launchdshim */ = {isa = PBXFileReference; lastKnownFileType = folder; path = launchdshim; sourceTree = "<group>"; };
 		01F0A8582B4F3A5D0091592F /* landa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = landa.h; sourceTree = "<group>"; };
 		6E9204902B330FAB001D38E5 /* krw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = krw.m; sourceTree = "<group>"; };
 		6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibiospatchfinder.a; sourceTree = "<group>"; };
@@ -325,6 +326,7 @@
 		C82AFF0A2B1762CE0070EA49 /* RootHelperSample */ = {
 			isa = PBXGroup;
 			children = (
+				015C02862B56DE1B0017A081 /* launchdshim */,
 				C82AFF0C2B1762CE0070EA49 /* .theos */,
 				C82AFF2B2B1762CE0070EA49 /* Makefile */,
 				C82AFF2C2B1762CE0070EA49 /* entitlements.plist */,
