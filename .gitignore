@@ -15,3 +15,4 @@ RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksign
 RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/hideConfidentialText.dylib
 apple-include
 ChOma_host
+*.dylib

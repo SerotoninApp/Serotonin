@@ -3,7 +3,6 @@
 //
 #include "troller.h"
 #include "util.h"
-#include "fun/fun.h"
 #include "fun/krw.h"
 #include "fun/kpf/patchfinder.h"
 #include "memoryControl.h"
@@ -12,6 +11,6 @@
 #include <stdbool.h>
 
 
-void fix_exploit(void);
 int go(bool isBeta, NSString* argument);
 int userspaceReboot(void);
+

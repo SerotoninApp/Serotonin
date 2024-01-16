@@ -17,11 +17,11 @@
 #define MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES      8
 
 typedef struct CF_BRIDGED_TYPE(id) __SecTask *SecTaskRef;
-SecTaskRef SecTaskCreateFromSelf(CFAllocatorRef _Nullable allocator);
-CFTypeRef SecTaskCopyValueForEntitlement(SecTaskRef task, CFStringRef entitlement, CFErrorRef *error);
+_Nullable SecTaskRef SecTaskCreateFromSelf(CFAllocatorRef _Nullable allocator);
+_Nullable CFTypeRef SecTaskCopyValueForEntitlement(SecTaskRef _Nonnull task, CFStringRef _Nonnull entitlement, CFErrorRef _Nullable * _Nullable error);
 
-bool hasEntitlement(CFStringRef entitlement);
-int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
+bool hasEntitlement(CFStringRef _Nonnull entitlement);
+int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void * _Nullable buffer, size_t buffersize);
 uint64_t getPhysicalMemorySize(void);
 
 typedef struct memorystatus_memlimit_properties {

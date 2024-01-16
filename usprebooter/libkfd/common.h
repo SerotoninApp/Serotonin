@@ -46,7 +46,11 @@ typedef uintptr_t usize;
 
 #if CONFIG_PRINT
 
+#ifndef __OBJC__
 #define print(format, ...) NSLog(CFSTR(format), ##__VA_ARGS__)
+#else
+#define print(format, ...) NSLog(@format, ##__VA_ARGS__)
+#endif
 
 #else /* CONFIG_PRINT */
 

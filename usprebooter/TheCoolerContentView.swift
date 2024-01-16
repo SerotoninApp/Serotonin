@@ -32,6 +32,9 @@ struct CoolerContentView: View {
     @AppStorage("loadd") var loadLaunch = false
     @AppStorage("showStdout") var showStdout = true
     @AppStorage("isBeta") var isBeta = false
+    @AppStorage("kread_method") private var kread_method = 1.0
+    @AppStorage("kwrite_method") private var kwrite_method = 1.0
+    @AppStorage("puaf_method") private var puaf_method = 2.0
     @State var reinstall = false
     @State var resetfs = false
     let mainBundlePath = Bundle.main.bundlePath + "/trolltoolsroothelper"
@@ -464,11 +467,10 @@ struct CoolerContentView: View {
                                 DispatchQueue.global(qos: .default).async {
                                     //                                        logItems.append("[*] Doing kopen")
                                     setProgress(0.1)
-                                    do_kopen(UInt64(pUaFPages), 2, 1, 1)
+                                    do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), Int(staticHeadroomMB), true)
                                     setProgress(0.25)
                                     //                                        logItems.append("[*] Exploit fixup")
                                     setProgress(0.3)
-                                    fix_exploit()
                                     setProgress(0.5)
                                     //                                        logItems.append("[*] Hammer time.")
                                     setProgress(0.6)

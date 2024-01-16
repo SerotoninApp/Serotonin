@@ -5,6 +5,7 @@
 //  Created by Mineek on 08/01/2024.
 //
 
+#if 0
 #import <Foundation/Foundation.h>
 
 NSString* findPrebootPath(void) {
@@ -46,3 +47,4 @@ int find_offsets_wrapper(void) {
     printf("kernelcachePath: %s\n", [kernelcachePath UTF8String]);
     return find_offsets([kernelcachePath UTF8String]);
 }
+#endif
