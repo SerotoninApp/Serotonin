@@ -9,9 +9,9 @@
 #import <sys/sysctl.h>
 #import <sys/mount.h>
 #import "patchfinder.h"
-#import "img4helper/img4.h"
+//#import "img4helper/img4.h"
 #import "patchfinder64.h"
-#import "libgrabkernel/libgrabkernel.h"
+//#import "libgrabkernel/libgrabkernel.h"
 #import "libdimentio.h"
 #import "krw.h"
 
@@ -49,132 +49,13 @@ void removeIfExist(const char* path) {
     if(access(path, F_OK) == 0) remove(path);
 }
 
-int do_static_patchfinder_libdimentio(void) {
-    //Stage 1. Download kernelcache
-    const char *kernelPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/kernelcache"].UTF8String;
-    removeIfExist(kernelPath);
-    grabkernel(kernelPath, 0);
-    
-    //Stage 2. Run Patchfinder (works even if compressed kernelcache)
-    set_kernel_path(kernelPath);
-    pfinder_t pfinder;
-    if(pfinder_init(&pfinder) != KERN_SUCCESS) {
-        return -1;
-    }
-    
-    off_cdevsw = pfinder_cdevsw(pfinder);
-    printf("cdevsw: 0x%llx\n", off_cdevsw);
-    if(off_cdevsw == 0) return -1;
-    
-    off_gPhysBase = pfinder_gPhysBase(pfinder);
-    printf("gPhysBase: 0x%llx\n", off_gPhysBase);
-    if(off_gPhysBase == 0) return -1;
-    
-    off_gPhysSize = pfinder_gPhysSize(pfinder);
-    printf("gPhysSize: 0x%llx\n", off_gPhysSize);
-    if(off_gPhysSize == 0) return -1;
-    
-    off_gVirtBase = pfinder_gVirtBase(pfinder);
-    printf("gVirtBase: 0x%llx\n", off_gVirtBase);
-    if(off_gVirtBase == 0) return -1;
-    
-    off_perfmon_dev_open = pfinder_perfmon_dev_open(pfinder);
-    printf("perfmon_dev_open: 0x%llx\n", off_perfmon_dev_open);
-    if(off_perfmon_dev_open == 0) return -1;
-    
-    off_perfmon_devices = pfinder_perfmon_devices(pfinder);
-    printf("perfmon_devices: 0x%llx\n", off_perfmon_devices);
-    if(off_perfmon_devices == 0) return -1;
-    
-    off_ptov_table = pfinder_ptov_table(pfinder);
-    printf("ptov_table: 0x%llx\n", off_ptov_table);
-    if(off_ptov_table == 0) return -1;
-    
-    off_vn_kqfilter = pfinder_vn_kqfilter(pfinder);
-    printf("vn_kqfilter: 0x%llx\n", off_vn_kqfilter);
-    if(off_vn_kqfilter == 0) return -1;
-    
-    off_proc_object_size = pfinder_proc_object_size(pfinder);
-    printf("proc_object_size: 0x%llx\n", off_proc_object_size); //will not work since couldn't read kernel data segment
-    
-    pfinder_term(&pfinder);
-    
-    removeIfExist(kernelPath);
-    
-    return 0;
-}
-
-
-int do_static_patchfinder(void) {
-    printf("[!] Starting static patchfinder (Thanks xerub)\n");
-    
-    //Stage 1. Download kernelcache
-    const char *kernelPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/kernelcache"].UTF8String;
-    removeIfExist(kernelPath);
-    grabkernel(kernelPath, 0);
-    
-    //Stage 2. Extract kernel raw from kernelcache
-    if(access(kernelPath, R_OK) == -1) return -1;
-    NSString *kernelcacheRawPath = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/Documents/kernelcache_raw"];
-    removeIfExist(kernelcacheRawPath.UTF8String);
-    img4_extract_im4p(kernelPath, kernelcacheRawPath.UTF8String, NULL, 0);
-    
-    //Stage 3. Run Patchfinder
-    if(init_kernel(NULL, 0, kernelcacheRawPath.UTF8String) != 0) {
-        return -1;
-    }
-    
-    off_cdevsw = find_cdevsw();
-    printf("cdevsw: 0x%llx\n", off_cdevsw);
-    if(off_cdevsw == 0) return -1;
-    
-    off_gPhysBase = find_gPhysBase();
-    printf("gPhysBase: 0x%llx\n", off_gPhysBase);
-    if(off_gPhysBase == 0) return -1;
-    
-    off_gPhysSize = find_gPhysSize();
-    printf("gPhysSize: 0x%llx\n", off_gPhysSize);
-    if(off_gPhysSize == 0) return -1;
-    
-    off_gVirtBase = find_gVirtBase();
-    printf("gVirtBase: 0x%llx\n", off_gVirtBase);
-    if(off_gVirtBase == 0) return -1;
-    
-    off_perfmon_dev_open = find_perfmon_dev_open();
-    printf("perfmon_dev_open: 0x%llx\n", off_perfmon_dev_open);
-    if(off_perfmon_dev_open == 0) return -1;
-    
-    off_perfmon_devices = find_perfmon_devices();
-    printf("perfmon_devices: 0x%llx\n", off_perfmon_devices);
-    if(off_perfmon_devices == 0) return -1;
-    
-    off_ptov_table = find_ptov_table();
-    printf("ptov_table: 0x%llx\n", off_ptov_table);
-    if(off_ptov_table == 0) return -1;
-    
-    off_vn_kqfilter = find_vn_kqfilter();
-    printf("vn_kqfilter: 0x%llx\n", off_vn_kqfilter);
-    if(off_vn_kqfilter == 0) return -1;
-    
-    off_proc_object_size = find_proc_object_size();
-    printf("proc_object_size: 0x%llx\n", off_proc_object_size);
-    if(off_proc_object_size == 0) return -1;
-    
-    term_kernel();
-    
-    removeIfExist(kernelPath);
-    removeIfExist(kernelcacheRawPath.UTF8String);
-    
-    save_kfd_offsets();
-    
-    return 0;
-}
 
 int do_dynamic_patchfinder(uint64_t kfd, uint64_t kbase) {
     printf("[!] Starting dynamic patchfinder (Thanks 0x7ff)\n");
     
     uint64_t vm_kernel_link_addr = get_vm_kernel_link_addr();
     uint64_t kslide = kbase - vm_kernel_link_addr;
+
     set_kbase(kbase);
     set_kfd(kfd);
     pfinder_t pfinder;
@@ -309,8 +190,11 @@ int save_kfd_offsets(void) {
 
 uint64_t get_vm_kernel_link_addr(void) {
     const char* kernversion = get_kernversion();
+    uint64_t retval;
     if(strstr(kernversion, "T8103") != NULL || strstr(kernversion, "T8112") != NULL)
-        return 0xFFFFFE0007004000;
+        retval = 0xFFFFFE0007004000;
     else
-        return 0xFFFFFFF007004000;
+        retval = 0xFFFFFFF007004000;
+    free((void*)kernversion);
+    return retval;
 }

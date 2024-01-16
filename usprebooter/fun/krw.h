@@ -9,10 +9,12 @@
 #define krw_h
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <os/proc.h>
 #include "fun.h"
 
 uint64_t unsign_kptr(uint64_t pac_kaddr);
-uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method);
+__attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_method, uint64_t kread_method, uint64_t kwrite_method, size_t headroom, bool use_headroom);
 void do_kclose(void);
 void early_kread(uint64_t kfd, uint64_t kaddr, void* uaddr, uint64_t size);
 void early_kreadbuf(uint64_t kfd, uint64_t kaddr, void* output, size_t size);
