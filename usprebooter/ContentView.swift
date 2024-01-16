@@ -17,8 +17,7 @@ struct ContentView: View {
             HStack {
                 Button("do the thing!") {
                     DispatchQueue.main.async {
-                        do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method))
-                        fix_exploit()
+                        do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), Int(staticHeadroomMB), true)
                         go(false, "install")
                         do_kclose()
                     }
