@@ -2,15 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
- 	<key>com.apple.private.security.no-sandbox</key>
-    <true/>
+	<key>com.apple.private.security.no-sandbox</key>
+	<true/>
 	<key>com.apple.private.domain-extension</key>
 	<true/>
 	<key>com.apple.private.security.container-required</key>
 	<false/>
 	<key>com.apple.private.security.no-container</key>
-	<true/>
-	<key>com.apple.private.skip-library-validation</key>
 	<true/>
 	<key>com.apple.private.xpc.domain-extension</key>
 	<true/>
@@ -44,22 +42,18 @@
 	<true/>
 	<key>com.apple.private.xpc.persona-manager</key>
 	<true/>
-    <key>com.apple.private.persona-mgmt</key>
-    <true/>
+	<key>com.apple.private.persona-mgmt</key>
+	<true/>
 	<key>com.apple.private.xpc.service-attach</key>
 	<true/>
 	<key>com.apple.private.xpc.service-configure</key>
 	<true/>
 	<key>platform-application</key>
 	<true/>
-    <key>get-task-allow</key>
-    <true/>
-    <key>task_for_pid-allow</key>
-    <true/>
-    <!-- <key>com.apple.private.security.storage.AppBundles</key>
-    <true/>
-    <key>com.apple.private.security.storage.AppDataContainers</key>
-    <true/> -->
+	<key>get-task-allow</key>
+	<true/>
+	<key>task_for_pid-allow</key>
+	<true/>
 	<key>com.apple.private.set-launch-type.internal</key>
 	<true/>
 	<key>com.apple.security.exception.mach-lookup.global-name</key>
@@ -74,8 +68,6 @@
 	<key>com.apple.private.iokit.system-nvram-allow</key>
 	<true/>
 	<key>com.apple.private.kernel.system-override</key>
-	<true/>
-	<key>com.apple.private.persona-mgmt</key>
 	<true/>
 	<key>com.apple.private.pmap.load-trust-cache</key>
 	<array>
