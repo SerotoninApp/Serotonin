@@ -28,6 +28,7 @@ struct CoolerContentView: View {
     @State var verboseBoot = false
     @State var hideText = false
     @AppStorage("unthreded") var untether = true
+    @AppStorage("use_hogger") var use_hogger = true;
     @AppStorage("hide") var hide = false
     @AppStorage("loadd") var loadLaunch = false
     @AppStorage("showStdout") var showStdout = true
@@ -122,12 +123,13 @@ struct CoolerContentView: View {
                             }
                             let memSizeMB = getPhysicalMemorySize() / 1048576
                             HStack {
-                                Label("Static Headroom", systemImage: "memorychip")
+                                Label("Memory hogger Headroom", systemImage: "memorychip")
                                 Spacer()
                                 Slider(value: $staticHeadroomMB, in: 0...Double(memSizeMB), step: 128.0, label: {})
                                 Text("\(Int(staticHeadroomMB)) MB")
                                     .font(.caption.monospacedDigit())
                             }
+                            Toggle("Use memory hogger", systemImage: "memorychip", isOn: $use_hogger)
 //                            Group {
 //                                Toggle("Custom Reboot Logo", systemImage: "applelogo", isOn: $customReboot) // soon
 //                                Toggle("Load Launch Daemons", systemImage: "restart.circle", isOn: $loadLaunch)
@@ -467,16 +469,9 @@ struct CoolerContentView: View {
                                 DispatchQueue.global(qos: .default).async {
                                     //                                        logItems.append("[*] Doing kopen")
                                     setProgress(0.1)
-                                    do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), Int(staticHeadroomMB), true)
-                                    setProgress(0.25)
-                                    //                                        logItems.append("[*] Exploit fixup")
-                                    setProgress(0.3)
-                                    setProgress(0.5)
-                                    //                                        logItems.append("[*] Hammer time.")
+                                    do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), Int(staticHeadroomMB), use_hogger)
                                     setProgress(0.6)
-                                    
-                                    setProgress(0.75)
-                                    //                                        logItems.append("[*] All done, kclosing")
+                                    // logItems.append("[*] All done, kclosing")
                                     go(isBeta, argument)
                                     setProgress(0.9)
                                     do_kclose()
