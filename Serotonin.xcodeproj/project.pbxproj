@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 013141FE2B445B26006BEBE9 /* memoryControl.m */; };
+		0179148F2B580219002676E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0179148E2B580219002676E0 /* Main.storyboard */; };
 		9756F40B2B505A3000172EF9 /* krw.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9204902B330FAB001D38E5 /* krw.m */; };
 		9756F4722B505EE000172EF9 /* patchfinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4262B505EE000172EF9 /* patchfinder.m */; };
 		9756F4892B505EE100172EF9 /* libdimentio.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4582B505EE000172EF9 /* libdimentio.m */; };
@@ -83,6 +84,7 @@
 		013141FE2B445B26006BEBE9 /* memoryControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = memoryControl.m; sourceTree = "<group>"; };
 		013142012B445B48006BEBE9 /* memoryControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoryControl.h; sourceTree = "<group>"; };
 		015C02862B56DE1B0017A081 /* launchdshim */ = {isa = PBXFileReference; lastKnownFileType = folder; path = launchdshim; sourceTree = "<group>"; };
+		0179148E2B580219002676E0 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		01F0A8582B4F3A5D0091592F /* landa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = landa.h; sourceTree = "<group>"; };
 		6E9204902B330FAB001D38E5 /* krw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = krw.m; sourceTree = "<group>"; };
 		6F379D012B4C6BBD00020008 /* liblibiospatchfinder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibiospatchfinder.a; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 				C82AFEF12B175AA30070EA49 /* usprebooterApp.swift */,
 				C805CA462B1719D5005157BA /* util.h */,
 				C805CA442B1719C1005157BA /* util.m */,
+				0179148E2B580219002676E0 /* Main.storyboard */,
 			);
 			path = usprebooter;
 			sourceTree = "<group>";
@@ -779,6 +782,7 @@
 				C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */,
 				D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */,
 				D6F9CF4A2B4C50BF00274803 /* (null) in Resources */,
+				0179148F2B580219002676E0 /* Main.storyboard in Resources */,
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
 				C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */,
 				C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */,
