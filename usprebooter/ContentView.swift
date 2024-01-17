@@ -69,7 +69,7 @@ struct ContentView: View {
             Button("do the thing!") {
                 DispatchQueue.main.async {
                     do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), Int(staticHeadroomMB), use_hogger)
-                    go(false, "install")
+                    go(isBeta, "install")
                     do_kclose()
                 }
             }.padding(16)
