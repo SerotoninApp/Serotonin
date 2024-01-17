@@ -3,19 +3,19 @@ import SwiftUI
 struct ContentView: View {
     @State var LogItems: [String.SubSequence] = [""]
     private let puaf_method_options = ["physpuppet", "smith", "landa"]
-    @AppStorage("puaf_method") private var puaf_method = 2
     private let puaf_pages_options = [16, 32, 64, 128, 256, 512, 1024, 2048, 3072, 3584, 4096];
     private var headroom_options = [16, 128, 256, 512, 768, 1024, 2048, 4096, 8192, 16384, 65536, 131072, 262144];
     private let kwrite_method_options = ["kqueue_workloop_ctl", "sem_open"];
-    @AppStorage("kwrite_method") private var kwrite_method = 1;
     private let kread_method_options = ["dup"," sem_open"];
+    @AppStorage("puaf_method") private var puaf_method = 2
+    @AppStorage("kwrite_method") private var kwrite_method = 1;
     @AppStorage("kread_method") private var kread_method = 1;
     @AppStorage("puaf_pages_index") private var puaf_pages_index = 8;
     @AppStorage("headroom_index") private var headroom_index = 3;
     @AppStorage("use_hogger") var use_hogger = true;
     @AppStorage("isBeta") var isBeta = false;
     @AppStorage("headroom") var staticHeadroomMB = 384;
-    @AppStorage("pages") var pUaFPages: Double = 3072.0
+    @AppStorage("pages") var pUaFPages = 3072
     @Binding var useNewUI: Bool;
     var body: some View {
         // thx haxi0
@@ -35,7 +35,7 @@ struct ContentView: View {
                     }
                 }
                 .onChange(of: puaf_pages_index) {sel in
-                    pUaFPages = Double(puaf_pages_options[sel])
+                    pUaFPages = puaf_pages_options[sel];
                 }
                 Picker("puaf method:", selection: $puaf_method) {
                     ForEach(0..<puaf_method_options.count, id: \.self) {
@@ -82,7 +82,7 @@ struct ContentView: View {
         HStack {
             Button("do the thing!") {
                 DispatchQueue.main.async {
-                    do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), Int(staticHeadroomMB), use_hogger)
+                    do_kopen(UInt64(pUaFPages), UInt64(puaf_method), UInt64(kread_method), UInt64(kwrite_method), staticHeadroomMB, use_hogger)
                     go(isBeta, "install")
                     do_kclose()
                 }
@@ -110,7 +110,7 @@ struct ContentView: View {
         let memSizeMB = getPhysicalMemorySize() / 1048576
         var new_headroom_options = headroom_options
         for option in headroom_options {
-            if (option > memSizeMB) {
+            if (option > memSizeMB && option > 512) {
                 new_headroom_options = new_headroom_options.filter { $0 != option }
             }
         }
