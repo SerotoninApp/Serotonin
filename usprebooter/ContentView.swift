@@ -2,44 +2,58 @@ import SwiftUI
 
 struct ContentView: View {
     @State var LogItems: [String.SubSequence] = [""]
-    private let puaf_method_options = ["physpuppet", "smith         ", "landa         "]
-    @AppStorage("puaf_method") private var puaf_method = 2.0
-    private let kwrite_method_options = ["kqueue_\nworkloop_ctl", "sem_open"];
-    @AppStorage("kwrite_method") private var kwrite_method = 1.0;
-    private let kread_method_options = ["dup        "," sem_open"];
-    @AppStorage("kread_method") private var kread_method = 1.0;
+    private let puaf_method_options = ["physpuppet", "smith", "landa"]
+    @AppStorage("puaf_method") private var puaf_method = 2
+    private let puaf_pages_options = [16, 32, 64, 128, 256, 512, 1024, 2048, 3072, 3584, 4096];
+    private var headroom_options = [16, 128, 256, 512, 768, 1024, 2048, 4096, 8192, 16384, 65536, 131072, 262144];
+    private let kwrite_method_options = ["kqueue_workloop_ctl", "sem_open"];
+    @AppStorage("kwrite_method") private var kwrite_method = 1;
+    private let kread_method_options = ["dup"," sem_open"];
+    @AppStorage("kread_method") private var kread_method = 1;
+    @AppStorage("puaf_pages_index") private var puaf_pages_index = 8;
+    @AppStorage("headroom_index") private var headroom_index = 3;
     @AppStorage("use_hogger") var use_hogger = true;
     @AppStorage("isBeta") var isBeta = false;
-    @AppStorage("headroom") var staticHeadroomMB: Double = 384.0
+    @AppStorage("headroom") var staticHeadroomMB = 384;
     @AppStorage("pages") var pUaFPages: Double = 3072.0
-    @Binding var useNewUI: Bool
+    @Binding var useNewUI: Bool;
     var body: some View {
         // thx haxi0
         VStack {
             List {
-                let memSizeMB = getPhysicalMemorySize() / 1048576
-                HStack {
-                    Text("Headroom: \(Int(staticHeadroomMB))")
-                    Slider(value: $staticHeadroomMB, in: 0...Double(memSizeMB), step: 256.0)
+                Picker("Headroom:", selection: $headroom_index) {
+                    ForEach(0..<headroom_options.count, id: \.self) {
+                        Text(String(headroom_options[$0]))
+                    }
                 }
-                HStack {
-                    Text("puaf pages: \(Int(pUaFPages))")
-                    Slider(value: $pUaFPages, in: 16...4096, step: 16.0)
+                .onChange(of: headroom_index) {sel in
+                    staticHeadroomMB = headroom_options[sel]
                 }
-                HStack {
-                    Text("puaf method: \(puaf_method_options[Int(puaf_method)])").layoutPriority(1.0)
-                    Slider(value: $puaf_method, in: 0...Double(puaf_method_options.count-1), step: 1.0).layoutPriority(0.25)
+                Picker("puaf pages:", selection: $puaf_pages_index) {
+                    ForEach(0..<puaf_pages_options.count, id: \.self) {
+                        Text(String(puaf_pages_options[$0]))
+                    }
                 }
-                HStack {
-                    Text("kread method: \(kread_method_options[Int(kread_method)])").layoutPriority(1.0)
-                    Slider(value: $kread_method, in: 0...Double(kread_method_options.count-1), step: 1.0).layoutPriority(0.25)
+                .onChange(of: puaf_pages_index) {sel in
+                    pUaFPages = Double(puaf_pages_options[sel])
                 }
-                HStack {
-                    Text("kwrite method: \(kwrite_method_options[Int(kwrite_method)])").layoutPriority(1.0)
-                    Slider(value: $kwrite_method, in: 0...Double(kwrite_method_options.count-1), step: 1.0).layoutPriority(0.7)
+                Picker("puaf method:", selection: $puaf_method) {
+                    ForEach(0..<puaf_method_options.count, id: \.self) {
+                        Text(String(puaf_method_options[$0]))
+                    }
                 }
-                Toggle("Use memory hogger", systemImage: "memorychip", isOn: $use_hogger);
-                Toggle("iOS Beta", systemImage: "ladybug", isOn: $isBeta);
+                Picker("kread method:", selection: $kread_method) {
+                    ForEach(0..<kread_method_options.count, id: \.self) {
+                        Text(String(kread_method_options[$0]))
+                    }
+                }
+                Picker("kwrite method:", selection: $kwrite_method) {
+                    ForEach(0..<kwrite_method_options.count, id: \.self) {
+                        Text(String(kwrite_method_options[$0]))
+                    }
+                }
+                Toggle("Use memory hogger", systemImage: "memorychip", isOn: $use_hogger).tint(.accentColor)
+                Toggle("iOS Beta", systemImage: "ladybug", isOn: $isBeta).tint(.accentColor)
             }
             ScrollView {
                 ScrollViewReader { scroll in
@@ -81,7 +95,7 @@ struct ContentView: View {
             withAnimation(fancyAnimation) {
                 useNewUI.toggle()
             }
-        }.padding(16);
+        }
         Text("");
     }
     private func FetchLog() {
@@ -91,6 +105,18 @@ struct ContentView: View {
         }
         LogItems = AttributedText.string.split(separator: "\n")
     }
+    init(useNewUI: Binding<Bool>) {
+        self._useNewUI = useNewUI;
+        let memSizeMB = getPhysicalMemorySize() / 1048576
+        var new_headroom_options = headroom_options
+        for option in headroom_options {
+            if (option > memSizeMB) {
+                new_headroom_options = new_headroom_options.filter { $0 != option }
+            }
+        }
+        headroom_options = new_headroom_options;
+    }
+
 }
 
 // #Preview {

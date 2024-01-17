@@ -57,6 +57,9 @@ int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_
 
 int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdErr)
 {
+#if TARGET_OS_SIMULATOR
+    return 0;
+#else
     NSMutableArray* argsM = args.mutableCopy ?: [NSMutableArray new];
     [argsM insertObject:path.lastPathComponent atIndex:0];
     
@@ -140,6 +143,7 @@ int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString** stdEr
     }
 //    NSLog(@"%@", status);
     return WEXITSTATUS(status);
+#endif
 }
 
 
