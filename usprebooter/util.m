@@ -288,3 +288,27 @@ NSString *jbroot(NSString *path)
     NSString* jbroot = find_jbroot();
     return [jbroot stringByAppendingPathComponent:path];
 }
+
+float roundLog(float input) {
+    double floored = floor(input);
+    double decimal = input - floored;
+    if (decimal < 0.159925) {
+        return floored;
+    } else if (decimal < 0.45943162) {
+        return (floored + 0.32192809);
+    } else if (decimal < 0.70043972) {
+        return (floored + 0.5849625);
+    } else if (decimal < 0.9068906) {
+        return (floored + 0.80735492);
+    } else {
+        return floored + 1;
+    }
+}
+
+bool isBetaiOS(void) {
+    char type[256];
+    size_t type_size = 256;
+    int ret = sysctlbyname("kern.osreleasetype", &type, &type_size, NULL, 0);
+    if (ret) return false;
+    return (!strcmp(type, "Beta"));
+}

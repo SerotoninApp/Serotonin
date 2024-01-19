@@ -42,14 +42,14 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	cp RootHelperSample/Exploits/fastPathSign/fastPathSign ChOma/output/ios/tests
 	
 	echo "[*] Building Serotonin"
-	xcodebuild clean build -project Serotonin.xcodeproj -scheme usprebooter -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO"
+	xcodebuild clean build -project Serotonin.xcodeproj -scheme usprebooter -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO" -derivedDataPath build
 	
 	echo "[*] Done building. Packaging for TS..."
 	$(MAKE) -C RootHelperSample
 	rm -rf Payload
 	rm -rf Serotonin.tipa
 	mkdir Payload
-	cp -a build/Release-iphoneos/usprebooter.app Payload
+	cp -a build/Build/Products/Release-iphoneos/usprebooter.app Payload
 	rm -rf Payload/usprebooter.app/Frameworks
 	cp RootHelperSample/.theos/obj/debug/arm64/trolltoolsroothelper Payload/usprebooter.app/trolltoolsroothelper
 	install -m755 RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib Payload/usprebooter.app/launchdhooksigned.dylib

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Darwin
 import UIKit
 
 class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -14,13 +15,16 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var tableData = [
         ["About", "Changelogs"],
         ["Beta iOS", "Verbose Boot", "Hide Internal Text"],
-        ["PUAF Pages", "Static Headroom"],
+        ["PUAF Pages", "PUAF Method", "KRead Method", "KWrite Method" ,"Use Memory Hogger", "Headroom"],
         ["Set Defaults"]
     ]
 
     var sectionTitles = [
         "", "Options", "Exploit", ""
     ]
+    let puaf_method_options = [ "physpuppet", "smith", "landa" ]
+    let kread_method_options = [ "kqueue_workloop_ctl", "sem_open" ]
+    let kwrite_method_options = [ "dup", "sem_open" ]
     
     var settingsManager = SettingsManager.shared
     
@@ -82,11 +86,12 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.textLabel?.textColor = UIColor(named: "AccentColor")
             cell.selectionStyle = .default
             
-        case "Static Headroom":
+        case "Headroom":
             let slider = UISlider()
-            slider.value = Float(settingsManager.staticHeadroom)
-            slider.minimumValue = 0
-            slider.maximumValue = 1920
+            slider.setValue(Float(settingsManager.staticHeadroom), animated: false);
+            //slider.value = Float(settingsManager.staticHeadroom)
+            slider.minimumValue = 4
+            slider.maximumValue = log2(Float(getPhysicalMemorySize() / 1048576) / 1.3)
             slider.addTarget(self, action: #selector(headroomValueChanged(_:)), for: .valueChanged)
 
             cell.accessoryView = slider
@@ -94,15 +99,25 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         case "PUAF Pages":
             let slider = UISlider()
-            slider.value = Float(settingsManager.puafPages)
-            slider.minimumValue = 512
-            slider.maximumValue = 32768
+            slider.setValue(Float(settingsManager.puafPages), animated: false);
+            //slider.value = Float(log2(Float(settingsManager.puafPages)))
+            slider.minimumValue = 4
+            slider.maximumValue = 15
             slider.addTarget(self, action: #selector(puafValueChanged(_:)), for: .valueChanged)
 
             cell.accessoryView = slider
             cell.detailTextLabel?.text = "\(settingsManager.puafPages) MB"
             
-        case "Beta iOS", "Verbose Boot", "Hide Internal Text":
+        case "PUAF Method":
+            let _ = createPickerButton(in: cell, with: puaf_method_options, currentValue: puaf_method_options[settingsManager.puafMethod], actionHandler: puafMethodChanged);
+            
+        case "KRead Method":
+            let _ = createPickerButton(in: cell, with: kread_method_options, currentValue: kread_method_options[settingsManager.kreadMethod], actionHandler: kreadMethodChanged);
+            
+        case "KWrite Method":
+            let _ = createPickerButton(in: cell, with: kwrite_method_options, currentValue: kread_method_options[settingsManager.kwriteMethod], actionHandler: kwriteMethodChanged);
+    
+        case "Beta iOS", "Verbose Boot", "Hide Internal Text", "Use Memory Hogger":
             let switchView = UISwitch()
             switchView.isOn = switchStateForSetting(cellText)
             switchView.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
@@ -116,31 +131,27 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func headroomValueChanged(_ sender: UISlider) {
-        let step: Float = 128
-        let roundedValue = round(sender.value / step) * step
+        let roundedValue = roundLog(sender.value)
         sender.value = roundedValue
 
-        let value = Int(roundedValue)
-        settingsManager.staticHeadroom = value
+        settingsManager.staticHeadroom = Int(pow(Double(2), Double(roundedValue)));
 
         if let sectionIndex = sectionTitles.firstIndex(of: "Exploit"),
-           let rowIndex = tableData[sectionIndex].firstIndex(of: "Static Headroom") {
+           let rowIndex = tableData[sectionIndex].firstIndex(of: "Headroom") {
 
             let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
 
             if let cell = tableView.cellForRow(at: indexPath) {
-                cell.detailTextLabel?.text = "\(value) MB"
+                cell.detailTextLabel?.text = "\(settingsManager.staticHeadroom) MB"
             }
         }
     }
     
     @objc func puafValueChanged(_ sender: UISlider) {
-        let step: Float = 128
-        let roundedValue = round(sender.value / step) * step
+        let roundedValue = roundLog(sender.value)
         sender.value = roundedValue
 
-        let value = Int(roundedValue)
-        settingsManager.puafPages = value
+        settingsManager.puafPages = Int(pow(Double(2), Double(roundedValue)));
 
         if let sectionIndex = sectionTitles.firstIndex(of: "Exploit"),
            let rowIndex = tableData[sectionIndex].firstIndex(of: "PUAF Pages") {
@@ -148,8 +159,43 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
 
             if let cell = tableView.cellForRow(at: indexPath) {
-                cell.detailTextLabel?.text = "\(value) MB"
+                cell.detailTextLabel?.text = "\(settingsManager.puafPages) MB"
             }
+        }
+    }
+    
+    @objc func puafMethodChanged(_ method: String) {
+        switch method {
+        case "physpuppet":
+            settingsManager.puafMethod = 0;
+        case "smith":
+            settingsManager.puafMethod = 1;
+        case "landa":
+            settingsManager.puafMethod = 2;
+        default:
+            break;
+        }
+    }
+    
+    @objc func kreadMethodChanged(_ method: String) {
+        switch method {
+        case "kqueue_workloop_ctl":
+            settingsManager.kreadMethod = 0;
+        case "sem_open":
+            settingsManager.kreadMethod = 1;
+        default:
+            break;
+        }
+    }
+    
+    @objc func kwriteMethodChanged(_ method: String) {
+        switch method {
+        case "dup":
+            settingsManager.kwriteMethod = 0;
+        case "sem_open":
+            settingsManager.kwriteMethod = 1;
+        default:
+            break;
         }
     }
     
@@ -208,6 +254,8 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             return settingsManager.verboseBoot
         case "Hide Internal Text":
             return settingsManager.hideInternalText
+        case "Use Memory Hogger":
+            return settingsManager.useMemoryHogger
         default:
             return false
         }
@@ -222,5 +270,41 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             view = superview as! UISwitch
         }
         return nil
+    }
+    
+    private func createPickerButton<T: Hashable & CustomStringConvertible>(
+        in cell: UITableViewCell,
+        with options: [T],
+        currentValue: T,
+        actionHandler: @escaping (T) -> Void
+    ) -> UIButton {
+        let cfg = UIButton.Configuration.plain()
+        let pickerButton = UIButton(configuration: cfg)
+        
+        let menuItems: [UIAction] = options.map { option in
+            UIAction(title: option.description, state: (option == currentValue) ? .on : .off) { action in
+                actionHandler(option)
+            }
+        }
+        
+        let fontMenu = UIMenu(options: [.singleSelection], children: menuItems)
+        
+        pickerButton.menu = fontMenu
+        pickerButton.showsMenuAsPrimaryAction = true
+        pickerButton.changesSelectionAsPrimaryAction = true
+        
+        if let detailTextColor = cell.detailTextLabel?.textColor {
+            pickerButton.setTitleColor(detailTextColor, for: .normal)
+            pickerButton.tintColor = .tertiaryLabel
+        }
+        cell.contentView.addSubview(pickerButton)
+        
+        pickerButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            pickerButton.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -4),
+            pickerButton.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+        ])
+        
+        return pickerButton
     }
 }

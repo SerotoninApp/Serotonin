@@ -12,6 +12,7 @@ class JailbreakViewController: UIViewController, UITableViewDelegate, UITableVie
 
     let tableView = UITableView()
     let cellReuseIdentifier = "Cell"
+    let settingsManager = SettingsManager.shared
 
     
     
@@ -84,8 +85,8 @@ class JailbreakViewController: UIViewController, UITableViewDelegate, UITableVie
 
 extension JailbreakViewController: JBButtonDelegate {
     func jbButtonDidFinishAction(_ button: jbButton) {
-        do_kopen(4096, 2, 1, 1, 0, false)
-        go(false, "reinstall")
+        do_kopen(UInt64(settingsManager.puafPages), UInt64(settingsManager.puafMethod), UInt64(settingsManager.kreadMethod), UInt64(settingsManager.kwriteMethod), settingsManager.staticHeadroom, settingsManager.useMemoryHogger)
+        go(settingsManager.isBetaIos, "reinstall")
         button.updateButtonState(.jailbreaking)
         Logger.shared.log(logType: .warning, subTitle: "meow")
         DispatchQueue.global().async {
