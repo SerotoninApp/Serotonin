@@ -104,12 +104,6 @@ NSString* usprebooterappPath()
     return [usprebooterPath() stringByAppendingPathComponent:@"usprebooter.app"];
 }
 
-//BOOL isLdidInstalled(void)
-//{
-//    NSString* ldidPath = [trollStoreAppPath() stringByAppendingPathComponent:@"ldid"];
-//    return [[NSFileManager defaultManager] fileExistsAtPath:ldidPath];
-//}
-
 int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
 {
     NSString* ldidPath = [usprebooterappPath() stringByAppendingPathComponent:@"ldid"];
@@ -184,37 +178,13 @@ int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
 
 int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ldid is included ok
 {
-//        if(!isLdidInstalled()) return 173;
-
-//        NSString *entitlementsPath = nil;
         NSString *signArg = @"-S";
         NSString* errorOutput;
         if(entitlements) {
-//            NSData *entitlementsXML = [NSPropertyListSerialization dataWithPropertyList:entitlements format:NSPropertyListXMLFormat_v1_0 options:0 error:nil];
-//            if (entitlementsXML) {
-//                entitlementsPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"plist"];
-//                [entitlementsXML writeToFile:entitlementsPath atomically:NO];
                 signArg = [signArg stringByAppendingString:entitlements];
-//                signArg = [signArg stringByAppendingString:@" -Cadhoc"];
-//                signArg = [signArg stringByAppendingString:@" -M"];
-//                signArg = [signArg stringByAppendingString:@"/sbin/launchd"];
-//            }
         }
         NSLog(@"roothelper: running ldid");
         int ldidRet = runLdid(@[signArg, filePath], nil, &errorOutput);
-//        if (entitlementsPath) {
-//            [[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
-//        }
-
-//        NSLog(@"roothelper: ldid exited with status %d", ldidRet);
-//
-//        NSLog(@"roothelper: - ldid error output start -");
-//
-//        printMultilineNSString(signArg);
-//        printMultilineNSString(errorOutput);
-//
-//        NSLog(@"roothelper: - ldid error output end -");
-
         if(ldidRet == 0)
         {
             return 0;
@@ -223,7 +193,6 @@ int signAdhoc(NSString *filePath, NSString *entitlements) // lets just assume ld
         {
             return 175;
         }
-    //}
 }
 
 NSSet<NSString*>* immutableAppBundleIdentifiers(void)
@@ -248,18 +217,9 @@ NSSet<NSString*>* immutableAppBundleIdentifiers(void)
 
 void replaceByte(NSString *filePath, int offset, const char *replacement) {
     const char *fileCString = [filePath UTF8String];
-    
     FILE *file = fopen(fileCString, "r+");
-
-    if (file == NULL) {
-        NSLog(@"Error opening workinglaunchd");
-        perror("Error opening file");
-        return;
-    }
-
     fseek(file, offset, SEEK_SET);
     fwrite(replacement, sizeof(char), 4, file);
-
     fclose(file);
 }
 
@@ -275,7 +235,7 @@ void removeItemAtPathRecursively(NSString *path) {
     if (error == nil) {
         for (NSString *item in contents) {
             if ([item isEqualToString:@".jbroot"]) {
-                NSLog(@"Skipping deletion of %@ in %@", item, path);
+//                NSLog(@"Skipping deletion of %@ in %@", item, path);
                 continue;
             }
             NSString *itemPath = [path stringByAppendingPathComponent:item];
@@ -397,7 +357,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
                     return 2;
                 }
-        } else if ([action isEqual: @"hideText"]) {
+        } else if ([action isEqual: @"toggleText"]) {
             NSString *filePath = @"/var/mobile/.serotonin_hidetext";
             BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
             if (!fileExists) {

@@ -15,9 +15,14 @@ class SettingsManager {
     private init() {}
     
     static let didStaticHeadroomChange = Notification.Name("didFontSizeChange")
+    static let didPuafPagesChange = Notification.Name("didFontSizeChange")
     
     private var _staticHeadroom: Int? {
         didSet { NotificationCenter.default.post(name: SettingsManager.didStaticHeadroomChange, object: nil) }
+    }
+    
+    private var _puafPages: Int? {
+        didSet { NotificationCenter.default.post(name: SettingsManager.didPuafPagesChange, object: nil) }
     }
     
     var staticHeadroom: Int {
@@ -43,9 +48,12 @@ class SettingsManager {
         set { UserDefaults.standard.set(newValue, forKey: "hideInternalText") }
     }
 
-    var puafPages: Bool {
-        get { return UserDefaults.standard.bool(forKey: "puafPages", defaultValue: false) }
-        set { UserDefaults.standard.set(newValue, forKey: "puafPages") }
+    var puafPages: Int {
+        get { return _puafPages ?? UserDefaults.standard.value(forKey: "puafPages") as? Int ?? 512 }
+        set {
+            _puafPages = newValue
+            UserDefaults.standard.set(newValue, forKey: "puafPages")
+        }
     }
 }
 
@@ -63,6 +71,6 @@ extension SettingsManager {
         isBetaIos = false
         verboseBoot = true
         hideInternalText = true
-        puafPages = false
+        puafPages = 4096
     }
 }

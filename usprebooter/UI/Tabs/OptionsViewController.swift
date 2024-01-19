@@ -87,18 +87,20 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             slider.value = Float(settingsManager.staticHeadroom)
             slider.minimumValue = 0
             slider.maximumValue = 1920
-            slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+            slider.addTarget(self, action: #selector(headroomValueChanged(_:)), for: .valueChanged)
 
             cell.accessoryView = slider
             cell.detailTextLabel?.text = "\(settingsManager.staticHeadroom) MB"
             
         case "PUAF Pages":
-            let switchView = UISwitch()
-            switchView.isOn = switchStateForSetting(cellText)
-            switchView.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
-            cell.accessoryView = switchView
-            cell.detailTextLabel?.text = "3072"
-            // I have no idea how this works, but figure it out!
+            let slider = UISlider()
+            slider.value = Float(settingsManager.puafPages)
+            slider.minimumValue = 512
+            slider.maximumValue = 32768
+            slider.addTarget(self, action: #selector(puafValueChanged(_:)), for: .valueChanged)
+
+            cell.accessoryView = slider
+            cell.detailTextLabel?.text = "\(settingsManager.puafPages) MB"
             
         case "Beta iOS", "Verbose Boot", "Hide Internal Text":
             let switchView = UISwitch()
@@ -113,7 +115,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
-    @objc func sliderValueChanged(_ sender: UISlider) {
+    @objc func headroomValueChanged(_ sender: UISlider) {
         let step: Float = 128
         let roundedValue = round(sender.value / step) * step
         sender.value = roundedValue
@@ -123,6 +125,25 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
 
         if let sectionIndex = sectionTitles.firstIndex(of: "Exploit"),
            let rowIndex = tableData[sectionIndex].firstIndex(of: "Static Headroom") {
+
+            let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+
+            if let cell = tableView.cellForRow(at: indexPath) {
+                cell.detailTextLabel?.text = "\(value) MB"
+            }
+        }
+    }
+    
+    @objc func puafValueChanged(_ sender: UISlider) {
+        let step: Float = 128
+        let roundedValue = round(sender.value / step) * step
+        sender.value = roundedValue
+
+        let value = Int(roundedValue)
+        settingsManager.puafPages = value
+
+        if let sectionIndex = sectionTitles.firstIndex(of: "Exploit"),
+           let rowIndex = tableData[sectionIndex].firstIndex(of: "PUAF Pages") {
 
             let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
 
@@ -163,8 +184,8 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let indexPath = tableView.indexPath(for: cell) {
             let setting = tableData[indexPath.section][indexPath.row]
             switch setting {
-            case "PUAF Pages":
-                settingsManager.puafPages = sender.isOn
+//            case "PUAF Pages":
+//                settingsManager.puafPages = sender.isOn
             case "Beta iOS":
                 settingsManager.isBetaIos = sender.isOn
             case "Verbose Boot":
@@ -179,8 +200,8 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private func switchStateForSetting(_ setting: String) -> Bool {
         switch setting {
-        case "PUAF Pages":
-            return settingsManager.puafPages
+//        case "PUAF Pages":
+//            return settingsManager.puafPages
         case "Beta iOS":
             return settingsManager.isBetaIos
         case "Verbose Boot":
