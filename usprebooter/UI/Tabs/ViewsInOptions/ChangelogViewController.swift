@@ -8,7 +8,7 @@
 
 import UIKit
 import SafariServices
-//import Markdown
+import Markdown
 
 struct Release: Decodable {
     let name: String
@@ -112,10 +112,10 @@ class ChangelogViewController: UIViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReleaseCell", for: indexPath) as! ReleaseCell
         let release = releases[indexPath.section][indexPath.row]
-//        var markdownosaur = Markdownosaur()
-//        let document = Document(parsing: release.body)
+        var markdownosaur = Markdownosaur()
+        let document = Document(parsing: release.body)
         
-//        cell.bodyLabel.attributedText = markdownosaur.attributedString(from: document)
+        cell.bodyLabel.attributedText = markdownosaur.attributedString(from: document)
         
         return cell
     }
