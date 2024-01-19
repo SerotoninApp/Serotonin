@@ -15,13 +15,12 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var tableData = [
         ["About", "Changelogs"],
         ["Beta iOS", "Verbose Boot", "Hide Internal Text"],
-        ["PUAF Pages", "PUAF Method", "KRead Method", "KWrite Method" ,"Use Memory Hogger", "Headroom"],
+        ["PUAF Pages", "PUAF Method", "KRead Method", "KWrite Method" ,"Use Memory Hogger"],
         ["Set Defaults"]
     ]
 
-    var sectionTitles = [
-        "", "Options", "Exploit", ""
-    ]
+    var sectionTitles = ["", "Options", "Exploit", ""]
+    
     let puaf_method_options = [ "physpuppet", "smith", "landa" ]
     let kread_method_options = [ "kqueue_workloop_ctl", "sem_open" ]
     let kwrite_method_options = [ "dup", "sem_open" ]
@@ -45,6 +44,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        updateTableDataForMemoryHogger()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int { return sectionTitles.count }
@@ -89,7 +89,6 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         case "Headroom":
             let slider = UISlider()
             slider.setValue(Float(settingsManager.staticHeadroom), animated: false);
-            //slider.value = Float(settingsManager.staticHeadroom)
             slider.minimumValue = 4
             slider.maximumValue = log2(Float(getPhysicalMemorySize() / 1048576) / 1.3)
             slider.addTarget(self, action: #selector(headroomValueChanged(_:)), for: .valueChanged)
@@ -100,7 +99,6 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         case "PUAF Pages":
             let slider = UISlider()
             slider.setValue(Float(settingsManager.puafPages), animated: false);
-            //slider.value = Float(log2(Float(settingsManager.puafPages)))
             slider.minimumValue = 4
             slider.maximumValue = 15
             slider.addTarget(self, action: #selector(puafValueChanged(_:)), for: .valueChanged)
@@ -230,12 +228,14 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let indexPath = tableView.indexPath(for: cell) {
             let setting = tableData[indexPath.section][indexPath.row]
             switch setting {
-//            case "PUAF Pages":
-//                settingsManager.puafPages = sender.isOn
             case "Beta iOS":
                 settingsManager.isBetaIos = sender.isOn
             case "Verbose Boot":
                 settingsManager.verboseBoot = sender.isOn
+            case "Use Memory Hogger":
+                settingsManager.useMemoryHogger = sender.isOn
+                updateTableDataForMemoryHogger()
+                tableView.reloadSections(IndexSet(integer: 2), with: .fade)
             case "Hide Internal Text":
                 settingsManager.hideInternalText = sender.isOn
             default:
@@ -244,10 +244,27 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    private func updateTableDataForMemoryHogger() {
+        if settingsManager.useMemoryHogger {
+            tableData[2].append("Headroom")
+        } else {
+            if let index = tableData[2].firstIndex(of: "Headroom") {
+                tableData[2].remove(at: index)
+            }
+        }
+    }
+}
+
+
+
+// MARK: - Other
+
+
+
+
+extension OptionsViewController {
     private func switchStateForSetting(_ setting: String) -> Bool {
         switch setting {
-//        case "PUAF Pages":
-//            return settingsManager.puafPages
         case "Beta iOS":
             return settingsManager.isBetaIos
         case "Verbose Boot":
