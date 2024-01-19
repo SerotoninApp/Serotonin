@@ -72,6 +72,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
 
         let cellText = tableData[indexPath.section][indexPath.row]
         cell.textLabel?.text = cellText
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16.0)
 
         switch cellText {
         case "About":
@@ -104,7 +105,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             slider.addTarget(self, action: #selector(puafValueChanged(_:)), for: .valueChanged)
 
             cell.accessoryView = slider
-            cell.detailTextLabel?.text = "\(settingsManager.puafPages) MB"
+            cell.detailTextLabel?.text = "\(settingsManager.puafPages)"
             
         case "PUAF Method":
             let _ = createPickerButton(in: cell, with: puaf_method_options, currentValue: puaf_method_options[settingsManager.puafMethod], actionHandler: puafMethodChanged);
@@ -124,7 +125,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
         default:
             break
         }
-
+        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 13.0)
         return cell
     }
     
@@ -157,7 +158,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
 
             if let cell = tableView.cellForRow(at: indexPath) {
-                cell.detailTextLabel?.text = "\(settingsManager.puafPages) MB"
+                cell.detailTextLabel?.text = "\(settingsManager.puafPages)"
             }
         }
     }

@@ -93,4 +93,4 @@ apple-include:
 clean:
 	rm -rf Payload build RootHelperSample/.theos apple-include RootHelperSample/build FUCK.tipa Serotonin.tipa
 
-.PHONY: all clean
+.PHONY: all clean Serotonin.tipa
