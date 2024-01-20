@@ -102,7 +102,7 @@ class jbButton: UIButton {
         
         switch currentState {
         case .done:
-            delegate?.jbButtonDidFinishAction(self)
+            userspaceReboot()
         case .jailbreak:
             Logger.shared.log(logType: .standard, subTitle: "Starting jailbreak process")
             delegate?.jbButtonDidFinishAction(self)

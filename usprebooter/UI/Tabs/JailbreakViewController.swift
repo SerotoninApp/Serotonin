@@ -60,14 +60,9 @@ class JailbreakViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func didAddNewLog() {
         DispatchQueue.main.async {
-            UIView.transition(with: self.tableView,
-                              duration: 0.3,
-                              options: .transitionCrossDissolve,
-                              animations: {
-                self.tableView.reloadData()
-                let indexPath = IndexPath(row: Logger.shared.data.count - 1, section: 0)
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-            }, completion: nil)
+            self.tableView.reloadData()
+            let indexPath = IndexPath(row: Logger.shared.data.count - 1, section: 0)
+            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
         }
     }
 
@@ -85,31 +80,25 @@ class JailbreakViewController: UIViewController, UITableViewDelegate, UITableVie
 
 extension JailbreakViewController: JBButtonDelegate {
     func jbButtonDidFinishAction(_ button: jbButton) {
-        do_kopen(UInt64(settingsManager.puafPages), UInt64(settingsManager.puafMethod), UInt64(settingsManager.kreadMethod), UInt64(settingsManager.kwriteMethod), settingsManager.staticHeadroom, settingsManager.useMemoryHogger)
-        go(settingsManager.isBetaIos, "reinstall")
+        
         button.updateButtonState(.jailbreaking)
-        Logger.shared.log(logType: .warning, subTitle: "meow")
-        DispatchQueue.global().async {
-            let randomNumber = Int.random(in: 0...1)
-            Logger.shared.log(logType: .warning, subTitle: "meo1w")
-            Logger.shared.log(logType: .warning, subTitle: "meow3")
-            Logger.shared.log(logType: .standard, subTitle: "meow33")
-            Logger.shared.log(logType: .success, subTitle: "meow32")
 
-            DispatchQueue.main.async {
-                if randomNumber == 0 {
-                    Logger.shared.log(logType: .success, subTitle: "Done!1")
-                    button.updateButtonState(.done)
-                } else {
-                    Logger.shared.log(logType: .error, subTitle: "Error with code: meow")
-                    self.simulateError()
-                    button.updateButtonState(.error)
-                }
+        DispatchQueue.global().async { [self] in
+            Logger.shared.log(logType: .standard, subTitle: "run 1")
+
+            do_kopen(UInt64(settingsManager.puafPages), UInt64(settingsManager.puafMethod), UInt64(settingsManager.kreadMethod), UInt64(settingsManager.kwriteMethod), settingsManager.staticHeadroom, settingsManager.useMemoryHogger)
+            
+            Logger.shared.log(logType: .standard, subTitle: "run 1")
+            
+            go(settingsManager.isBetaIos, "reinstall")
+            Logger.shared.log(logType: .standard, subTitle: "run 2")
+
+            do_kclose()
+            Logger.shared.log(logType: .standard, subTitle: "run 3")
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                button.updateButtonState(.done)
             }
         }
-    }
-    
-    private func simulateError() {
-        print("Button finished action with an error")
     }
 }

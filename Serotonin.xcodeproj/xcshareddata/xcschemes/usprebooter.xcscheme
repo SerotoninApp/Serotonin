@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C81122992B15E7BB00AD077B"
-               BuildableName = "usprebooter.app"
+               BuildableName = "Serotonin.app"
                BlueprintName = "usprebooter"
                ReferencedContainer = "container:Serotonin.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C81122992B15E7BB00AD077B"
-            BuildableName = "usprebooter.app"
+            BuildableName = "Serotonin.app"
             BlueprintName = "usprebooter"
             ReferencedContainer = "container:Serotonin.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C81122992B15E7BB00AD077B"
-            BuildableName = "usprebooter.app"
+            BuildableName = "Serotonin.app"
             BlueprintName = "usprebooter"
             ReferencedContainer = "container:Serotonin.xcodeproj">
          </BuildableReference>

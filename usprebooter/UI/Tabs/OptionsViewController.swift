@@ -50,13 +50,7 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func numberOfSections(in tableView: UITableView) -> Int { return sectionTitles.count }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return tableData[section].count }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return sectionTitles[section] }
-    
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let sectionTitle = sectionTitles[section]
-        if sectionTitle.isEmpty { return 20 }
-        return 40
-    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return sectionTitles[section].isEmpty ? 20 : 40 }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let title = sectionTitles[section]
@@ -252,6 +246,15 @@ class OptionsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let index = tableData[2].firstIndex(of: "Headroom") {
                 tableData[2].remove(at: index)
             }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case 2:
+            return "You can leave these settings as default if you don't know what they do."
+        default:
+            return nil
         }
     }
 }
