@@ -10,8 +10,8 @@
 #include "util.h"
 #import "fun/vnode.h"
 
-NSString* getLunchd(void) {
-    return jbroot(@"lunchd");
+NSString* getLaunchd(void) {
+    return jbroot(@"launchd");
 }
 
 #define SYSTEM_VERSION_LOWER_THAN(v)                ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -22,14 +22,14 @@ bool overwrite_patchedlaunchd_kfd(bool isBeta) {
     if (SYSTEM_VERSION_LOWER_THAN(@"16.4")) {
         uint64_t orig_nc_vp = 0;
         uint64_t orig_to_vnode = 0;
-        SwitchSysBin160("/sbin/launchd", getLunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
+        SwitchSysBin160("/sbin/launchd", getLaunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
     } else if(isBeta && SYSTEM_VERSION_EQUAL_TO(@"16.6")) {
         printf("[i] 16.6b1 detected!");
         uint64_t orig_nc_vp = 0;
         uint64_t orig_to_vnode = 0;
-        SwitchSysBin160("/sbin/launchd", getLunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
+        SwitchSysBin160("/sbin/launchd", getLaunchd().UTF8String, &orig_to_vnode, &orig_nc_vp);
     } else {
-        SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLunchd().UTF8String);
+        SwitchSysBin(getVnodeAtPathByChdir("/sbin"), "launchd", getLaunchd().UTF8String);
     }
     printf("[i] launchd haxed\n");
     return true;
