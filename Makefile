@@ -18,10 +18,10 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	echo "[*] Building fastPathSign"
 	$(MAKE) -C RootHelperSample/Exploits/fastPathSign
 	
-	echo "[*] Building lunchd hook"
+	echo "[*] Building launchd hook"
 	$(MAKE) -C RootHelperSample/launchdshim/launchdhook
 	
-	echo "[*] Signing lunchd hook"
+	echo "[*] Signing launchd hook"
 	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/launchdhook.dylib -r -o RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib
 	
 	echo "[*] Building SpringBoard Hook"

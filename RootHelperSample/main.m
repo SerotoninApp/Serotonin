@@ -289,7 +289,7 @@ int main(int argc, char *argv[], char *envp[]) {
             if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
             } else {
-//                if (!jbroot(@"lunchd")) {
+//                if (!jbroot(@"launchd")) {
                     //                1. install roothide bootstrap
                     //                2. copy over launchd to your macos from your phone
                 NSLog(@"copy launchd over");
@@ -300,8 +300,8 @@ int main(int argc, char *argv[], char *envp[]) {
 //                sleep(1);
                 NSLog(@"sign launchd over and out");
                     spawnRoot(rootHelperPath(), @[@"codesign", source, @""], nil, nil);
-                    //                3. copy over workinglaunchd to your jbroot/lunchd
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"lunchd") error:nil];
+                    //                3. copy over workinglaunchd to your jbroot/launchd
+                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"launchd") error:nil];
                     //                4. copy over launchdhooksigned.dylib as jbroot/launchdhook.dylib
                     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbroot(@"launchdhook.dylib") error:nil];
                     //                5. copy over your regular SpringBoard.app to jbroot/System/Library/CoreServices/SpringBoard.app
@@ -326,7 +326,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     // remove workinglaunchd
                     [[NSFileManager defaultManager] removeItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
 //                } else {
-//                    NSLog(@"lunchd was found, you've already installed");
+//                    NSLog(@"launchd was found, you've already installed");
 //                }
             }
         } else if ([action isEqual: @"uninstall"]) {
@@ -334,13 +334,13 @@ int main(int argc, char *argv[], char *envp[]) {
             if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
             } else {
-                if (!jbroot(@"lunchd")) {
-                    NSLog(@"not continuing, lunchd wasn't found to remove");
+                if (!jbroot(@"launchd")) {
+                    NSLog(@"not continuing, launchd wasn't found to remove");
                     return -1;
                 } else {
                     removeItemAtPathRecursively(jbroot(@"/System/Library/CoreServices/SpringBoard.app/"));
                     [[NSFileManager defaultManager] removeItemAtPath:@"/var/mobile/Serotonin.jp2" error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"lunchd") error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchd") error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchdhook.dylib") error:nil];
                 }
             }
