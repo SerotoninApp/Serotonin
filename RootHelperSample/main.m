@@ -101,7 +101,7 @@ NSString* usprebooterPath()
 
 NSString* usprebooterappPath()
 {
-    return [usprebooterPath() stringByAppendingPathComponent:@"usprebooter.app"];
+    return [usprebooterPath() stringByAppendingPathComponent:@"Serotonin.app"];
 }
 
 int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
