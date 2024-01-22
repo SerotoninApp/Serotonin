@@ -27,7 +27,7 @@ To use this app, you need to be on a supported version (mentioned above), and ha
 
 ## TODO
  - Try adding support for lower iOS versions by overwriting NSGetExecutablePath
- - Add support for arm64
+ - ~~Add support for arm64~~
  - Add a boot splash screen (SOON)
  - Fix some Makefile jankiness
  - Fix `puaf_pages` picker crash in new UI
