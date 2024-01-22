@@ -36,7 +36,7 @@
 		C8B1D3B12B5A620500C5562B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3A32B5A620500C5562B /* Logger.swift */; };
 		C8B1D3B22B5A620500C5562B /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3A42B5A620500C5562B /* MainTabBarController.swift */; };
 		C8B1D3B32B5A620500C5562B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3A52B5A620500C5562B /* SettingsManager.swift */; };
-		C8B1D3B82B5A635800C5562B /* usprebooterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3B62B5A635800C5562B /* usprebooterApp.swift */; };
+		C8B1D3B82B5A635800C5562B /* SerotoninApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3B62B5A635800C5562B /* SerotoninApp.swift */; };
 		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
 		C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */; };
 		C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC882B3FFE560008D8FD /* offsets.m */; };
@@ -66,7 +66,7 @@
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* Serotonin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Serotonin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C81122AB2B15E7BD00AD077B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "usprebooter-Bridging-Header.h"; sourceTree = "<group>"; };
+		C81122CF2B15EA8600AD077B /* Serotonin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Serotonin-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81122DD2B16C9CB00AD077B /* troller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = troller.h; sourceTree = "<group>"; };
 		C81122DE2B16C9CC00AD077B /* troller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = troller.m; sourceTree = "<group>"; };
 		C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Serotonin.jp2; sourceTree = "<group>"; };
@@ -125,7 +125,7 @@
 		C8B1D3A32B5A620500C5562B /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		C8B1D3A42B5A620500C5562B /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		C8B1D3A52B5A620500C5562B /* SettingsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
-		C8B1D3B62B5A635800C5562B /* usprebooterApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = usprebooterApp.swift; sourceTree = "<group>"; };
+		C8B1D3B62B5A635800C5562B /* SerotoninApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerotoninApp.swift; sourceTree = "<group>"; };
 		C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
 		C8BFCC7A2B3FFE560008D8FD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		C8BFCC7B2B3FFE560008D8FD /* vnode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vnode.h; sourceTree = "<group>"; };
@@ -199,7 +199,7 @@
 				D6F9CF402B4B306400274803 /* fastPathSign */,
 				D6F9CF3E2B4B2F7D00274803 /* ct_bypass */,
 				C82AFF0A2B1762CE0070EA49 /* RootHelperSample */,
-				C811229C2B15E7BB00AD077B /* usprebooter */,
+				C811229C2B15E7BB00AD077B /* Serotonin */,
 				C811229B2B15E7BB00AD077B /* Products */,
 				C82AFF3B2B1796D90070EA49 /* Frameworks */,
 			);
@@ -213,10 +213,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C811229C2B15E7BB00AD077B /* usprebooter */ = {
+		C811229C2B15E7BB00AD077B /* Serotonin */ = {
 			isa = PBXGroup;
 			children = (
-				C8B1D3B62B5A635800C5562B /* usprebooterApp.swift */,
+				C8B1D3B62B5A635800C5562B /* SerotoninApp.swift */,
 				C8B1D3A52B5A620500C5562B /* SettingsManager.swift */,
 				C8B1D3952B5A620500C5562B /* UI */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
@@ -235,11 +235,11 @@
 				D6E090912B48E60300AE49BF /* Private Headers I stole from the macOS SDK */,
 				C81122DD2B16C9CB00AD077B /* troller.h */,
 				C81122DE2B16C9CC00AD077B /* troller.m */,
-				C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */,
+				C81122CF2B15EA8600AD077B /* Serotonin-Bridging-Header.h */,
 				C805CA462B1719D5005157BA /* util.h */,
 				C805CA442B1719C1005157BA /* util.m */,
 			);
-			path = usprebooter;
+			path = Serotonin;
 			sourceTree = "<group>";
 		};
 		C82AFF0A2B1762CE0070EA49 /* RootHelperSample */ = {
@@ -512,9 +512,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C81122992B15E7BB00AD077B /* usprebooter */ = {
+		C81122992B15E7BB00AD077B /* Serotonin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "usprebooter" */;
+			buildConfigurationList = C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "Serotonin" */;
 			buildPhases = (
 				C81122962B15E7BB00AD077B /* Sources */,
 				C81122972B15E7BB00AD077B /* Frameworks */,
@@ -524,11 +524,11 @@
 			);
 			dependencies = (
 			);
-			name = usprebooter;
+			name = Serotonin;
 			packageProductDependencies = (
 				33C3E8B12B5A79FD0043575A /* Markdown */,
 			);
-			productName = usprebooter;
+			productName = Serotonin;
 			productReference = C811229A2B15E7BB00AD077B /* Serotonin.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -570,7 +570,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				C81122992B15E7BB00AD077B /* usprebooter */,
+				C81122992B15E7BB00AD077B /* Serotonin */,
 			);
 		};
 /* End PBXProject section */
@@ -616,7 +616,7 @@
 				9756F4902B505F1900172EF9 /* cs_blobs.m in Sources */,
 				C8B1D3B32B5A620500C5562B /* SettingsManager.swift in Sources */,
 				9756F48E2B505EE100172EF9 /* patchfinder64.m in Sources */,
-				C8B1D3B82B5A635800C5562B /* usprebooterApp.swift in Sources */,
+				C8B1D3B82B5A635800C5562B /* SerotoninApp.swift in Sources */,
 				C8B1D3AC2B5A620500C5562B /* AboutViewController.swift in Sources */,
 				C83594CF2B18F70700346F80 /* overwriter.m in Sources */,
 				9756F4892B505EE100172EF9 /* libdimentio.m in Sources */,
@@ -763,7 +763,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = usprebooter/Info.plist;
+				INFOPLIST_FILE = Serotonin/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Serotonin;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -778,15 +778,15 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
-					"$(PROJECT_DIR)/usprebooter/lib",
-					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps",
-					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps/curl-static",
+					"$(PROJECT_DIR)/Serotonin/lib",
+					"$(PROJECT_DIR)/Serotonin/fun/kpf/libgrabkernel/deps",
+					"$(PROJECT_DIR)/Serotonin/fun/kpf/libgrabkernel/deps/curl-static",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
+				PRODUCT_BUNDLE_IDENTIFIER = pisshill.Serotonin;
 				PRODUCT_NAME = Serotonin;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "usprebooter/usprebooter-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Serotonin/Serotonin-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -804,7 +804,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = usprebooter/Info.plist;
+				INFOPLIST_FILE = Serotonin/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Serotonin;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -819,15 +819,15 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/launchdhook",
 					"$(PROJECT_DIR)/RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook",
-					"$(PROJECT_DIR)/usprebooter/lib",
-					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps",
-					"$(PROJECT_DIR)/usprebooter/fun/kpf/libgrabkernel/deps/curl-static",
+					"$(PROJECT_DIR)/Serotonin/lib",
+					"$(PROJECT_DIR)/Serotonin/fun/kpf/libgrabkernel/deps",
+					"$(PROJECT_DIR)/Serotonin/fun/kpf/libgrabkernel/deps/curl-static",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pisshill.usprebooter;
+				PRODUCT_BUNDLE_IDENTIFIER = pisshill.Serotonin;
 				PRODUCT_NAME = Serotonin;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "usprebooter/usprebooter-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Serotonin/Serotonin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -845,7 +845,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "usprebooter" */ = {
+		C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "Serotonin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C81122C52B15E7BD00AD077B /* Debug */,

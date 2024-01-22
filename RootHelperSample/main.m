@@ -91,22 +91,22 @@ NSString *jbroot(NSString *path)
 }
 
 
-NSString* usprebooterPath()
+NSString* SerotoninPath()
 {
     NSError* mcmError;
-    MCMAppContainer* appContainer = [MCMAppContainer containerWithIdentifier:@"pisshill.usprebooter" createIfNecessary:NO existed:NULL error:&mcmError];
+    MCMAppContainer* appContainer = [MCMAppContainer containerWithIdentifier:@"pisshill.Serotonin" createIfNecessary:NO existed:NULL error:&mcmError];
     if(!appContainer) return nil;
     return appContainer.url.path;
 }
 
-NSString* usprebooterappPath()
+NSString* SerotoninappPath()
 {
-    return [usprebooterPath() stringByAppendingPathComponent:@"Serotonin.app"];
+    return [SerotoninPath() stringByAppendingPathComponent:@"Serotonin.app"];
 }
 
 int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
 {
-    NSString* ldidPath = [usprebooterappPath() stringByAppendingPathComponent:@"ldid"];
+    NSString* ldidPath = [SerotoninappPath() stringByAppendingPathComponent:@"ldid"];
     NSMutableArray* argsM = args.mutableCopy ?: [NSMutableArray new];
     [argsM insertObject:ldidPath.lastPathComponent atIndex:0];
 
@@ -275,12 +275,12 @@ int main(int argc, char *argv[], char *envp[]) {
 //                @"get-task-allow": [NSNumber numberWithBool:YES],
 //                @"platform-application": [NSNumber numberWithBool:YES],
 //            };
-            NSString* launchdents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
-            NSString* patchedLaunchdCopy = [usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"];
+            NSString* launchdents = [SerotoninappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
+            NSString* patchedLaunchdCopy = [SerotoninappPath() stringByAppendingPathComponent:@"workinglaunchd"];
             signAdhoc(patchedLaunchdCopy, launchdents); // source file, NSDictionary with entitlements
             
             // TODO: Use ct_bypass instead of fastPathSign, it's just better :trol:
-            NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
+            NSString *fastPathSignPath = [SerotoninappPath() stringByAppendingPathComponent:@"fastPathSign"];
             NSString *stdOut;
             NSString *stdErr;
             spawnRoot(fastPathSignPath, @[@"-i", patchedLaunchdCopy, @"-r", @"-o", patchedLaunchdCopy], &stdOut, &stdErr);
@@ -293,17 +293,17 @@ int main(int argc, char *argv[], char *envp[]) {
                     //                1. install roothide bootstrap
                     //                2. copy over launchd to your macos from your phone
                 NSLog(@"copy launchd over");
-                    [[NSFileManager defaultManager] copyItemAtPath:@"/sbin/launchd" toPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:@"/sbin/launchd" toPath:[SerotoninappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
                     // remove cpu subtype, insert_dylib, then
-                    replaceByte([usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"], 8, "\x00\x00\x00\x00");
-                    insert_dylib_main("@loader_path/launchdhook.dylib", [[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] UTF8String]);
+                    replaceByte([SerotoninappPath() stringByAppendingPathComponent:@"workinglaunchd"], 8, "\x00\x00\x00\x00");
+                    insert_dylib_main("@loader_path/launchdhook.dylib", [[SerotoninappPath() stringByAppendingPathComponent:@"workinglaunchd"] UTF8String]);
 //                sleep(1);
                 NSLog(@"sign launchd over and out");
                     spawnRoot(rootHelperPath(), @[@"codesign", source, @""], nil, nil);
                     //                3. copy over workinglaunchd to your jbroot/launchd
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"launchd") error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"launchd") error:nil];
                     //                4. copy over launchdhooksigned.dylib as jbroot/launchdhook.dylib
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbroot(@"launchdhook.dylib") error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbroot(@"launchdhook.dylib") error:nil];
                     //                5. copy over your regular SpringBoard.app to jbroot/System/Library/CoreServices/SpringBoard.app
                     
                     [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/System/Library/CoreServices/") withIntermediateDirectories:YES attributes:nil error:nil];
@@ -311,20 +311,20 @@ int main(int argc, char *argv[], char *envp[]) {
                         
                     //                6. replace the regular SpringBoard in your jbroot/System/Library/CoreServices/SpringBoard.app/SpringBoard with springboardshimsignedinjected
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardshimsignedinjected"] toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"springboardshimsignedinjected"] toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
                      
                     //                7. place springboardhooksigned.dylib as jbroot/SpringBoard.app/springboardhook.dylib
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/springboardhook.dylib") error:nil];
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
                     // 8. create a symlink to jbroot named .jbroot
                     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
                     // 9. add the cool bootlogo!
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
                     // 10. add our confidential text hider into regular TweakInject dir
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] error:nil];
-                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"hideconfidentialtext.plist"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"] error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"hideconfidentialtext.plist"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"] error:nil];
                     // remove workinglaunchd
-                    [[NSFileManager defaultManager] removeItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:[SerotoninappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
 //                } else {
 //                    NSLog(@"launchd was found, you've already installed");
 //                }

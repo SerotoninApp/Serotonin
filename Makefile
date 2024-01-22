@@ -42,7 +42,7 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	cp RootHelperSample/Exploits/fastPathSign/fastPathSign ChOma/output/ios/tests
 	
 	echo "[*] Building Serotonin"
-	xcodebuild clean build -project Serotonin.xcodeproj -scheme usprebooter -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO" -derivedDataPath build
+	xcodebuild clean build -project Serotonin.xcodeproj -scheme Serotonin -sdk iphoneos -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED="NO" -derivedDataPath build
 	
 	echo "[*] Done building. Packaging for TS..."
 	$(MAKE) -C RootHelperSample
