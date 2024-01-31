@@ -115,9 +115,11 @@ void _offsets_init(void) {
     
     if(SYSTEM_VERSION_EQUAL_TO(@"15.5")) {
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/bsd/sys/queue.h#L485
+        //same as xnu-8792.41.9
         off_p_list_le_prev = 0x8;
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/bsd/sys/proc_internal.h#L270
+        //TODO: check if these are actually right
         off_p_proc_ro = 0x20;
         off_p_ppid = 0x28;
         off_p_original_ppid = 0x2c;
@@ -128,12 +130,12 @@ void _offsets_init(void) {
         off_p_rgid = 0x40;
         off_p_svuid = 0x44;
         off_p_svgid = 0x48;
-        //off_p_sessionid = 0x4c; // doesn't exist in 15.5 FIXME: ?
         off_p_puniqueid = 0x50;
         off_p_pid = 0x5c;
         off_p_pfd = 0xf4;
         off_p_textvp = 0x544;
         off_p_name = 0x575;
+        //off_p_sessionid = 0xFF; FIXME: help
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/bsd/sys/proc_ro.h#L59
         //same as xnu-8792.41.9
@@ -141,7 +143,7 @@ void _offsets_init(void) {
         off_p_ro_p_ucred = 0x20;    //_proc_ucred
         off_p_ro_pr_proc = 0;
         off_p_ro_pr_task = 0x8;
-        //off_p_ro_t_flags_ro = 0x00; doesn't exist in 15.5
+        //off_p_ro_t_flags_ro = 0x00; doesn't exist - introduced in xnu-8792.41.9 krnl src
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/bsd/sys/ucred.h#L91
         //same as xnu-8792.41.9
@@ -161,7 +163,7 @@ void _offsets_init(void) {
         off_cr_flags = 0x5c;
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/osfmk/kern/task.h#L280
-        //might be wrong, I didn't really chck thoroughly TODO: CHECK
+        ///same as xnu-8792.41.9
         off_task_t_flags = 0x3C0;
         off_task_itk_space = 0x300;
 
@@ -224,6 +226,7 @@ void _offsets_init(void) {
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/osfmk/ipc/ipc_space.h#L128
         //same as xnu-8792.41.9(???) TODO: CHECK
+        //Doesn't seem like it changed
         off_ipc_space_is_table = 0x20;
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/bsd/sys/ubc_internal.h#L152
@@ -240,12 +243,12 @@ void _offsets_init(void) {
         off_cs_blob_csb_cdhash = 0x58;
         off_cs_blob_csb_flags = 0x20;   //_csblob_get_flags
         off_cs_blob_csb_teamid = 0x88;
-        //Doesn't exist (off_cs_blob_csb_pmap_cs_entry) FIXME:
+        //Doesn't exist (off_cs_blob_csb_pmap_cs_entry)
         //off_cs_blob_csb_validation_category = 0;
 
 
         //https://github.com/apple-oss-distributions/xnu/blob/xnu-8020.121.3/osfmk/vm/pmap_cs.h
-        //These don't exist at all in xnu-8020.121.3 FIXME:
+        //These don't exist at all in xnu-8020.121.3
         //Introduced in xnu-8792.41.9
         /*
         off_pmap_cs_code_directory_ce_ctx = 0;
@@ -268,7 +271,7 @@ void _offsets_init(void) {
         off_ipc_port_ip_kobject = 0x48;
 
 
-        /* FIXME: ?
+        /*
         off_gphysbase = 0;
         off_gphysize = 0;
         off_gvirtbase = 0;
