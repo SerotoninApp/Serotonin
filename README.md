@@ -7,6 +7,7 @@
 
 <h6 align="center"> Should Support iOS/iPadOS 16.0 - 16.6.1  </h6>
 
+# IF YOUR DEVICE SUPPORTS [DOPAMINE](https://github.com/opa334/Dopamine), YOU SHOULD REALLY USE THAT OVER THIS. THIS WILL NOT BE UPDATED ANYMORE FOR THOSE DEVICES.
 
 ## How do I use this?
 To use this app, you need to be on a supported version (mentioned above), and have [TrollStore](https://github.com/opa334/TrollStore/) installed. You can follow [this guide](https://ios.cfw.guide/installing-trollstore/) to install it on your device. Please note that this tool doesn't support iOS 17.0 despite of it having TrollStore.
