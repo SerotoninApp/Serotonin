@@ -11,6 +11,6 @@ launchdhook_CODESIGN_FLAGS = -S../launchdentitlements.plist
 launchdhook_LDFLAGS = -F./Frameworks
 launchdhook_EXTRA_FRAMEWORKS += IOMobileFramebuffer IOSurface
 after-package::
-	echo "[*] Signing lunchd hook"
+	echo "[*] Signing launchd hook"
 	ct_bypass -i .theos/obj/debug/launchdhook.dylib -o launchdhooksigned.dylib
 include $(THEOS_MAKE_PATH)/library.mk

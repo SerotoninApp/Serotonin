@@ -59,10 +59,10 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
         for (size_t i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
             size_t prefix_len = strlen(prefixes[i]);
             if (strncmp(path, prefixes[i], prefix_len) == 0) {
-//                FILE *file = fopen("/var/mobile/lunchd.log", "a");
+//                FILE *file = fopen("/var/mobile/launchd.log", "a");
                 if (/*file && */attrp != 0) {
 //                    char output[1024];
-//                    sprintf(output, "[lunchd] setting launch type path %s to 0\n", path);
+//                    sprintf(output, "[launchd] setting launch type path %s to 0\n", path);
 //                    fputs(output, file);
 //                    fclose(file);
                     posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0); // needs ios 16.0 sdk
@@ -76,7 +76,7 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
     change_launchtype(attrp, path);
-//    const char *coolerLaunchd = jbroot(@"lunchd").UTF8String;
+//    const char *coolerLaunchd = jbroot(@"launchd").UTF8String;
 //    if (attrp) {
 //        short flags;
 //        if (!posix_spawnattr_getflags(attrp, &flags)) {
@@ -98,9 +98,9 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
 
     if (!strncmp(path, springboardPath, strlen(springboardPath))) {
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//        FILE *file = fopen("/var/mobile/lunchd.log", "a");
+//        FILE *file = fopen("/var/mobile/launchd.log", "a");
 //        char output[1024];
-//        sprintf(output, "[lunchd] changing path %s to %s\n", path, coolerSpringboard);
+//        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerSpringboard);
 //        fputs(output, file);
         path = coolerSpringboard;
 //        fclose(file);
@@ -121,10 +121,10 @@ void initVerboseFramebuffer(void);
 int bootscreend_main();
 __attribute__((constructor)) static void init(int argc, char **argv) {
 //    FILE *file;
-//    file = fopen("/var/mobile/lunchd.log", "w");
+//    file = fopen("/var/mobile/launchd.log", "w");
 //    char output[1024];
-//    sprintf(output, "[lunchd] launchdhook pid %d", getpid());
-//    printf("[lunchd] launchdhook pid %d", getpid());
+//    sprintf(output, "[launchd] launchdhook pid %d", getpid());
+//    printf("[launchd] launchdhook pid %d", getpid());
 //    fputs(output, file);
 //    fclose(file);
 //    sync();

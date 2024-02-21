@@ -19,7 +19,7 @@ To use this app, you need to be on a supported version (mentioned above), and ha
 
    
 ## How was this done? 
- - It replaces launchd by searching through /sbin's vp_namecache, finds launchd's name cache and kwrites it with a patch to `lunchd`, our patched `launchd` (*you can have a look at a better explanation from AlfieCG [here](https://www.reddit.com/r/jailbreak/comments/18zehl2/comment/kgi5ya3/)*)
+  - It replaces launchd by searching through /sbin's vp_namecache, finds launchd's name cache and kwrites it with a patch to a patched `launchd`, (*you can have a look at a better explanation from AlfieCG [here](https://www.reddit.com/r/jailbreak/comments/18zehl2/comment/kgi5ya3/)*)
  - Patched launchd hooks posix_spawnp of SpringBoard and execs our own SpringBoard with springboardhook.dylib
  - Springboardhook loads in tweaks, ellekit, etc.
  - CoreTrust Bug found by [AlfieCG](https://github.com/alfiecg24)
@@ -38,7 +38,7 @@ To use this app, you need to be on a supported version (mentioned above), and ha
 - [AlfieCG](https://github.com/alfiecg24) - helped out a ton!
 - [Nick Chan](https://github.com/asdfugil) - helped out a ton!
 - [Mineek](https://github.com/mineek) - helped out a ton, kfd offsets patchfinder
-- [BomberFish](https://github.com/BomberFish) - Icon, new UI, `lunchd` name idea :trollface:
+- [BomberFish](https://github.com/BomberFish) - Icon, new UI, `lunchd` name idea :trollface: (sadly had to switch back to launchd name, womp womp)
 - [haxi0](https://github.com/haxi0) - old UI log, iOS 16.0-16.1.2 support implementation
 - [wh1te4ever](https://github.com/wh1te4ever) - SwitchSysBin fix for 16.0-16.1.2
 - [Evelyne](https://github.com/evelyneee) for showing it was possible. 

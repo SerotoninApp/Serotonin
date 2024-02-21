@@ -102,7 +102,7 @@
 		9756F48F2B505F1900172EF9 /* cs_blobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cs_blobs.m; sourceTree = "<group>"; };
 		C805CA442B1719C1005157BA /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
-		C811229A2B15E7BB00AD077B /* usprebooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = usprebooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C811229A2B15E7BB00AD077B /* Serotonin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Serotonin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C81122AB2B15E7BD00AD077B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "usprebooter-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81122DD2B16C9CB00AD077B /* troller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = troller.h; sourceTree = "<group>"; };
@@ -287,7 +287,7 @@
 		C811229B2B15E7BB00AD077B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C811229A2B15E7BB00AD077B /* usprebooter.app */,
+				C811229A2B15E7BB00AD077B /* Serotonin.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -711,9 +711,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C81122992B15E7BB00AD077B /* usprebooter */ = {
+		C81122992B15E7BB00AD077B /* Serotonin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "usprebooter" */;
+			buildConfigurationList = C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "Serotonin" */;
 			buildPhases = (
 				C81122962B15E7BB00AD077B /* Sources */,
 				C81122972B15E7BB00AD077B /* Frameworks */,
@@ -723,11 +723,11 @@
 			);
 			dependencies = (
 			);
-			name = usprebooter;
+			name = Serotonin;
 			packageProductDependencies = (
 			);
 			productName = usprebooter;
-			productReference = C811229A2B15E7BB00AD077B /* usprebooter.app */;
+			productReference = C811229A2B15E7BB00AD077B /* Serotonin.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -767,7 +767,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				C81122992B15E7BB00AD077B /* usprebooter */,
+				C81122992B15E7BB00AD077B /* Serotonin */,
 			);
 		};
 /* End PBXProject section */
@@ -915,7 +915,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -972,7 +972,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1079,7 +1079,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "usprebooter" */ = {
+		C81122C42B15E7BD00AD077B /* Build configuration list for PBXNativeTarget "Serotonin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C81122C52B15E7BD00AD077B /* Debug */,
