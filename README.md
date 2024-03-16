@@ -16,7 +16,7 @@ To use this app, you need to be on a supported version (mentioned above), and ha
 2. Install ElleKit from Sileo
 3. Download the `.tipa` file from the [latest release](https://github.com/mineek/Serotonin/releases/latest)
 4. Install the downloaded file in TrollStore
-5. Open the app and press the Jelbrek button. Your device should userspace reboot, and you should be (not/semi) jailbroken!
+5. Open the app and press the Jailbreak button. Your device should userspace reboot, and you should be (not/semi) jailbroken!
 
    
 ## How was this done? 
