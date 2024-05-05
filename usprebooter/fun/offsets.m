@@ -100,6 +100,7 @@ uint64_t off_gphysbase = 0;
 uint64_t off_gphysize = 0;
 uint64_t off_gvirtbase = 0;
 uint64_t off_ptov__table = 0;
+uint32_t v_holdcount = 0;
 
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -170,7 +171,7 @@ void _offsets_init(void) {
     //xnu-8796.121.2 vs xnu-8796.141.3 same
     
     //changed priority with below fields;
-    //uint32_t v_holdcount;
+    v_holdcount = 0xB4;
     //v_name ~ end should be changed offsets, but same offsets when checked 16.2 vs 16.6.1 (_mac_vnode_label_get same)
     off_vnode_v_ncchildren_tqh_first = 0x30;
     off_vnode_v_ncchildren_tqh_last = 0x38;
