@@ -8,6 +8,8 @@
 	<string>com.apple.springboard</string>
 	<key>com.apple.private.security.no-sandbox</key>
     <true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
 	<key>com.apple.private.domain-extension</key>
 	<true/>
 	<key>com.apple.private.security.container-required</key>

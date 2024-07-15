@@ -18,7 +18,7 @@ NSString* getLaunchd(void) {
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 bool overwrite_patchedlaunchd_kfd(bool isBeta) {
-    printf("[i] performing launchd hax\n");
+    NSLog(@"[i] performing launchd hax\n");
     if (SYSTEM_VERSION_LOWER_THAN(@"16.4")) {
         uint64_t orig_nc_vp = 0;
         uint64_t orig_to_vnode = 0;

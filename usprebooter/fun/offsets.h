@@ -100,5 +100,5 @@ extern uint64_t off_gphysbase;
 extern uint64_t off_gphysize;
 extern uint64_t off_gvirtbase;
 extern uint64_t off_ptov__table;
-
+extern uint32_t v_holdcount;
 void _offsets_init(void);

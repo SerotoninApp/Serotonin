@@ -50,9 +50,9 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
 
 void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path) {
     const char *prefixes[] = {
-        "/private/var",
-        "/var",
-        "/private/preboot"
+        "/private/preboot",
+        jbroot(@"/").UTF8String,
+//        "/Applications/MediaRemoteUI.app/"
     };
 
     if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
@@ -60,9 +60,9 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
             size_t prefix_len = strlen(prefixes[i]);
             if (strncmp(path, prefixes[i], prefix_len) == 0) {
 //                FILE *file = fopen("/var/mobile/launchd.log", "a");
-                if (/*file && */attrp != 0) {
+                if (/*file &&*/ attrp != 0) {
 //                    char output[1024];
-//                    sprintf(output, "[launchd] setting launch type path %s to 0\n", path);
+//                    sprintf(output, "[launchd] setting launch type path %s from %d to 0\n", path, attrp);
 //                    fputs(output, file);
 //                    fclose(file);
                     posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0); // needs ios 16.0 sdk
@@ -74,7 +74,7 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
 }
 
 
-int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
+int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, posix_spawnattr_t *attrp, char *argv[], char *const envp[]) {
     change_launchtype(attrp, path);
 //    const char *coolerLaunchd = jbroot(@"launchd").UTF8String;
 //    if (attrp) {
@@ -91,22 +91,33 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
         return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
     }
 
-int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *const argv[restrict], char *const envp[restrict]) {
+int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
     const char *springboardPath = "/System/Library/CoreServices/SpringBoard.app/SpringBoard";
     const char *coolerSpringboard = jbroot("/System/Library/CoreServices/SpringBoard.app/SpringBoard");
-
+    const char *mruiPath = "/Applications/MediaRemoteUI.app/MediaRemoteUI";
+    const char *coolerMrui = jbroot("/Applications/MediaRemoteUI.app/MediaRemoteUI");
     if (!strncmp(path, springboardPath, strlen(springboardPath))) {
-        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
 //        FILE *file = fopen("/var/mobile/launchd.log", "a");
-//        char output[1024];
+//        char output[512];
 //        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerSpringboard);
 //        fputs(output, file);
         path = coolerSpringboard;
 //        fclose(file);
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    } else if (!strncmp(path, mruiPath, strlen(mruiPath))) {
+//        FILE *file = fopen("/var/mobile/launchd.log", "a");
+//        char output[512];
+//        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
+//        fputs(output, file);
+        path = coolerMrui;
+//        fclose(file);
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
-            
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 
@@ -141,16 +152,17 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
     } else {
         bootscreend_main();
     }
+//    initVerboseFramebuffer();
 //    bootscreend_main();
 
-    printf("[launchd] launchdhook pid %d", getpid());
-    if (getpid() == 1) {
-        printf("============\n");
-        printf("== WE ARE ==\n");
-        printf("==  PID1  ==\n");
-        printf("============\n\n");
-        printf("Also, my parent is %d\n", getppid());
-    }
+//    printf("[launchd] launchdhook pid %d", getpid());
+//    if (getpid() == 1) {
+//        printf("============\n");
+//        printf("== WE ARE ==\n");
+//        printf("==  PID1  ==\n");
+//        printf("============\n\n");
+//        printf("Also, my parent is %d\n", getppid());
+//    }
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},

@@ -49,6 +49,7 @@ class jbButton: UIButton {
 
             switch state {
             case .done:
+                self.isEnabled = true
                 self.backgroundColor = .systemGreen
                 self.setTitle("Userspace Reboot", for: .normal)
             case .jailbreak:

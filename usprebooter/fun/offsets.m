@@ -100,7 +100,7 @@ uint64_t off_gphysbase = 0;
 uint64_t off_gphysize = 0;
 uint64_t off_gvirtbase = 0;
 uint64_t off_ptov__table = 0;
-uint32_t v_holdcount = 0;
+uint32_t v_holdcount = 0xB4;
 
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)

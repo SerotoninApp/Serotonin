@@ -84,17 +84,17 @@ extension JailbreakViewController: JBButtonDelegate {
         button.updateButtonState(.jailbreaking)
 
         DispatchQueue.global().async { [self] in
-            Logger.shared.log(logType: .standard, subTitle: "run 1")
+            Logger.shared.log(logType: .standard, subTitle: "Exploiting kernel")
 
             do_kopen(UInt64(settingsManager.puafPages), UInt64(settingsManager.puafMethod), UInt64(settingsManager.kreadMethod), UInt64(settingsManager.kwriteMethod), settingsManager.staticHeadroom, settingsManager.useMemoryHogger)
             
-            Logger.shared.log(logType: .standard, subTitle: "run 1")
+            Logger.shared.log(logType: .standard, subTitle: "Jailbreaking")
             
             go(settingsManager.isBetaIos, "reinstall")
-            Logger.shared.log(logType: .standard, subTitle: "run 2")
+            Logger.shared.log(logType: .standard, subTitle: "Installing...")
 
             do_kclose()
-            Logger.shared.log(logType: .standard, subTitle: "run 3")
+            Logger.shared.log(logType: .standard, subTitle: "Cleaned up")
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                 button.updateButtonState(.done)

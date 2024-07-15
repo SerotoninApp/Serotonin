@@ -5,8 +5,8 @@ include $(THEOS)/makefiles/common.mk
 
 TOOL_NAME = springboardshim
 
-springboardshim_FILES = main.c
-springboardshim_CFLAGS = -fobjc-arc -isystem
+springboardshim_FILES = $(wildcard *.c) $(wildcard *.m)
+springboardshim_CFLAGS = -fobjc-arc -isystem -Wno-error
 springboardshim_LDFLAGS = -L./ -lbsm
 springboardshim_CODESIGN_FLAGS = -SSpringBoardEnts.plist
 #springboardshim_PRIVATE_FRAMEWORKS = SpringBoard SpringBoardServices Foundation // adding SpringBoard to privateframeworks here will add it into load command before the tweak dylib is loaded, which causes the platform check to fail - thanks DuyKhanhTran

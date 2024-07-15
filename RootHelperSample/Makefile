@@ -3,14 +3,14 @@ ARCHS = arm64
 
 include $(THEOS)/makefiles/common.mk
 
-TOOL_NAME = trolltoolsroothelper
+TOOL_NAME = serotoninroothelper
 
-trolltoolsroothelper_FILES = $(wildcard *.m) Exploits/fastPathSign/src/coretrust_bug.c Exploits/fastPathSign/src/codesign.m
-trolltoolsroothelper_LDFLAGS = -Lexternal/lib -lcrypto -lchoma
-trolltoolsroothelper_CFLAGS = -fobjc-arc $(shell pkg-config --cflags libcrypto) -Iexternal/include -Wmissing-braces -IExploits/fastPathSign/src
-trolltoolsroothelper_CODESIGN_FLAGS = -Sentitlements.plist
-trolltoolsroothelper_INSTALL_PATH = /usr/local/bin
-trolltoolsroothelper_LIBRARIES = archive
-trolltoolsroothelper_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices MobileCoreServices MobileContainerManager IOKit
+$(TOOL_NAME)_FILES = $(wildcard *.m) $(wildcard *.c) Exploits/fastPathSign/src/coretrust_bug.c Exploits/fastPathSign/src/codesign.m
+$(TOOL_NAME)_LDFLAGS = -Lexternal/lib -lcrypto -lchoma
+$(TOOL_NAME)_CFLAGS = -fobjc-arc $(shell pkg-config --cflags libcrypto) -Iexternal/include -Wno-error -IExploits/fastPathSign/src
+$(TOOL_NAME)_CODESIGN_FLAGS = -Sentitlements.plist
+$(TOOL_NAME)_INSTALL_PATH = /usr/local/bin
+$(TOOL_NAME)_LIBRARIES = archive
+$(TOOL_NAME)_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices MobileCoreServices MobileContainerManager IOKit
 
 include $(THEOS_MAKE_PATH)/tool.mk
