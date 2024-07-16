@@ -3,21 +3,17 @@ SHELL = /usr/bin/env bash
 LDID = ldid
 MACOSX_SYSROOT = $(shell xcrun -sdk macosx --show-sdk-path)
 TARGET_SYSROOT = $(shell xcrun -sdk iphoneos --show-sdk-path)
-SB_SHIM = RootHelperSample/launchdshim/SpringBoardShim/
 CFPREFSD_SHIM = RootHelperSample/launchdshim/cfprefsdshim/
+LDID = /Users/ibarahime/Downloads/ldid_macosx_arm64
+CTBYPASS = ./ChOma_host/output/tests/ct_bypass
 
 all: Serotonin.tipa
 
 shims:
 	echo "[*] Building cfprefsdshim"
 	$(MAKE) -C  $(CFPREFSD_SHIM)
-	/Users/ibarahime/Downloads/ldid_macosx_arm64 -S$(CFPREFSD_SHIM)ent.plist $(CFPREFSD_SHIM).theos/obj/debug/cfprefsdshim
-	/Users/ibarahime/dev/ChOma/ct_bypass -i $(CFPREFSD_SHIM).theos/obj/debug/cfprefsdshim -r -o $(CFPREFSD_SHIM)cfprefsdshimsignedinjected
-	echo "[*] Building springboardshim"
-	$(MAKE) -C $(SB_SHIM)
-	/Users/ibarahime/Downloads/ldid_macosx_arm64 -S$(SB_SHIM)SpringBoardEnts.plist $(SB_SHIM).theos/obj/debug/springboardshim
-	/Users/ibarahime/dev/ChOma/ct_bypass -i $(SB_SHIM).theos/obj/debug/springboardshim -r -o $(SB_SHIM)springboardshimsignedinjected
-
+	$(LDID) -S$(CFPREFSD_SHIM)ent.plist $(CFPREFSD_SHIM).theos/obj/debug/cfprefsdshim
+	$(CTBYPASS) -i $(CFPREFSD_SHIM).theos/obj/debug/cfprefsdshim -r -o $(CFPREFSD_SHIM)cfprefsdshimsignedinjected
 
 Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	echo "[*] Building ChOma for host"
@@ -34,26 +30,22 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	$(MAKE) -C RootHelperSample/launchdshim/launchdhook
 	
 	echo "[*] Signing launchd hook"
-	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/launchdhook.dylib -r -o RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib
-	
-	echo "[*] Building SpringBoard Hook"
-	$(MAKE) -C RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook
-	
-	echo "[*] Signing SB hook"
-	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/.theos/obj/debug/SpringBoardHook.dylib -r -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib
-	
+	$(CTBYPASS) -i RootHelperSample/launchdshim/launchdhook/.theos/obj/debug/launchdhook.dylib -r -o RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib
+		
 	echo "[*] Building general hook"
 	$(MAKE) -C RootHelperSample/launchdshim/generalhook
 	
 	echo "[*] Signing general hook"
-	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/generalhook/.theos/obj/debug/generalhook.dylib -r -o RootHelperSample/launchdshim/generalhook/generalhook.dylib
+	$(CTBYPASS) -i RootHelperSample/launchdshim/generalhook/.theos/obj/debug/generalhook.dylib -r -o RootHelperSample/launchdshim/generalhook/generalhook.dylib
 	
-	echo "[*] Building hideconfidentiatext"
-	$(MAKE) -C RootHelperSample/launchdshim/hideConfidentialText/
+	echo "[*] Building xpcproxyhook"
+	$(MAKE) -C RootHelperSample/launchdshim/xpcproxyhook
+	# ./RootHelperSample/launchdshim/xpcproxyhook/build.sh
 
-	echo "[*] Signing hideconfidentialtext"
-	./ChOma_host/output/tests/ct_bypass -i RootHelperSample/launchdshim/hideConfidentialText/.theos/obj/debug/hideConfidentialText.dylib -r -o RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/hideConfidentialText.dylib
-	
+	echo "[*] Signing xpcproxyhook"
+	$(LDID) -SRootHelperSample/launchdshim/xpcproxyhook/.theos/obj/debug/xpcproxyhook.dylib
+	$(CTBYPASS) -i RootHelperSample/launchdshim/xpcproxyhook/.theos/obj/debug/xpcproxyhook.dylib -r -o RootHelperSample/launchdshim/xpcproxyhook/xpcproxyhook.dylib
+
 	# jank workaround at best, can someone else please fix this weird file dependency? – bomberfish
 	echo "[*] Copying fastPathSign"
 	cp RootHelperSample/Exploits/fastPathSign/fastPathSign ChOma/output/ios/tests
@@ -70,10 +62,8 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	rm -rf Payload/Serotonin.app/Frameworks
 	cp RootHelperSample/.theos/obj/debug/arm64/serotoninroothelper Payload/Serotonin.app/serotoninroothelper
 	install -m755 RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib Payload/Serotonin.app/launchdhooksigned.dylib
-	install -m755 RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/springboardhooksigned.dylib Payload/Serotonin.app/springboardhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/generalhook/generalhook.dylib Payload/Serotonin.app/generalhooksigned.dylib
-	install -m755 RootHelperSample/launchdshim/hideConfidentialText/.theos/obj/debug/hideConfidentialText.dylib Payload/Serotonin.app/hideconfidentialtext.dylib
-	cp RootHelperSample/launchdshim/hideConfidentialText/hideconfidentialtext.plist Payload/Serotonin.app/hideconfidentialtext.plist
+	install -m755 RootHelperSample/launchdshim/xpcproxyhook/xpcproxyhook.dylib Payload/Serotonin.app/xpcproxyhooksigned.dylib
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/Serotonin.app/{fastPathSign,ldid,serotoninroothelper}
 	$(LDID) -Sent.plist -Cadhoc Payload/Serotonin.app/Serotonin
 	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"

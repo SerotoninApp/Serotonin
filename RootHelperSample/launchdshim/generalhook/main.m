@@ -103,6 +103,20 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
     return result;
 }
 
+void setupAppBundle(const char *fullPath) {
+    NSString *bundlePath = [NSString stringWithUTF8String:fullPath];
+    NSBundle *appBundle = [[NSBundle alloc] initWithPath:bundlePath];
+    
+    overwriteMainNSBundle(appBundle);
+    overwriteMainCFBundle();
+    
+    NSMutableArray<NSString *> *objcArgv = NSProcessInfo.processInfo.arguments.mutableCopy;
+    objcArgv[0] = appBundle.executablePath;
+    [NSProcessInfo.processInfo performSelector:@selector(setArguments:) withObject:objcArgv];
+    NSProcessInfo.processInfo.processName = appBundle.infoDictionary[@"CFBundleExecutable"];
+    *_CFGetProgname() = NSProcessInfo.processInfo.processName.UTF8String;
+}
+
 int csops_audittoken(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
 int csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize);
 
@@ -135,14 +149,22 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
         {(void *)csops_audittoken, (void *)hooked_csops_audittoken, (void *)&orig_csops_audittoken, 0}
     };
     LHHookFunctions(hooks, 2);
-    unsetenv("DYLD_INSERT_LIBRARIES");
-    NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-    if(access(jbroot("/var/mobile/.tweakenabled"), F_OK)==0) {
-        const char* tweakloader = jbroot("/usr/lib/TweakLoader.dylib");
-        //currenly ellekit/oldabi uses JBROOT
-        const char* oldJBROOT = getenv("JBROOT");
-        setenv("JBROOT", jbroot("/"), 1);
-        dlopen(tweakloader, RTLD_NOW);
-        if(oldJBROOT) setenv("JBROOT", oldJBROOT, 1); else unsetenv("JBROOT");
+
+    const char *appPaths[] = {
+        "/System/Library/CoreServices/SpringBoard.app/SpringBoard",
+        "/Applications/CarPlayWallpaper.app/CarPlayWallpaper",
+        "/Applications/MobileSMS.app/MobileSMS",
+        "/Applications/MediaRemoteUI.app/MediaRemoteUI",
+        "/Applications/MobilePhone.app/MobilePhone",
+        "/Applications/SharingViewService.app/SharingViewService",
+        "/Applications/InCallService.app/InCallService"
+    };
+    for (int i = 0; i < sizeof(appPaths) / sizeof(appPaths[0]); i++) {
+        if (strcmp(argv[0], appPaths[i]) == 0) {
+            setupAppBundle(appPaths[i]);
+            break;
+        }
     }
+    NSLog(@"generalhook - loading tweaks for pid %d", getpid());
+    dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
 }

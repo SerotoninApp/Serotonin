@@ -1,9 +1,0 @@
-Package: serotonin.hideconfidentialtext
-Name: hideconfidentialtext
-Version: 0.0.1
-Architecture: iphoneos-arm
-Description: hides the confidential text if /var/mobile/.serotonin_hidetext exists
-Maintainer: Serotonin
-Author: Fiore
-Section: Tweaks
-Depends: mobilesubstrate

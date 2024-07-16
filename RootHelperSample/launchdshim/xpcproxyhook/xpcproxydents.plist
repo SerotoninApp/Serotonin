@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>platform-application</key>
+	<true/>
+	<key>com.apple.private.security.no-container</key>
+	<true/>
+	<key>get-task-allow</key>
+	<true/>
+	<key>task_for_pid-allow</key>
+	<true/>
+	<key>com.apple.private.set-launch-type.internal</key>
+	<true/>
+	<key>com.apple.private.coreservices.canmanagebackgroundtasks</key>
+	<true/>
+	<key>com.apple.private.security.storage.driverkitd</key>
+	<true/>
+	<key>com.apple.private.spawn-driver</key>
+	<true/>
+	<key>com.apple.private.spawn-panic-crash-behavior</key>
+	<true/>
+	<key>com.apple.private.spawn-subsystem-root</key>
+	<true/>
+	<key>com.apple.private.xpc.is.xpcproxy</key>
+	<true/>
+</dict>
+</plist>

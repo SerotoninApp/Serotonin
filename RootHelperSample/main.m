@@ -289,27 +289,31 @@ void installLaunchd(void) {
 }
 
 void installClone(NSString *path) {
+    NSLog(@"Signing %@", path);
     if ([[NSFileManager defaultManager] fileExistsAtPath:[path stringByDeletingLastPathComponent]] == true) {
-//        removeItemAtPathRecursively(jbroot(path));
         [[NSFileManager defaultManager] removeItemAtPath:[path stringByDeletingLastPathComponent] error:nil];
     }
-//    [[NSFileManager defaultManager] createDirectoryAtPath: jbroot([path stringByDeletingLastPathComponent]) withIntermediateDirectories:YES attributes:nil error:nil];
+    
     [[NSFileManager defaultManager] copyItemAtPath:[path stringByDeletingLastPathComponent] toPath:jbroot([path stringByDeletingLastPathComponent]) error:nil];
-    // strip arm64e
-    replaceByte(jbroot(path), 8, "\x00\x00\x00\x00");
-    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String]));
-     
-    // sign mrui
-    NSLog(@"Signing %@", path);
+    
+    [[NSFileManager defaultManager] copyItemAtPath:path toPath:jbroot(path) error:nil];
+    
     NSString* ents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
     if ([path isEqual:@"/Applications/MediaRemoteUI.app/MediaRemoteUI"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"MRUIents.plist"];
+    } else if ([path isEqual:@"/System/Library/CoreServices/SpringBoard.app/SpringBoard"]) {
+        ents = [usprebooterappPath() stringByAppendingPathComponent:@"SpringBoardEnts.plist"];
     } else {
         NSLog(@"Note: no dedicated ents file for this, shit will likely break");
     }
-    signAdhoc(jbroot(path), ents); // source file, NSDictionary with entitlements
+    // strip arm64e
+    replaceByte(jbroot(path), 8, "\x00\x00\x00\x00");
+    
+    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String]));
+    signAdhoc(jbroot(path), ents);
     
     NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
+    
     NSString *stdOut;
     NSString *stdErr;
     spawnRoot(fastPathSignPath, @[@"-i", jbroot(path), @"-r", @"-o", jbroot(path)], &stdOut, &stdErr);
@@ -323,22 +327,6 @@ void installClone(NSString *path) {
     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(symlink_path) withDestinationPath:jbroot(@"/") error:nil];
 }
 
-void installSpringBoard(void) {
-    [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/System/Library/CoreServices/") withIntermediateDirectories:YES attributes:nil error:nil];
-    [[NSFileManager defaultManager] copyItemAtPath:@"/System/Library/CoreServices/SpringBoard.app" toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app") error:nil];
-        
-    //                6. replace the regular SpringBoard in your jbroot/System/Library/CoreServices/SpringBoard.app/SpringBoard with springboardshimsignedinjected
-    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
-    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardshimsignedinjected"] toPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") error:nil];
-//    insert_dylib_main("@loader_path/.jbroot/usr/lib/libhooker.dylib", [jbroot(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard") UTF8String]);
-
-    //                7. place springboardhooksigned.dylib as jbroot/SpringBoard.app/springboardhook.dylib
-//    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/springboardhook.dylib") error:nil];
-//    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"springboardhooksigned.dylib"] toPath:[jbroot(@"/System/Library/CoreServices/SpringBoard.app") stringByAppendingPathComponent:@"springboardhook.dylib"] error:nil];
-    // 8. create a symlink to jbroot named .jbroot
-    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
-}
-
 void install_cfprefsd(void) {
     [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/usr/sbin/") withIntermediateDirectories:YES attributes:nil error:nil];
 
@@ -346,7 +334,7 @@ void install_cfprefsd(void) {
     [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"cfprefsdshimsignedinjected"] toPath:jbroot(@"/usr/sbin/cfprefsd") error:nil];
      
     // 8. create a symlink to jbroot named .jbroot
-    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/System/Library/CoreServices/SpringBoard.app/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
+    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/usr/sbin/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
 }
 
 int main(int argc, char *argv[], char *envp[]) {
@@ -355,24 +343,16 @@ int main(int argc, char *argv[], char *envp[]) {
         loadMCMFramework();
         NSString* action = [NSString stringWithUTF8String:argv[1]];
         NSString* source = [NSString stringWithUTF8String:argv[2]];
-//        NSString* destination = [NSString stringWithUTF8String:argv[3]];  
-        
         if ([action isEqual: @"install"]) {
             NSLog(@"installing");
             if (!jbroot(@"/")) {
                 NSLog(@"jbroot not found...");
             } else {
                 installLaunchd();
-                installSpringBoard();
-//                installMRUI();
+                installClone(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard");
                 installClone(@"/Applications/MediaRemoteUI.app/MediaRemoteUI");
+                installClone(@"/usr/libexec/xpcproxy");
                 install_cfprefsd();
-//                installClone(@"/Applications/MediaRemoteUI.app/MediaRemoteUI");
-                    // 9. add the cool bootlogo!
-//                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
-//                    // 10. add our confidential text hider into regular TweakInject dir
-////                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] error:nil];
-////                    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"hideconfidentialtext.plist"] toPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"] error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
             NSLog(@"uninstalling");

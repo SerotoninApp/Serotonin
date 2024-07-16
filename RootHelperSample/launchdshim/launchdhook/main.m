@@ -76,18 +76,6 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, posix_spawnattr_t *attrp, char *argv[], char *const envp[]) {
     change_launchtype(attrp, path);
-//    const char *coolerLaunchd = jbroot(@"launchd").UTF8String;
-//    if (attrp) {
-//        short flags;
-//        if (!posix_spawnattr_getflags(attrp, &flags)) {
-//            if (flags & POSIX_SPAWN_SETEXEC) {
-//                if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *))
-//                    posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//                }
-//                path = coolerLaunchd;
-//                return posix_spawn(pid, path, file_actions, attrp, argv, envp);
-//            }
-//        }
         return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
     }
 
@@ -97,9 +85,8 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
     const char *coolerSpringboard = jbroot("/System/Library/CoreServices/SpringBoard.app/SpringBoard");
     const char *mruiPath = "/Applications/MediaRemoteUI.app/MediaRemoteUI";
     const char *coolerMrui = jbroot("/Applications/MediaRemoteUI.app/MediaRemoteUI");
-    const char *cfprefsdPath = "/usr/sbin/cfprefsd";
-    const char *coolerCfPrefsd = jbroot("/usr/sbin/cfprefsd");
-
+    const char *xpcproxyPath = "/usr/libexec/xpcproxy";
+    const char *coolerXpcProxyPath = jbroot("/usr/libexec/xpcproxy");
     if (!strncmp(path, springboardPath, strlen(springboardPath))) {
 //        FILE *file = fopen("/var/mobile/launchd.log", "a");
 //        char output[512];
@@ -120,18 +107,17 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
-    }
-//    } else if (!strncmp(path, cfprefsdPath, strlen(mruiPath)f)) {
+//    } else if (!strncmp(path, xpcproxyPath, strlen(xpcproxyPath))) {
 //        //        FILE *file = fopen("/var/mobile/launchd.log", "a");
 //        //        char output[512];
 //        //        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
 //        //        fputs(output, file);
-//        path = coolerCfPrefsd;
+//        path = coolerXpcProxyPath;
 //        //        fclose(file);
 //        argv[0] = (char *)path;
 //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
 //        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
-//    }
+    }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 
@@ -180,7 +166,6 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
-        {"posix_spawn", hooked_posix_spawn, (void *)&orig_posix_spawn},
         {"posix_spawnp", hooked_posix_spawnp, (void *)&orig_posix_spawnp},
         {"xpc_dictionary_get_bool", hook_xpc_dictionary_get_bool, (void *)&xpc_dictionary_get_bool_orig},
     };

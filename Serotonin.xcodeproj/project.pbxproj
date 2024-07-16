@@ -16,15 +16,15 @@
 		9756F4902B505F1900172EF9 /* cs_blobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F48F2B505F1900172EF9 /* cs_blobs.m */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
-		C81131092C45B03900BD1C37 /* MRUIents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C81131082C45B02B00BD1C37 /* MRUIents.plist */; };
 		C81131112C46799000BD1C37 /* cfprefsdshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C81131102C46798F00BD1C37 /* cfprefsdshimsignedinjected */; };
-		C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */; };
 		C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82AFEF32B175AB80070EA49 /* Assets.xcassets */; };
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
 		C82AFF432B17AA6D0070EA49 /* ldid in Resources */ = {isa = PBXBuildFile; fileRef = C82AFF422B17AA6C0070EA49 /* ldid */; };
 		C83594CF2B18F70700346F80 /* overwriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C83594CE2B18F70700346F80 /* overwriter.m */; };
-		C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C84002E82B4A55A300C73950 /* springboardshimsignedinjected */; };
 		C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C84002EC2B4A64E200C73950 /* launchdentitlements.plist */; };
+		C862EB4D2C46EEED0052F3AD /* xpcproxydents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB4C2C46EEED0052F3AD /* xpcproxydents.plist */; };
+		C862EB4F2C46EF470052F3AD /* SpringBoardEnts.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB4E2C46EF470052F3AD /* SpringBoardEnts.plist */; };
+		C862EB512C46EF880052F3AD /* MRUIents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB502C46EF880052F3AD /* MRUIents.plist */; };
 		C8B1D3A92B5A620500C5562B /* MD.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39B2B5A620500C5562B /* MD.swift */; };
 		C8B1D3AA2B5A620500C5562B /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39C2B5A620500C5562B /* LicensesViewController.swift */; };
 		C8B1D3AB2B5A620500C5562B /* ChangelogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39D2B5A620500C5562B /* ChangelogViewController.swift */; };
@@ -110,8 +110,10 @@
 		C83594D32B18F80300346F80 /* overwriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = overwriter.h; sourceTree = "<group>"; };
 		C84002E32B4A545400C73950 /* insert_dylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = insert_dylib.m; sourceTree = "<group>"; };
 		C84002E52B4A547B00C73950 /* insert_dylib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = insert_dylib.h; sourceTree = "<group>"; };
-		C84002E82B4A55A300C73950 /* springboardshimsignedinjected */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = springboardshimsignedinjected; path = RootHelperSample/launchdshim/SpringBoardShim/springboardshimsignedinjected; sourceTree = SOURCE_ROOT; };
 		C84002EC2B4A64E200C73950 /* launchdentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = launchdentitlements.plist; path = RootHelperSample/launchdshim/launchdentitlements.plist; sourceTree = SOURCE_ROOT; };
+		C862EB4C2C46EEED0052F3AD /* xpcproxydents.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = xpcproxydents.plist; path = RootHelperSample/launchdshim/xpcproxyhook/xpcproxydents.plist; sourceTree = "<group>"; };
+		C862EB4E2C46EF470052F3AD /* SpringBoardEnts.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = SpringBoardEnts.plist; path = RootHelperSample/launchdshim/generalhook/SpringBoardEnts.plist; sourceTree = "<group>"; };
+		C862EB502C46EF880052F3AD /* MRUIents.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MRUIents.plist; path = RootHelperSample/launchdshim/generalhook/MRUIents.plist; sourceTree = "<group>"; };
 		C8B1D3992B5A620500C5562B /* swift-markdown.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "swift-markdown.md"; sourceTree = "<group>"; };
 		C8B1D39A2B5A620500C5562B /* Markdownosaur.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Markdownosaur.md; sourceTree = "<group>"; };
 		C8B1D39B2B5A620500C5562B /* MD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MD.swift; sourceTree = "<group>"; };
@@ -196,6 +198,9 @@
 		C81122912B15E7BB00AD077B = {
 			isa = PBXGroup;
 			children = (
+				C862EB502C46EF880052F3AD /* MRUIents.plist */,
+				C862EB4E2C46EF470052F3AD /* SpringBoardEnts.plist */,
+				C862EB4C2C46EEED0052F3AD /* xpcproxydents.plist */,
 				C81131102C46798F00BD1C37 /* cfprefsdshimsignedinjected */,
 				D6F9CF402B4B306400274803 /* fastPathSign */,
 				D6F9CF3E2B4B2F7D00274803 /* ct_bypass */,
@@ -222,7 +227,6 @@
 				C8B1D3952B5A620500C5562B /* UI */,
 				C82AFEF32B175AB80070EA49 /* Assets.xcassets */,
 				C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */,
-				C84002E82B4A55A300C73950 /* springboardshimsignedinjected */,
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C8BFCC772B3FFE560008D8FD /* fun */,
 				C81122AB2B15E7BD00AD077B /* Info.plist */,
@@ -582,15 +586,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C862EB512C46EF880052F3AD /* MRUIents.plist in Resources */,
+				C862EB4D2C46EEED0052F3AD /* xpcproxydents.plist in Resources */,
 				D6F9CF412B4B306400274803 /* fastPathSign in Resources */,
-				C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */,
-				C81131092C45B03900BD1C37 /* MRUIents.plist in Resources */,
 				D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */,
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
-				C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */,
 				C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
 				C81131112C46799000BD1C37 /* cfprefsdshimsignedinjected in Resources */,
+				C862EB4F2C46EF470052F3AD /* SpringBoardEnts.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

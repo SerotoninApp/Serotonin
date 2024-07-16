@@ -11,6 +11,6 @@ generalhook_CODESIGN_FLAGS = -S../launchdentitlements.plist
 generalhook_LDFLAGS = -L./ -lbsm -L/Users/ibarahime/theos/vendor/lib/ -lhooker -I/Users/ibarahime/theos/vendor/include -dynamiclib
 #launchdhook_EXTRA_FRAMEWORKS += IOMobileFramebuffer IOSurface
 after-package::
-	echo "[*] Signing launchd hook"
+	echo "[*] Signing general hook"
 	ct_bypass -i .theos/obj/debug/generalhook.dylib -o generalhooksigned.dylib
 include $(THEOS_MAKE_PATH)/library.mk
