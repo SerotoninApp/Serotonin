@@ -8,7 +8,7 @@ LIBRARY_NAME = generalhook
 generalhook_FILES = $(wildcard *.m) $(wildcard *.c) $(wildcard verbose/*.m)
 generalhook_CFLAGS = -fobjc-arc -isystem "../../../usprebooter/Private Headers I stole from the macOS SDK" -Wno-error
 generalhook_CODESIGN_FLAGS = -S../launchdentitlements.plist
-launchdhook_LDFLAGS = -L./ -lbsm -L/Users/nathan/theos/vendor/lib/ -lhooker -I/Users/nathan/theos/vendor/include -dynamiclib
+generalhook_LDFLAGS = -L./ -lbsm -L/Users/ibarahime/theos/vendor/lib/ -lhooker -I/Users/ibarahime/theos/vendor/include -dynamiclib
 #launchdhook_EXTRA_FRAMEWORKS += IOMobileFramebuffer IOSurface
 after-package::
 	echo "[*] Signing launchd hook"

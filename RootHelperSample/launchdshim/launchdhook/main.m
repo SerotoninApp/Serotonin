@@ -97,6 +97,9 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
     const char *coolerSpringboard = jbroot("/System/Library/CoreServices/SpringBoard.app/SpringBoard");
     const char *mruiPath = "/Applications/MediaRemoteUI.app/MediaRemoteUI";
     const char *coolerMrui = jbroot("/Applications/MediaRemoteUI.app/MediaRemoteUI");
+    const char *cfprefsdPath = "/usr/sbin/cfprefsd";
+    const char *coolerCfPrefsd = jbroot("/usr/sbin/cfprefsd");
+
     if (!strncmp(path, springboardPath, strlen(springboardPath))) {
 //        FILE *file = fopen("/var/mobile/launchd.log", "a");
 //        char output[512];
@@ -108,16 +111,27 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     } else if (!strncmp(path, mruiPath, strlen(mruiPath))) {
-//        FILE *file = fopen("/var/mobile/launchd.log", "a");
-//        char output[512];
-//        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
-//        fputs(output, file);
+        //        FILE *file = fopen("/var/mobile/launchd.log", "a");
+        //        char output[512];
+        //        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
+        //        fputs(output, file);
         path = coolerMrui;
-//        fclose(file);
+        //        fclose(file);
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
+//    } else if (!strncmp(path, cfprefsdPath, strlen(mruiPath)f)) {
+//        //        FILE *file = fopen("/var/mobile/launchd.log", "a");
+//        //        char output[512];
+//        //        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
+//        //        fputs(output, file);
+//        path = coolerCfPrefsd;
+//        //        fclose(file);
+//        argv[0] = (char *)path;
+//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+//        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+//    }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 

@@ -16,6 +16,8 @@
 		9756F4902B505F1900172EF9 /* cs_blobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F48F2B505F1900172EF9 /* cs_blobs.m */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
+		C81131092C45B03900BD1C37 /* MRUIents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C81131082C45B02B00BD1C37 /* MRUIents.plist */; };
+		C81131112C46799000BD1C37 /* cfprefsdshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C81131102C46798F00BD1C37 /* cfprefsdshimsignedinjected */; };
 		C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */; };
 		C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82AFEF32B175AB80070EA49 /* Assets.xcassets */; };
 		C82AFF3F2B179A8C0070EA49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82AFF3D2B179A880070EA49 /* IOKit.framework */; };
@@ -23,9 +25,6 @@
 		C83594CF2B18F70700346F80 /* overwriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C83594CE2B18F70700346F80 /* overwriter.m */; };
 		C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C84002E82B4A55A300C73950 /* springboardshimsignedinjected */; };
 		C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C84002EC2B4A64E200C73950 /* launchdentitlements.plist */; };
-		C870DFE32C444F0A003A17A5 /* generalhookents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C870DFE22C444F0A003A17A5 /* generalhookents.plist */; };
-		C8B1D3A72B5A620500C5562B /* swift-markdown.md in Resources */ = {isa = PBXBuildFile; fileRef = C8B1D3992B5A620500C5562B /* swift-markdown.md */; };
-		C8B1D3A82B5A620500C5562B /* Markdownosaur.md in Resources */ = {isa = PBXBuildFile; fileRef = C8B1D39A2B5A620500C5562B /* Markdownosaur.md */; };
 		C8B1D3A92B5A620500C5562B /* MD.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39B2B5A620500C5562B /* MD.swift */; };
 		C8B1D3AA2B5A620500C5562B /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39C2B5A620500C5562B /* LicensesViewController.swift */; };
 		C8B1D3AB2B5A620500C5562B /* ChangelogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39D2B5A620500C5562B /* ChangelogViewController.swift */; };
@@ -45,8 +44,6 @@
 		C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC8A2B3FFE560008D8FD /* proc.c */; };
 		D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF3E2B4B2F7D00274803 /* ct_bypass */; };
 		D6F9CF412B4B306400274803 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF402B4B306400274803 /* fastPathSign */; };
-		D6F9CF4A2B4C50BF00274803 /* (null) in Resources */ = {isa = PBXBuildFile; };
-		D6F9CF4B2B4C50C200274803 /* (null) in Resources */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +67,8 @@
 		C81122CF2B15EA8600AD077B /* usprebooter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "usprebooter-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81122DD2B16C9CB00AD077B /* troller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = troller.h; sourceTree = "<group>"; };
 		C81122DE2B16C9CC00AD077B /* troller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = troller.m; sourceTree = "<group>"; };
+		C81131082C45B02B00BD1C37 /* MRUIents.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MRUIents.plist; sourceTree = "<group>"; };
+		C81131102C46798F00BD1C37 /* cfprefsdshimsignedinjected */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = cfprefsdshimsignedinjected; path = RootHelperSample/launchdshim/cfprefsdshim/cfprefsdshimsignedinjected; sourceTree = "<group>"; };
 		C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Serotonin.jp2; sourceTree = "<group>"; };
 		C82AFEF32B175AB80070EA49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C82AFF0D2B1762CE0070EA49 /* fakeroot */ = {isa = PBXFileReference; lastKnownFileType = text; path = fakeroot; sourceTree = "<group>"; };
@@ -113,7 +112,6 @@
 		C84002E52B4A547B00C73950 /* insert_dylib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = insert_dylib.h; sourceTree = "<group>"; };
 		C84002E82B4A55A300C73950 /* springboardshimsignedinjected */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = springboardshimsignedinjected; path = RootHelperSample/launchdshim/SpringBoardShim/springboardshimsignedinjected; sourceTree = SOURCE_ROOT; };
 		C84002EC2B4A64E200C73950 /* launchdentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = launchdentitlements.plist; path = RootHelperSample/launchdshim/launchdentitlements.plist; sourceTree = SOURCE_ROOT; };
-		C870DFE22C444F0A003A17A5 /* generalhookents.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = generalhookents.plist; path = RootHelperSample/launchdshim/generalhookents.plist; sourceTree = SOURCE_ROOT; };
 		C8B1D3992B5A620500C5562B /* swift-markdown.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "swift-markdown.md"; sourceTree = "<group>"; };
 		C8B1D39A2B5A620500C5562B /* Markdownosaur.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Markdownosaur.md; sourceTree = "<group>"; };
 		C8B1D39B2B5A620500C5562B /* MD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MD.swift; sourceTree = "<group>"; };
@@ -198,6 +196,7 @@
 		C81122912B15E7BB00AD077B = {
 			isa = PBXGroup;
 			children = (
+				C81131102C46798F00BD1C37 /* cfprefsdshimsignedinjected */,
 				D6F9CF402B4B306400274803 /* fastPathSign */,
 				D6F9CF3E2B4B2F7D00274803 /* ct_bypass */,
 				C82AFF0A2B1762CE0070EA49 /* RootHelperSample */,
@@ -227,7 +226,7 @@
 				C82AFF422B17AA6C0070EA49 /* ldid */,
 				C8BFCC772B3FFE560008D8FD /* fun */,
 				C81122AB2B15E7BD00AD077B /* Info.plist */,
-				C870DFE22C444F0A003A17A5 /* generalhookents.plist */,
+				C81131082C45B02B00BD1C37 /* MRUIents.plist */,
 				C84002EC2B4A64E200C73950 /* launchdentitlements.plist */,
 				C8BFCC902B3FFE560008D8FD /* libkfd */,
 				C8BFCCA32B3FFE570008D8FD /* libkfd.h */,
@@ -584,17 +583,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6F9CF412B4B306400274803 /* fastPathSign in Resources */,
-				C8B1D3A82B5A620500C5562B /* Markdownosaur.md in Resources */,
 				C82599F02B4C4C07002D0DDA /* Serotonin.jp2 in Resources */,
+				C81131092C45B03900BD1C37 /* MRUIents.plist in Resources */,
 				D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */,
-				D6F9CF4A2B4C50BF00274803 /* (null) in Resources */,
 				C82AFEF42B175AB80070EA49 /* Assets.xcassets in Resources */,
 				C84002E92B4A55A300C73950 /* springboardshimsignedinjected in Resources */,
 				C84002ED2B4A64E200C73950 /* launchdentitlements.plist in Resources */,
-				C870DFE32C444F0A003A17A5 /* generalhookents.plist in Resources */,
 				C82AFF432B17AA6D0070EA49 /* ldid in Resources */,
-				D6F9CF4B2B4C50C200274803 /* (null) in Resources */,
-				C8B1D3A72B5A620500C5562B /* swift-markdown.md in Resources */,
+				C81131112C46799000BD1C37 /* cfprefsdshimsignedinjected in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

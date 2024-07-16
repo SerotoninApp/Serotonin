@@ -4,7 +4,7 @@
 #include <bsm/audit.h>
 #include <xpc/xpc.h>
 #include <stdio.h>
-#include "fishhook.h"
+//#include "fishhook.h"
 #include <libhooker/libhooker.h>
 #include <spawn.h>
 #include <limits.h>
@@ -107,7 +107,6 @@ int csops_audittoken(pid_t pid, unsigned int  ops, void * useraddr, size_t users
 int csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize);
 
 __attribute__((constructor)) static void init(int argc, char **argv, char *envp[]) {
-//    NSLog(@"generalhook - mediaremoteui");
     @autoreleasepool {
         if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
 //            NSLog(@"generalhook - jitting");
@@ -137,44 +136,7 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
     };
     LHHookFunctions(hooks, 2);
     unsetenv("DYLD_INSERT_LIBRARIES");
-
-//        if (strcmp(argv[0], jbroot(@"/Applications/MediaRemoteUI.app/MediaRemoteUI").UTF8String) == 0) {
-//            NSString *bundlePath = @"/Applications/MediaRemoteUI.app/";
-//            NSBundle *appBundle = [[NSBundle alloc] initWithPath:bundlePath];
-//            Class bundleClass = objc_getClass("NSBundle");
-//            overwriteMainNSBundle(appBundle);
-//            overwriteMainCFBundle();
-//            NSMutableArray<NSString *> *objcArgv = NSProcessInfo.processInfo.arguments.mutableCopy;
-//            objcArgv[0] = appBundle.executablePath;
-//            [NSProcessInfo.processInfo performSelector:@selector(setArguments:) withObject:objcArgv];
-//            NSProcessInfo.processInfo.processName = appBundle.infoDictionary[@"CFBundleExecutable"];
-//            *_CFGetProgname() = NSProcessInfo.processInfo.processName.UTF8String;
-//        }
     NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-//    NSString *tweakFolderPath = jbroot(@"/Library/MobileSubstrate/DynamicLibraries");
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    NSArray *tweakFolderContents = [fileManager contentsOfDirectoryAtPath:tweakFolderPath error:nil];
-//    for (NSString *tweak in tweakFolderContents) {
-//        if ([tweak hasSuffix:@".dylib"]) {
-//            NSString *tweakPath = [tweakFolderPath stringByAppendingPathComponent:tweak];
-//            NSString *plistPath = [tweakPath stringByReplacingOccurrencesOfString:@".dylib" withString:@".plist"];
-//            if ([fileManager fileExistsAtPath:plistPath]) {
-//                NSString *plistContents = [NSString stringWithContentsOfFile:plistPath encoding:NSUTF8StringEncoding error:nil];
-//                if ([plistContents containsString:@"com.apple.MediaRemoteUI"]) {
-//                    NSLog(@"[mineek's supporttweak] loading tweak: %@", tweakPath);
-//                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//                        void *handle = dlopen([tweakPath UTF8String], RTLD_NOW);
-//                        if (handle) {
-//                            NSLog(@"[mineek's supporttweak] loaded tweak");
-//                        } else {
-//                        NSLog(@"[mineek's supporttweak] failed to load tweak");
-//                        }
-//                    });
-//                }
-//            }
-//        }
-//    }
-
     if(access(jbroot("/var/mobile/.tweakenabled"), F_OK)==0) {
         const char* tweakloader = jbroot("/usr/lib/TweakLoader.dylib");
         //currenly ellekit/oldabi uses JBROOT

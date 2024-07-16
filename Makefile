@@ -3,9 +3,21 @@ SHELL = /usr/bin/env bash
 LDID = ldid
 MACOSX_SYSROOT = $(shell xcrun -sdk macosx --show-sdk-path)
 TARGET_SYSROOT = $(shell xcrun -sdk iphoneos --show-sdk-path)
-
+SB_SHIM = RootHelperSample/launchdshim/SpringBoardShim/
+CFPREFSD_SHIM = RootHelperSample/launchdshim/cfprefsdshim/
 
 all: Serotonin.tipa
+
+shims:
+	echo "[*] Building cfprefsdshim"
+	$(MAKE) -C  $(CFPREFSD_SHIM)
+	/Users/ibarahime/Downloads/ldid_macosx_arm64 -S$(CFPREFSD_SHIM)ent.plist $(CFPREFSD_SHIM).theos/obj/debug/cfprefsdshim
+	/Users/ibarahime/dev/ChOma/ct_bypass -i $(CFPREFSD_SHIM).theos/obj/debug/cfprefsdshim -r -o $(CFPREFSD_SHIM)cfprefsdshimsignedinjected
+	echo "[*] Building springboardshim"
+	$(MAKE) -C $(SB_SHIM)
+	/Users/ibarahime/Downloads/ldid_macosx_arm64 -S$(SB_SHIM)SpringBoardEnts.plist $(SB_SHIM).theos/obj/debug/springboardshim
+	/Users/ibarahime/dev/ChOma/ct_bypass -i $(SB_SHIM).theos/obj/debug/springboardshim -r -o $(SB_SHIM)springboardshimsignedinjected
+
 
 Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	echo "[*] Building ChOma for host"

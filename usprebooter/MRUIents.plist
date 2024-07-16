@@ -4,6 +4,22 @@
 <dict>
 	<key>application-identifier</key>
 	<string>com.apple.MediaRemoteUI</string>
+	<key>platform-application</key>
+	<true/>
+	<key>get-task-allow</key>
+	<true/>
+	<key>task_for_pid-allow</key>
+	<true/>
+	<key>com.apple.security.iokit-user-client-class</key>
+	<array>
+		<string>IOSurfaceRootUserClient</string>
+		<string>AGXDeviceUserClient</string>
+		<string>AGXSharedUserClient</string>
+		<string>AGXCommandQueue</string>
+		<string>AGXDevice</string>
+		<string>IOSurfaceAcceleratorClient</string>
+		<string>AppleJPEGDriverUserClient</string>
+	</array>
 	<key>com.apple.PairingManager.Read</key>
 	<true/>
 	<key>com.apple.PairingManager.RemovePeer</key>
@@ -56,8 +72,10 @@
 	<true/>
 	<key>com.apple.private.coreservices.canmaplsdatabase</key>
 	<true/>
-	<key>com.apple.private.security.container-required</key>
-	<false/>
+	<key>com.apple.private.security.no-sandbox</key>
+	<true/>
+	<key>com.apple.private.security.storage.AppDataContainers</key>
+	<true/>
 	<key>com.apple.private.sessionkit.custom-platter-target</key>
 	<true/>
 	<key>com.apple.private.sessionkit.permitMultipleProcessInputs</key>
@@ -70,14 +88,9 @@
 	<true/>
 	<key>com.apple.runningboard.launchprocess</key>
 	<true/>
-	<key>com.apple.security.exception.files.absolute-path.read-only</key>
-	<array>
-		<string>/private/var/containers/Bundle/</string>
-		<string>/Applications/</string>
-	</array>
 	<key>com.apple.security.exception.mach-lookup.global-name</key>
 	<array>
-        <string>com.apple.coremedia.endpointpicker.xpc</string>
+		<string>com.apple.coremedia.endpointpicker.xpc</string>
 		<string>com.apple.coremedia.routediscoverer.xpc</string>
 		<string>com.apple.coremedia.routingcontext.xpc</string>
 		<string>com.apple.coremedia.endpointremotecontrolsession.xpc</string>
@@ -108,7 +121,6 @@
 		<string>com.apple.facetime.bag</string>
 		<string>com.apple.da</string>
 		<string>com.apple.mediaremoteui</string>
-        <string>com.apple.Sharing</string>
 	</array>
 	<key>com.apple.springboard-ui.client</key>
 	<true/>
@@ -124,53 +136,13 @@
 	<true/>
 	<key>com.apple.springboard.stark.activateBackgroundProvider</key>
 	<true/>
-	<key>com.apple.apfs.get-dev-by-role</key>
-	<true/>
-	<key>com.apple.private.amfi.can-allow-non-platform</key>
+	<key>com.apple.private.security.no-sandbox</key>
 	<true/>
 	<key>com.apple.private.domain-extension</key>
 	<true/>
-	<key>com.apple.private.iokit.system-nvram-allow</key>
-	<true/>
-	<key>com.apple.private.kernel.system-override</key>
-	<true/>
-	<key>com.apple.private.persona-mgmt</key>
-	<true/>
-	<key>com.apple.private.pmap.load-trust-cache</key>
-	<array>
-		<string>cryptex1.boot.os</string>
-		<string>cryptex1.boot.app</string>
-		<string>cryptex1.safari-downlevel</string>
-	</array>
-	<key>com.apple.private.record_system_event</key>
-	<true/>
-	<key>com.apple.private.roots-installed-read-write</key>
-	<true/>
-	<key>com.apple.private.security.disk-device-access</key>
-	<true/>
+	<key>com.apple.private.security.container-required</key>
+	<false/>
 	<key>com.apple.private.security.no-container</key>
-	<true/>
-	<key>com.apple.private.security.no-sandbox</key>
-	<true/>
-	<key>com.apple.private.security.storage.driverkitd</key>
-	<true/>
-	<key>com.apple.private.security.storage.launchd</key>
-	<true/>
-	<key>com.apple.private.security.system-mount-authority</key>
-	<true/>
-	<key>com.apple.private.set-atm-diagnostic-flag</key>
-	<true/>
-	<key>com.apple.private.set-launch-type.internal</key>
-	<true/>
-	<key>com.apple.private.spawn-panic-crash-behavior</key>
-	<true/>
-	<key>com.apple.private.spawn-subsystem-root</key>
-	<true/>
-	<key>com.apple.private.vfs.allow-low-space-writes</key>
-	<true/>
-	<key>com.apple.private.vfs.graftdmg</key>
-	<true/>
-	<key>com.apple.private.vfs.pivot-root</key>
 	<true/>
 	<key>com.apple.private.xpc.domain-extension</key>
 	<true/>
@@ -204,9 +176,56 @@
 	<true/>
 	<key>com.apple.private.xpc.persona-manager</key>
 	<true/>
+	<key>com.apple.private.persona-mgmt</key>
+	<true/>
 	<key>com.apple.private.xpc.service-attach</key>
 	<true/>
 	<key>com.apple.private.xpc.service-configure</key>
+	<true/>
+	<key>com.apple.private.set-launch-type.internal</key>
+	<true/>
+	<key>com.apple.security.exception.mach-lookup.global-name</key>
+	<array>
+		<string>com.apple.mmaintenanced</string>
+		<string>com.apple.memory-maintenance</string>
+	</array>
+	<key>com.apple.apfs.get-dev-by-role</key>
+	<true/>
+	<key>com.apple.private.amfi.can-allow-non-platform</key>
+	<true/>
+	<key>com.apple.private.iokit.system-nvram-allow</key>
+	<true/>
+	<key>com.apple.private.kernel.system-override</key>
+	<true/>
+	<key>com.apple.private.pmap.load-trust-cache</key>
+	<array>
+		<string>cryptex1.boot.os</string>
+		<string>cryptex1.boot.app</string>
+		<string>cryptex1.safari-downlevel</string>
+	</array>
+	<key>com.apple.private.record_system_event</key>
+	<true/>
+	<key>com.apple.private.roots-installed-read-write</key>
+	<true/>
+	<key>com.apple.private.security.disk-device-access</key>
+	<true/>
+	<key>com.apple.private.security.storage.driverkitd</key>
+	<true/>
+	<key>com.apple.private.security.storage.launchd</key>
+	<true/>
+	<key>com.apple.private.security.system-mount-authority</key>
+	<true/>
+	<key>com.apple.private.set-atm-diagnostic-flag</key>
+	<true/>
+	<key>com.apple.private.spawn-panic-crash-behavior</key>
+	<true/>
+	<key>com.apple.private.spawn-subsystem-root</key>
+	<true/>
+	<key>com.apple.private.vfs.allow-low-space-writes</key>
+	<true/>
+	<key>com.apple.private.vfs.graftdmg</key>
+	<true/>
+	<key>com.apple.private.vfs.pivot-root</key>
 	<true/>
 	<key>com.apple.rootless.restricted-block-devices</key>
 	<true/>
@@ -216,16 +235,5 @@
 	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
-	<key>get-task-allow</key>
-	<true/>
-	<key>platform-application</key>
-	<true/>
-	<key>task_for_pid-allow</key>
-	<true/>
-    <key>com.apple.private.MobileGestalt.AllowedProtectedKeys</key>
-    <array>
-        <string>SysCfg</string>
-        <string>SysCfgDict</string>
-    </array>
 </dict>
 </plist>
