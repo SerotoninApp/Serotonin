@@ -107,16 +107,16 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
         return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
-//    } else if (!strncmp(path, xpcproxyPath, strlen(xpcproxyPath))) {
-//        //        FILE *file = fopen("/var/mobile/launchd.log", "a");
-//        //        char output[512];
-//        //        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
-//        //        fputs(output, file);
-//        path = coolerXpcProxyPath;
-//        //        fclose(file);
-//        argv[0] = (char *)path;
-//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    } else if (!strncmp(path, xpcproxyPath, strlen(xpcproxyPath))) {
+        //        FILE *file = fopen("/var/mobile/launchd.log", "a");
+        //        char output[512];
+        //        sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
+        //        fputs(output, file);
+        path = coolerXpcProxyPath;
+        //        fclose(file);
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }

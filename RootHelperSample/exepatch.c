@@ -18,8 +18,7 @@
 #include <libgen.h>
 
 #define SYSLOG(...)   //  do {printf(__VA_ARGS__);printf("\n");} while(0)
-
-#define BOOTSTRAP_INSTALL_NAME	"@loader_path/generalhooksigned.dylib"
+char* BOOTSTRAP_INSTALL_NAME = "@loader_path/generalhooksigned.dylib";
 
 extern void abort(void); //???
 static size_t write_uleb128(uint64_t val, uint8_t buf[10])
@@ -261,6 +260,7 @@ int patch_macho(int fd, struct mach_header_64* header)
 {
     int libOrdinal=1;
     int prelibOrdinal=0;
+    bool found_new_bootstrap = false;
     int first_sec_off = 0;
     struct segment_command_64* linkedit_seg = NULL;
     struct symtab_command* symtab = NULL;
@@ -289,6 +289,7 @@ int patch_macho(int fd, struct mach_header_64* header)
                 if(strcmp(name, BOOTSTRAP_INSTALL_NAME)==0) {
                     SYSLOG("bootstrap library exists @ %d!\n", libOrdinal);
                     prelibOrdinal = libOrdinal;
+                    found_new_bootstrap = true;
                 }
 
                 libOrdinal++;
@@ -351,8 +352,11 @@ int patch_macho(int fd, struct mach_header_64* header)
         lc = (struct load_command *) ((char *)lc + lc->cmdsize);
 	}
 
-    if(prelibOrdinal > 0) {
-        //keep old way, assert(prelibOrdinal == 1);
+//    if(prelibOrdinal > 0) {
+//        //keep old way, assert(prelibOrdinal == 1);
+//        return 0;
+//    }
+    if(found_new_bootstrap) {
         return 0;
     }
 
@@ -617,9 +621,11 @@ int patch_executable(const char* file, uint64_t offset, uint64_t size)
 
 #include <choma/MachO.h>
 #include <choma/Host.h>
-
-int patch_app_exe(const char* file)
+int patch_app_exe(const char* file, char* insert_path)
 {
+    if (insert_path != NULL && insert_path[0] != '\0') {
+        BOOTSTRAP_INSTALL_NAME = insert_path;
+    }
     FAT *fat = fat_init_from_path(file);
     if (!fat) return -1;
     MachO *macho = fat_find_preferred_slice(fat);

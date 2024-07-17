@@ -100,12 +100,13 @@ bool new_CFPrefsGetPathForTriplet(CFStringRef bundleIdentifier, CFStringRef user
 }
 
 int (*__CFXPreferencesDaemon_main)(int argc, char *argv[], char *envp[], char* apple[]);
+int ptrace(int request, pid_t pid, caddr_t addr, int data);
 
 int main(int argc, char *argv[], char *envp[], char* apple[]) {
     @autoreleasepool {
-        NSLog(@"cfprefsdshim loaded");
+//        NSLog(@"cfprefsdshim loaded"); /
         if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
-            NSLog(@"cfprefsdshim jit 1");
+//            NSLog(@"cfprefsdshim jit 1");
             ptrace(0, 0, 0, 0);
             exit(0);
         } else {
@@ -113,7 +114,7 @@ int main(int argc, char *argv[], char *envp[], char* apple[]) {
             char *modified_argv[] = {argv[0], "--jit", NULL };
             int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
             if (ret == 0) {
-                NSLog(@"cfprefsdshim jit 2");
+//                NSLog(@"cfprefsdshim jit 2");
                 waitpid(pid, NULL, WUNTRACED);
                 ptrace(11, pid, 0, 0);
                 kill(pid, SIGTERM);
@@ -133,7 +134,7 @@ int main(int argc, char *argv[], char *envp[], char* apple[]) {
         LHHookFunctions(hooks, 3);
         void *handle = dlopen("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", RTLD_GLOBAL);
         __CFXPreferencesDaemon_main = dlsym(handle, "__CFXPreferencesDaemon_main");
-        NSLog(@"cfprefsdshim starting...");
+//        NSLog(@"cfprefsdshim starting...");
         return __CFXPreferencesDaemon_main(argc, argv, envp, apple);
     }
 }

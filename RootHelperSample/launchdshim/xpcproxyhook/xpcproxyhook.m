@@ -51,14 +51,13 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv) {
-    FILE *file;
-    file = fopen("/var/mobile/xpcproxyhook.log", "w");
-    char output[512];
-    sprintf(output, "[xpcproxyhook] xpcproxyhook pid %d", getpid());
-//    printf("[launchd] launchdhook pid %d", getpid());
-    fputs(output, file);
-    fclose(file);
-    sync();
+//    FILE *file;
+//    file = fopen("/var/mobile/xpcproxyhook.log", "w");
+//    char output[512];
+//    sprintf(output, "[xpcproxyhook] xpcproxyhook pid %d", getpid());
+//    fputs(output, file);
+//    fclose(file);
+//    sync();
 
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},

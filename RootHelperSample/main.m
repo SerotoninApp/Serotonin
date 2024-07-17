@@ -299,17 +299,23 @@ void installClone(NSString *path) {
     [[NSFileManager defaultManager] copyItemAtPath:path toPath:jbroot(path) error:nil];
     
     NSString* ents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
+    NSString *hook_file = @"generalhooksigned.dylib";
+    NSString *insert_path = @"";
     if ([path isEqual:@"/Applications/MediaRemoteUI.app/MediaRemoteUI"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"MRUIents.plist"];
     } else if ([path isEqual:@"/System/Library/CoreServices/SpringBoard.app/SpringBoard"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"SpringBoardEnts.plist"];
+    } else if ([path isEqual:@"/usr/libexec/xpcproxy"]) {
+        ents = [usprebooterappPath() stringByAppendingPathComponent:@"xpcproxydents.plist"];
+        hook_file = @"xpcproxyhooksigned.dylib";
+        insert_path = @"@loader_path/xpcproxyhooksigned.dylib";
     } else {
         NSLog(@"Note: no dedicated ents file for this, shit will likely break");
     }
     // strip arm64e
     replaceByte(jbroot(path), 8, "\x00\x00\x00\x00");
     
-    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String]));
+    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String], [insert_path UTF8String]));
     signAdhoc(jbroot(path), ents);
     
     NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
@@ -318,11 +324,10 @@ void installClone(NSString *path) {
     NSString *stdErr;
     spawnRoot(fastPathSignPath, @[@"-i", jbroot(path), @"-r", @"-o", jbroot(path)], &stdOut, &stdErr);
 
-    NSString *dylib_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"generalhooksigned.dylib"];
-    
+    NSString *dylib_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:hook_file];
     NSString *symlink_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@".jbroot"];
     
-    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(dylib_path) error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:hook_file] toPath:jbroot(dylib_path) error:nil];
 
     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(symlink_path) withDestinationPath:jbroot(@"/") error:nil];
 }
@@ -368,10 +373,13 @@ int main(int argc, char *argv[], char *envp[]) {
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchd") error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchdhook.dylib") error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/MediaRemoteUI") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/generalhooksigned") error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/generalhooksigned.dylib") error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/") error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"] error:nil];
                     [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxyhooksigned.dylib"] error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"generalhooksigned.dylib"] error:nil];
+                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxy"] error:nil];
                 }
             }
         } else if ([action isEqual: @"reinstall"]) {
