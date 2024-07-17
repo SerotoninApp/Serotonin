@@ -18,7 +18,9 @@
 #include <libgen.h>
 
 #define SYSLOG(...)   //  do {printf(__VA_ARGS__);printf("\n");} while(0)
-char* BOOTSTRAP_INSTALL_NAME = "@loader_path/generalhooksigned.dylib";
+#include <choma/MachO.h>
+#include <choma/Host.h>
+//char* BOOTSTRAP_INSTALL_NAME = "";
 
 extern void abort(void); //???
 static size_t write_uleb128(uint64_t val, uint8_t buf[10])
@@ -256,7 +258,7 @@ void* rebind(struct mach_header_64* header, enum bindtype type, void* data, uint
     return NULL;
 }
 
-int patch_macho(int fd, struct mach_header_64* header)
+int patch_macho(int fd, struct mach_header_64* header, const char* insert_path)
 {
     int libOrdinal=1;
     int prelibOrdinal=0;
@@ -286,7 +288,12 @@ int patch_macho(int fd, struct mach_header_64* header)
                 char* name = (char*)((uint64_t)idcmd + idcmd->dylib.name.offset);
                 SYSLOG("libOrdinal=%d, %s\n", libOrdinal, name);
 
-                if(strcmp(name, BOOTSTRAP_INSTALL_NAME)==0) {
+//                if(strcmp(name, BOOTSTRAP_INSTALL_NAME)==0) {
+//                    SYSLOG("bootstrap library exists @ %d!\n", libOrdinal);
+//                    prelibOrdinal = libOrdinal;
+//                    found_new_bootstrap = true;
+//                }
+                if(strcmp(name, insert_path)==0) {
                     SYSLOG("bootstrap library exists @ %d!\n", libOrdinal);
                     prelibOrdinal = libOrdinal;
                     found_new_bootstrap = true;
@@ -352,19 +359,21 @@ int patch_macho(int fd, struct mach_header_64* header)
         lc = (struct load_command *) ((char *)lc + lc->cmdsize);
 	}
 
-//    if(prelibOrdinal > 0) {
-//        //keep old way, assert(prelibOrdinal == 1);
-//        return 0;
-//    }
-    if(found_new_bootstrap) {
+    if(prelibOrdinal > 0) {
+        //keep old way, assert(prelibOrdinal == 1);
         return 0;
     }
+//    if(found_new_bootstrap) {
+//        return 0;
+//    }
 
     struct stat st;
     assert(fstat(fd, &st)==0);
     assert(st.st_size == (linkedit_seg->fileoff+linkedit_seg->filesize));
 
-	int addsize = sizeof(struct dylib_command) + strlen(BOOTSTRAP_INSTALL_NAME) + 1;
+//	int addsize = sizeof(struct dylib_command) + strlen(BOOTSTRAP_INSTALL_NAME) + 1;
+    int addsize = sizeof(struct dylib_command) + strlen(insert_path) + 1;
+
 	if(addsize%sizeof(void*)) addsize = (addsize/sizeof(void*) + 1) * sizeof(void*); //align
 	if(first_sec_off < (sizeof(*header)+header->sizeofcmds+addsize))
 	{
@@ -563,7 +572,8 @@ int patch_macho(int fd, struct mach_header_64* header)
 	newlib->dylib.current_version = 0;
 	newlib->dylib.compatibility_version = 0;
 	newlib->dylib.name.offset = sizeof(*newlib);
-	strcpy((char*)newlib+sizeof(*newlib), BOOTSTRAP_INSTALL_NAME);
+//	strcpy((char*)newlib+sizeof(*newlib), BOOTSTRAP_INSTALL_NAME);
+    strcpy((char*)newlib+sizeof(*newlib), insert_path);
 	
 	header->sizeofcmds += addsize;
 	header->ncmds++;
@@ -577,7 +587,7 @@ int patch_macho(int fd, struct mach_header_64* header)
 	return 0;
 }
 
-int patch_executable(const char* file, uint64_t offset, uint64_t size)
+int patch_executable(const char* file, uint64_t offset, uint64_t size, const char* insert_path)
 {
 	int fd = open(file, O_RDWR);
     if(fd < 0) {
@@ -609,7 +619,7 @@ int patch_executable(const char* file, uint64_t offset, uint64_t size)
 
     struct mach_header_64* header = (struct mach_header_64*)((uint64_t)macho + 0);
 
-	int retval = patch_macho(fd, header);
+	int retval = patch_macho(fd, header, insert_path);
 	SYSLOG("patch macho @ %x : %d", offset, retval);
 
     munmap(macho, st.st_size);
@@ -619,18 +629,12 @@ int patch_executable(const char* file, uint64_t offset, uint64_t size)
     return retval;
 }
 
-#include <choma/MachO.h>
-#include <choma/Host.h>
 int patch_app_exe(const char* file, char* insert_path)
 {
-    if (insert_path != NULL && insert_path[0] != '\0') {
-        BOOTSTRAP_INSTALL_NAME = insert_path;
-    }
     FAT *fat = fat_init_from_path(file);
     if (!fat) return -1;
     MachO *macho = fat_find_preferred_slice(fat);
     if (!macho) return -1;
     // printf("offset=%llx size=%llx\n", macho->archDescriptor.offset, macho->archDescriptor.size);
-	return patch_executable(file, macho->archDescriptor.offset, macho->archDescriptor.size);
+    return patch_executable(file, macho->archDescriptor.offset, macho->archDescriptor.size, insert_path);
 }
-

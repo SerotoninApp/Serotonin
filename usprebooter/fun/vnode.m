@@ -15,8 +15,6 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <Foundation/Foundation.h>
-#include "thanks_opa334dev_htrowii.h"
-
 uint64_t getVnodeAtPath(char* filename) {
     int file_index = open(filename, O_RDONLY);
     if (file_index == -1) return -1;

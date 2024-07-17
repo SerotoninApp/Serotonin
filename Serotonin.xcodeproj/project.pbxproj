@@ -13,7 +13,6 @@
 		9756F4722B505EE000172EF9 /* patchfinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4262B505EE000172EF9 /* patchfinder.m */; };
 		9756F4892B505EE100172EF9 /* libdimentio.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F4582B505EE000172EF9 /* libdimentio.m */; };
 		9756F48E2B505EE100172EF9 /* patchfinder64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F46D2B505EE000172EF9 /* patchfinder64.m */; };
-		9756F4902B505F1900172EF9 /* cs_blobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 9756F48F2B505F1900172EF9 /* cs_blobs.m */; };
 		C805CA452B1719C1005157BA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = C805CA442B1719C1005157BA /* util.m */; };
 		C81122DF2B16C9CC00AD077B /* troller.m in Sources */ = {isa = PBXBuildFile; fileRef = C81122DE2B16C9CC00AD077B /* troller.m */; };
 		C81131112C46799000BD1C37 /* cfprefsdshimsignedinjected in Resources */ = {isa = PBXBuildFile; fileRef = C81131102C46798F00BD1C37 /* cfprefsdshimsignedinjected */; };
@@ -25,6 +24,9 @@
 		C862EB4D2C46EEED0052F3AD /* xpcproxydents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB4C2C46EEED0052F3AD /* xpcproxydents.plist */; };
 		C862EB4F2C46EF470052F3AD /* SpringBoardEnts.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB4E2C46EF470052F3AD /* SpringBoardEnts.plist */; };
 		C862EB512C46EF880052F3AD /* MRUIents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB502C46EF880052F3AD /* MRUIents.plist */; };
+		C862EB532C47A9710052F3AD /* installdents.plist in Resources */ = {isa = PBXBuildFile; fileRef = C862EB522C47A9710052F3AD /* installdents.plist */; };
+		C862EB5F2C47EDCE0052F3AD /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C862EB5E2C47EDCE0052F3AD /* proc.c */; };
+		C862EB602C47EE6D0052F3AD /* Serotonin.jp2 in Resources */ = {isa = PBXBuildFile; fileRef = C82599EF2B4C4C07002D0DDA /* Serotonin.jp2 */; };
 		C8B1D3A92B5A620500C5562B /* MD.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39B2B5A620500C5562B /* MD.swift */; };
 		C8B1D3AA2B5A620500C5562B /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39C2B5A620500C5562B /* LicensesViewController.swift */; };
 		C8B1D3AB2B5A620500C5562B /* ChangelogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D39D2B5A620500C5562B /* ChangelogViewController.swift */; };
@@ -37,11 +39,8 @@
 		C8B1D3B22B5A620500C5562B /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3A42B5A620500C5562B /* MainTabBarController.swift */; };
 		C8B1D3B32B5A620500C5562B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3A52B5A620500C5562B /* SettingsManager.swift */; };
 		C8B1D3B82B5A635800C5562B /* usprebooterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1D3B62B5A635800C5562B /* usprebooterApp.swift */; };
-		C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC842B3FFE560008D8FD /* utils.m */; };
-		C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */; };
 		C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC882B3FFE560008D8FD /* offsets.m */; };
 		C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC892B3FFE560008D8FD /* vnode.m */; };
-		C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BFCC8A2B3FFE560008D8FD /* proc.c */; };
 		D6F9CF3F2B4B2F7D00274803 /* ct_bypass in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF3E2B4B2F7D00274803 /* ct_bypass */; };
 		D6F9CF412B4B306400274803 /* fastPathSign in Resources */ = {isa = PBXBuildFile; fileRef = D6F9CF402B4B306400274803 /* fastPathSign */; };
 /* End PBXBuildFile section */
@@ -59,7 +58,6 @@
 		9756F4582B505EE000172EF9 /* libdimentio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = libdimentio.m; sourceTree = "<group>"; };
 		9756F46D2B505EE000172EF9 /* patchfinder64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = patchfinder64.m; sourceTree = "<group>"; };
 		9756F46E2B505EE000172EF9 /* patchfinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchfinder.h; sourceTree = "<group>"; };
-		9756F48F2B505F1900172EF9 /* cs_blobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cs_blobs.m; sourceTree = "<group>"; };
 		C805CA442B1719C1005157BA /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		C805CA462B1719D5005157BA /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		C811229A2B15E7BB00AD077B /* Serotonin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Serotonin.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +112,9 @@
 		C862EB4C2C46EEED0052F3AD /* xpcproxydents.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = xpcproxydents.plist; path = RootHelperSample/launchdshim/xpcproxyhook/xpcproxydents.plist; sourceTree = "<group>"; };
 		C862EB4E2C46EF470052F3AD /* SpringBoardEnts.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = SpringBoardEnts.plist; path = RootHelperSample/launchdshim/generalhook/SpringBoardEnts.plist; sourceTree = "<group>"; };
 		C862EB502C46EF880052F3AD /* MRUIents.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MRUIents.plist; path = RootHelperSample/launchdshim/generalhook/MRUIents.plist; sourceTree = "<group>"; };
+		C862EB522C47A9710052F3AD /* installdents.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = installdents.plist; path = RootHelperSample/launchdshim/generalhook/installdents.plist; sourceTree = "<group>"; };
+		C862EB5D2C47EDC60052F3AD /* proc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proc.h; sourceTree = "<group>"; };
+		C862EB5E2C47EDCE0052F3AD /* proc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = proc.c; sourceTree = "<group>"; };
 		C8B1D3992B5A620500C5562B /* swift-markdown.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "swift-markdown.md"; sourceTree = "<group>"; };
 		C8B1D39A2B5A620500C5562B /* Markdownosaur.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Markdownosaur.md; sourceTree = "<group>"; };
 		C8B1D39B2B5A620500C5562B /* MD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MD.swift; sourceTree = "<group>"; };
@@ -128,17 +129,11 @@
 		C8B1D3A42B5A620500C5562B /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		C8B1D3A52B5A620500C5562B /* SettingsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		C8B1D3B62B5A635800C5562B /* usprebooterApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = usprebooterApp.swift; sourceTree = "<group>"; };
-		C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
-		C8BFCC7A2B3FFE560008D8FD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		C8BFCC7B2B3FFE560008D8FD /* vnode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vnode.h; sourceTree = "<group>"; };
-		C8BFCC7C2B3FFE560008D8FD /* proc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proc.h; sourceTree = "<group>"; };
 		C8BFCC7D2B3FFE560008D8FD /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
 		C8BFCC7E2B3FFE560008D8FD /* krw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = krw.h; sourceTree = "<group>"; };
-		C8BFCC842B3FFE560008D8FD /* utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = utils.m; sourceTree = "<group>"; };
-		C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thanks_opa334dev_htrowii.m; sourceTree = "<group>"; };
 		C8BFCC882B3FFE560008D8FD /* offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
 		C8BFCC892B3FFE560008D8FD /* vnode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vnode.m; sourceTree = "<group>"; };
-		C8BFCC8A2B3FFE560008D8FD /* proc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = proc.c; sourceTree = "<group>"; };
 		C8BFCC912B3FFE560008D8FD /* krkw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = krkw.h; sourceTree = "<group>"; };
 		C8BFCC942B3FFE560008D8FD /* kread_sem_open.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kread_sem_open.h; sourceTree = "<group>"; };
 		C8BFCC952B3FFE560008D8FD /* kread_kqueue_workloop_ctl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kread_kqueue_workloop_ctl.h; sourceTree = "<group>"; };
@@ -198,6 +193,7 @@
 		C81122912B15E7BB00AD077B = {
 			isa = PBXGroup;
 			children = (
+				C862EB522C47A9710052F3AD /* installdents.plist */,
 				C862EB502C46EF880052F3AD /* MRUIents.plist */,
 				C862EB4E2C46EF470052F3AD /* SpringBoardEnts.plist */,
 				C862EB4C2C46EEED0052F3AD /* xpcproxydents.plist */,
@@ -409,20 +405,15 @@
 		C8BFCC772B3FFE560008D8FD /* fun */ = {
 			isa = PBXGroup;
 			children = (
-				9756F48F2B505F1900172EF9 /* cs_blobs.m */,
+				C862EB5E2C47EDCE0052F3AD /* proc.c */,
+				C862EB5D2C47EDC60052F3AD /* proc.h */,
 				9756F41C2B505EE000172EF9 /* kpf */,
-				C8BFCC792B3FFE560008D8FD /* thanks_opa334dev_htrowii.h */,
-				C8BFCC7A2B3FFE560008D8FD /* utils.h */,
-				C8BFCC842B3FFE560008D8FD /* utils.m */,
 				C8BFCC7B2B3FFE560008D8FD /* vnode.h */,
 				C8BFCC892B3FFE560008D8FD /* vnode.m */,
-				C8BFCC7C2B3FFE560008D8FD /* proc.h */,
 				C8BFCC7D2B3FFE560008D8FD /* offsets.h */,
 				C8BFCC7E2B3FFE560008D8FD /* krw.h */,
-				C8BFCC852B3FFE560008D8FD /* thanks_opa334dev_htrowii.m */,
 				6E9204902B330FAB001D38E5 /* krw.m */,
 				C8BFCC882B3FFE560008D8FD /* offsets.m */,
-				C8BFCC8A2B3FFE560008D8FD /* proc.c */,
 			);
 			path = fun;
 			sourceTree = "<group>";
@@ -586,6 +577,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C862EB602C47EE6D0052F3AD /* Serotonin.jp2 in Resources */,
+				C862EB532C47A9710052F3AD /* installdents.plist in Resources */,
 				C862EB512C46EF880052F3AD /* MRUIents.plist in Resources */,
 				C862EB4D2C46EEED0052F3AD /* xpcproxydents.plist in Resources */,
 				D6F9CF412B4B306400274803 /* fastPathSign in Resources */,
@@ -616,8 +609,6 @@
 				C8B1D3A92B5A620500C5562B /* MD.swift in Sources */,
 				C8B1D3AF2B5A620500C5562B /* ToolbarButton.swift in Sources */,
 				C8B1D3AB2B5A620500C5562B /* ChangelogViewController.swift in Sources */,
-				C8BFCCA82B3FFE570008D8FD /* utils.m in Sources */,
-				9756F4902B505F1900172EF9 /* cs_blobs.m in Sources */,
 				C8B1D3B32B5A620500C5562B /* SettingsManager.swift in Sources */,
 				9756F48E2B505EE100172EF9 /* patchfinder64.m in Sources */,
 				C8B1D3B82B5A635800C5562B /* usprebooterApp.swift in Sources */,
@@ -625,12 +616,11 @@
 				C83594CF2B18F70700346F80 /* overwriter.m in Sources */,
 				9756F4892B505EE100172EF9 /* libdimentio.m in Sources */,
 				C8BFCCAC2B3FFE570008D8FD /* offsets.m in Sources */,
-				C8BFCCAE2B3FFE570008D8FD /* proc.c in Sources */,
 				013141FF2B445B26006BEBE9 /* memoryControl.m in Sources */,
 				9756F4722B505EE000172EF9 /* patchfinder.m in Sources */,
+				C862EB5F2C47EDCE0052F3AD /* proc.c in Sources */,
 				C8B1D3AA2B5A620500C5562B /* LicensesViewController.swift in Sources */,
 				C8BFCCAD2B3FFE570008D8FD /* vnode.m in Sources */,
-				C8BFCCA92B3FFE570008D8FD /* thanks_opa334dev_htrowii.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

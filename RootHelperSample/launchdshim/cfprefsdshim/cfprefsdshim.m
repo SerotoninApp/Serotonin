@@ -27,7 +27,7 @@ int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
     int result = orig_csops(pid, ops, useraddr, usersize);
     if (result != 0) return result;
     if (ops == 0) {
-        *((uint32_t *)useraddr) |= 0x4000000;
+       *((uint32_t *)useraddr) |= 0x4000001;
     }
     return result;
 }
@@ -36,7 +36,7 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
     int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
     if (result != 0) return result;
     if (ops == 0) {
-        *((uint32_t *)useraddr) |= 0x4000000;
+       *((uint32_t *)useraddr) |= 0x4000001;
     }
     return result;
 }

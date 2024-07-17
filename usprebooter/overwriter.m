@@ -6,7 +6,6 @@
 #import <mach-o/fixup-chains.h>
 #import "overwriter.h"
 #import "troller.h"
-#import "fun/thanks_opa334dev_htrowii.h"
 #include "util.h"
 #import "fun/vnode.h"
 

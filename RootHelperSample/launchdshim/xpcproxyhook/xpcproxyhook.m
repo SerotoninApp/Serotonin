@@ -26,7 +26,7 @@ int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
     int result = orig_csops(pid, ops, useraddr, usersize);
     if (result != 0) return result;
     if (ops == 0) { // CS_OPS_STATUS
-        *((uint32_t *)useraddr) |= 0x4000000; // CS_PLATFORM_BINARY
+       *((uint32_t *)useraddr) |= 0x4000001; // CS_PLATFORM_BINARY
     }
     return result;
 }
@@ -35,17 +35,24 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
     int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
     if (result != 0) return result;
     if (ops == 0) { // CS_OPS_STATUS
-        *((uint32_t *)useraddr) |= 0x4000000; // CS_PLATFORM_BINARY
+       *((uint32_t *)useraddr) |= 0x4000001; // CS_PLATFORM_BINARY
     }
     return result;
 }
+const char *installd = "/usr/libexec/installd";
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char * envp[restrict]) {
+    const char *coolerinstalld = jbroot("/usr/libexec/installd");
     const char *coolercfprefsd = jbroot("/usr/sbin/cfprefsd");
     if (strncmp(path, "/usr/sbin/cfprefsd", 18) == 0) {
         path = coolercfprefsd;
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np(attrp, 0);
+    } else if (!strncmp(path, installd, strlen(installd))) {
+        path = coolerinstalld;
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
     }
     return orig_posix_spawnp(pid, path, file_actions, attrp, argv, envp);
 }

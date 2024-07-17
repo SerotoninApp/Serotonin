@@ -16,6 +16,9 @@
 
 #define PT_DETACH 11    /* stop tracing a process */
 #define PT_ATTACHEXC 14 /* attach to running process with signal exception */
+#define MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT 6
+#define POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE 0x48
+#define POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE 0x4C
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
 
 int posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
@@ -28,13 +31,16 @@ int (*orig_posix_spawn)(pid_t * __restrict pid, const char * __restrict path,
                         char *const argv[ __restrict], char *const envp[ __restrict]);
 
 int (*orig_posix_spawnp)(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, const posix_spawnattr_t *restrict attrp, char *const argv[restrict], char *const envp[restrict]);
+xpc_object_t (*xpc_dictionary_get_value_orig)(xpc_object_t xdict, const char *key);
+int (*memorystatus_control_orig)(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
+bool (*xpc_dictionary_get_bool_orig)(xpc_object_t dictionary, const char *key);
 
 
 int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
     int result = orig_csops(pid, ops, useraddr, usersize);
     if (result != 0) return result;
     if (ops == 0) { // CS_OPS_STATUS
-        *((uint32_t *)useraddr) |= 0x4000000; // CS_PLATFORM_BINARY
+       *((uint32_t *)useraddr) |= 0x4000001; // CS_PLATFORM_BINARY
     }
     return result;
 }
@@ -43,7 +49,7 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
     int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
     if (result != 0) return result;
     if (ops == 0) { // CS_OPS_STATUS
-        *((uint32_t *)useraddr) |= 0x4000000; // CS_PLATFORM_BINARY
+       *((uint32_t *)useraddr) |= 0x4000001; // CS_PLATFORM_BINARY
     }
     return result;
 }
@@ -128,6 +134,33 @@ bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
     else return xpc_dictionary_get_bool_orig(dictionary, key);
 }
 
+xpc_object_t hook_xpc_dictionary_get_value(xpc_object_t dict, const char *key) {
+    xpc_object_t retval = xpc_dictionary_get_value_orig(dict, key);
+
+    if (strcmp(key, "Paths") == 0) {
+        const char *paths[] = {
+            "/var/jb/Library/LaunchDaemons",
+            "/var/jb/System/Library/LaunchDaemons",
+            "/var/jb/Library/LaunchAgents",
+            "/var/jb/System/Library/LaunchAgents"
+        };
+
+        for (size_t i = 0; i < sizeof(paths) / sizeof(paths[0]); ++i) {
+            xpc_array_append_value(retval, xpc_string_create(paths[i]));
+        }
+    }
+
+    return retval;
+}
+
+int memorystatus_control_hook(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize)
+{
+    if (command == MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT) {
+        return 0;
+    }
+    return memorystatus_control_orig(command, pid, flags, buffer, buffersize);
+}
+
 void initVerboseFramebuffer(void);
 int bootscreend_main();
 __attribute__((constructor)) static void init(int argc, char **argv) {
@@ -168,6 +201,8 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
         {"posix_spawnp", hooked_posix_spawnp, (void *)&orig_posix_spawnp},
         {"xpc_dictionary_get_bool", hook_xpc_dictionary_get_bool, (void *)&xpc_dictionary_get_bool_orig},
+        {"xpc_dictionary_get_value", hook_xpc_dictionary_get_value, (void *)&xpc_dictionary_get_value_orig},
+        {"memorystatus_control", memorystatus_control_hook, (void *)&memorystatus_control_orig},
     };
     rebind_symbols(rebindings, sizeof(rebindings)/sizeof(struct rebinding));
 }

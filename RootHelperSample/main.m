@@ -300,7 +300,7 @@ void installClone(NSString *path) {
     
     NSString* ents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
     NSString *hook_file = @"generalhooksigned.dylib";
-    NSString *insert_path = @"";
+    NSString *insert_path = @"@loader_path/generalhooksigned.dylib";
     if ([path isEqual:@"/Applications/MediaRemoteUI.app/MediaRemoteUI"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"MRUIents.plist"];
     } else if ([path isEqual:@"/System/Library/CoreServices/SpringBoard.app/SpringBoard"]) {
@@ -309,6 +309,9 @@ void installClone(NSString *path) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"xpcproxydents.plist"];
         hook_file = @"xpcproxyhooksigned.dylib";
         insert_path = @"@loader_path/xpcproxyhooksigned.dylib";
+//    } else if ([path isEqual:@"/usr/libexec/installd"]) {
+//        ents = [usprebooterappPath() stringByAppendingPathComponent:@"installdents.plist"];
+//        insert_path = @"@loader_path/generalhooksigned.dylib"; // doesnt work idk
     } else {
         NSLog(@"Note: no dedicated ents file for this, shit will likely break");
     }
@@ -357,7 +360,9 @@ int main(int argc, char *argv[], char *envp[]) {
                 installClone(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard");
                 installClone(@"/Applications/MediaRemoteUI.app/MediaRemoteUI");
                 installClone(@"/usr/libexec/xpcproxy");
+//                installClone(@"/usr/libexec/installd");
                 install_cfprefsd();
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:jbroot(@"/var/mobile/Serotonin.jp2") error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
             NSLog(@"uninstalling");
@@ -368,18 +373,30 @@ int main(int argc, char *argv[], char *envp[]) {
                     NSLog(@"not continuing, launchd wasn't found to remove");
                     return -1;
                 } else {
-                    removeItemAtPathRecursively(jbroot(@"/System/Library/CoreServices/SpringBoard.app/"));
-                    [[NSFileManager defaultManager] removeItemAtPath:@"/var/mobile/Serotonin.jp2" error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchd") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"launchdhook.dylib") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/MediaRemoteUI") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/generalhooksigned.dylib") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/Applications/MediaRemoteUI.app/") error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"] error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"] error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxyhooksigned.dylib"] error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"generalhooksigned.dylib"] error:nil];
-                    [[NSFileManager defaultManager] removeItemAtPath:[jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxy"] error:nil];
+                    NSFileManager *fileManager = [NSFileManager defaultManager];
+                    NSError *error = nil;
+                    NSArray *pathsToRemove = @[
+                        jbroot(@"/System/Library/CoreServices/SpringBoard.app/"),
+                        @"/var/mobile/Serotonin.jp2",
+                        jbroot(@"launchd"),
+                        jbroot(@"launchdhook.dylib"),
+                        jbroot(@"/Applications/MediaRemoteUI.app/MediaRemoteUI"),
+                        jbroot(@"/Applications/MediaRemoteUI.app/generalhooksigned.dylib"),
+                        jbroot(@"/Applications/MediaRemoteUI.app/"),
+                        [jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"],
+                        [jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"],
+                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxyhooksigned.dylib"],
+                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
+                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxy"],
+                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"installd"]
+                    ];
+                    for (NSString *path in pathsToRemove) {
+                        if ([fileManager fileExistsAtPath:path]) {
+                            if (![fileManager removeItemAtPath:path error:&error]) {
+                                NSLog(@"Error removing item at %@: %@", path, error.localizedDescription);
+                            }
+                        }
+                    }
                 }
             }
         } else if ([action isEqual: @"reinstall"]) {

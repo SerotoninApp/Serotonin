@@ -44,7 +44,7 @@ class MainTabBarController: UITabBarController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 //        titleLabel.text = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? ""
         titleLabel.text = "Serotonin"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
 
         navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: titleLabel)]
 
