@@ -96,8 +96,6 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
     _offsets_init();
     // set gsystemInfo
     gSystemInfo.kernelConstant.slide = ((struct kfd *)_kfd)->perf.kernel_slide;
-    // gPrimitives.kreadbuf = kreadbuf;
-    // gPrimitives.kwritebuf = kwritebuf;
     return _kfd;
 }
 

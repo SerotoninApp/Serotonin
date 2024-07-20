@@ -370,7 +370,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 install_cfprefsd();
                 
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
-                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
+//                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
             NSLog(@"uninstalling");
@@ -399,7 +399,9 @@ int main(int argc, char *argv[], char *envp[]) {
                         [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"installd"],
                         [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"cfprefsd"],
                         [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
-                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"mediaserverd"]
+                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"mediaserverd"],
+                        jbroot(@"/generalhooksigned.dylib"),
+                        jbroot(@"/var/mobile/Serotonin.jp2"),
                     ];
                     for (NSString *path in pathsToRemove) {
                         if ([fileManager fileExistsAtPath:path]) {

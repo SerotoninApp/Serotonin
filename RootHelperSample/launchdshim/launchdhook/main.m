@@ -20,6 +20,9 @@
 
 #define PT_DETACH 11    /* stop tracing a process */
 #define PT_ATTACHEXC 14 /* attach to running process with signal exception */
+#define __probable(x)   __builtin_expect(!!(x), 1)
+#define __improbable(x) __builtin_expect(!!(x), 0)
+
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
 
 #define INSTALLD_PATH       "/usr/libexec/installd"
@@ -36,6 +39,7 @@ void abort_with_reason(uint32_t reason_namespace, uint64_t reason_code, const ch
 #define POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE 0x4C
 
 int posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
+int unsandbox2(const char* dir, const char* file);
 
 int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
 int (*orig_csops_audittoken)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
@@ -139,15 +143,15 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
     return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
 }
 
-void log_path(char* path, char* jbroot_path) {
-    FILE *file = fopen("/var/mobile/launchd.log", "a");
-    char output[256];
-    sprintf(output, "[launchd] changing path %s to %s\n", path, jbroot_path);
-    fputs(output, file);
-    fclose(file);
-}
+// void log_path(char* path, char* jbroot_path) {
+//     FILE *file = fopen("/var/mobile/launchd.log", "a");
+//     char output[256];
+//     sprintf(output, "[launchd] changing path %s to %s\n", path, jbroot_path);
+//     fputs(output, file);
+//     fclose(file);
+// }
 char HOOK_DYLIB_PATH[PATH_MAX] = {0};
-bool shouldWeGamble = false;
+bool shouldWeGamble = true;
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
     if (!strncmp(path, SPRINGBOARD_PATH, strlen(SPRINGBOARD_PATH))) {
@@ -161,11 +165,11 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         path = jbroot(MRUI_PATH);
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    } else if (!strncmp(path, XPCPROXY_PATH, strlen(XPCPROXY_PATH))) {
+    } else if (__probable(!strncmp(path, XPCPROXY_PATH, strlen(XPCPROXY_PATH)))) {
         path = jbroot(XPCPROXY_PATH);
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-        if(shouldWeGamble)
+        if(__improbable(shouldWeGamble))
         {
             uint64_t kfd = do_kopen(1024, 2, 1, 1, 1000, true);
             customLog("successfully gambled with kfd!\n");
@@ -173,11 +177,11 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
             // customLog("reading pid... %d, getpid ret %d", kread32(((struct kfd *)kfd)->info.kaddr.current_proc + 0x60), getpid());
             // NSString* systemhookFilePath = [NSString stringWithFormat:@"%s/generalhooksigned.dylib", jbroot("/")];
             
-            // int unsandbox2(const char* dir, const char* file);
             // unsandbox2("/usr/lib", systemhookFilePath.fileSystemRepresentation);
+            unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
 
-            // //new "real path"
-            // snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
+            //new "real path"
+            snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
             do_kclose();
             shouldWeGamble = false;
         }
@@ -263,7 +267,8 @@ int memorystatus_control_hook(uint32_t command, int32_t pid, uint32_t flags, voi
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv) {
-    crashreporter_start();
+    // APPARENTLY for no reason, this crashreporter fuckin breaks ptrace in bootstrapd??
+    // crashreporter_start();
     // customLog("launchdhook is running");
     if(gSystemInfo.jailbreakInfo.rootPath) free(gSystemInfo.jailbreakInfo.rootPath);
     
@@ -273,7 +278,7 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         gSystemInfo.jailbreakInfo.jbrand = jbrand();
     }
     // initXPCHooks();
-	// setenv("DYLD_INSERT_LIBRARIES", jbroot("/launchdhook.dylib"), 1);
+	setenv("DYLD_INSERT_LIBRARIES", jbroot("/launchdhook.dylib"), 1);
 	setenv("LAUNCHD_UUID", [NSUUID UUID].UUIDString.UTF8String, 1);
 
     // If Dopamine was initialized before, we assume we're coming from a userspace reboot

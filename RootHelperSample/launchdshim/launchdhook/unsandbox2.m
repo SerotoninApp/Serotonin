@@ -119,6 +119,7 @@ int unsandbox2(const char* dir, const char* file)
 		goto failed;
 	}
 	customLog("writing to dirvp...");
+	sleep(1);
 	kwrite32(dirvp + off_vnode_v_usecount, dirvnode.v_usecount+1);
 
     uint64_t filevp = proc_fd_vnode(proc_self(), filefd);
@@ -130,12 +131,14 @@ int unsandbox2(const char* dir, const char* file)
 	struct vnode filevnode;
 	kreadbuf(filevp, &filevnode, sizeof(filevnode));
 	customLog("writing to filevp...");
+	sleep(1);
 	kwrite32(filevp+off_vnode_v_usecount, filevnode.v_usecount+1);
 
 	struct vnode parentvnode;
     uint64_t parentvp = kUNSIGN_PTR((uint64_t) filevnode.v_parent);
 	kreadbuf(parentvp, &parentvnode, sizeof(parentvnode));
 	customLog("writing to parentvp...");
+	sleep(1);
 	kwrite32(parentvp+off_vnode_v_usecount, parentvnode.v_usecount+1);
 
 	customLog("filefd=%d filevp=%llx/%d fileid=%lld parent=%llx/%d dirvp=%llx dirid=%lld ncchildren=%llx:%llx->%llx\n", 
@@ -144,12 +147,14 @@ int unsandbox2(const char* dir, const char* file)
 
     char parentname[32]={0};
     kreadbuf((uint64_t)parentvnode.v_name, parentname, sizeof(parentname));
+	sleep(1);
     customLog("parentname=%s\n", parentname);
 
 
 	struct namecache filenc={0};
 	uint64_t filencp = (uint64_t)filevnode.v_nclinks.lh_first;
 	kreadbuf(filencp, &filenc, sizeof(filenc));
+	sleep(1);
     customLog("filenc=%llx vp=%llx dvp=%llx\n", filencp, filenc.nc_vp, filenc.nc_dvp);
 
 {
@@ -158,6 +163,7 @@ int unsandbox2(const char* dir, const char* file)
 
 		struct namecache nc={0};
 		kreadbuf(ncp, &nc, sizeof(nc));
+		sleep(1);
 
 		char namebuf[128]={0};
 		for(int i=0; i<sizeof(namebuf)/sizeof(namebuf[0]); i++)
