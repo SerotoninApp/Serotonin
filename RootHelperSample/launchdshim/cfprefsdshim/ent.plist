@@ -8,6 +8,10 @@
 	<true/>
 	<key>get-task-allow</key>
 	<true/>
+	<key>platform-application</key>
+	<true/>
+	<key>task_for_pid-allow</key>
+	<true/>
 	<key>com.apple.private.MobileContainerManager.otherIdLookup</key>
 	<true/>
 	<key>com.apple.private.security.storage.CoreRoutine</key>
@@ -26,7 +30,5 @@
 	<array>
 		<string>systemgroup.com.apple.cfpreferences.managed</string>
 	</array>
-	<key>platform-application</key>
-	<true/>
 </dict>
 </plist>

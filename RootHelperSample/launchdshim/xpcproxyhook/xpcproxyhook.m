@@ -40,31 +40,50 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
     return result;
 }
 const char *installd = "/usr/libexec/installd";
+const char *nfcd = "/usr/libexec/nfcd";
+const char *mediaserverd = "/usr/sbin/mediaserverd";
+
+void log_path(char* path, char* jbroot_path) {
+    FILE *file = fopen("/var/mobile/xpcproxyhook.log", "a");
+    char output[256];
+    sprintf(output, "[xpcproxyhook] changing path %s to %s\n", path, jbroot_path);
+    fputs(output, file);
+    fclose(file);
+}
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char * envp[restrict]) {
-    const char *coolerinstalld = jbroot("/usr/libexec/installd");
-    const char *coolercfprefsd = jbroot("/usr/sbin/cfprefsd");
     if (strncmp(path, "/usr/sbin/cfprefsd", 18) == 0) {
-        path = coolercfprefsd;
-        argv[0] = (char *)path;
-        posix_spawnattr_set_launch_type_np(attrp, 0);
-    } else if (!strncmp(path, installd, strlen(installd))) {
-        path = coolerinstalld;
+        log_path(path, jbroot(path));
+        path = jbroot("/usr/sbin/cfprefsd");
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+//    } else if (!strncmp(path, mediaserverd, strlen(mediaserverd))) {
+//        log_path(path, jbroot(path));
+//        path = jbroot(mediaserverd);
+//        argv[0] = (char *)path;
+//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    } else if (!strncmp(path, installd, strlen(installd))) {
+        log_path(path, jbroot(path));
+        path = jbroot(installd);
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+//    } else if (!strncmp(path, nfcd, strlen(nfcd))) {
+//        log_path(path, jbroot(path));
+//        path = jbroot(nfcd);
+//        argv[0] = (char *)path;
+//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
     }
     return orig_posix_spawnp(pid, path, file_actions, attrp, argv, envp);
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv) {
-//    FILE *file;
-//    file = fopen("/var/mobile/xpcproxyhook.log", "w");
-//    char output[512];
-//    sprintf(output, "[xpcproxyhook] xpcproxyhook pid %d", getpid());
-//    fputs(output, file);
-//    fclose(file);
-//    sync();
+    FILE *file;
+    file = fopen("/var/mobile/xpcproxyhook.log", "w");
+    char output[128];
+    sprintf(output, "[xpcproxyhook] xpcproxyhook pid %d", getpid());
+    fputs(output, file);
+    fclose(file);
+    sync();
 
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},

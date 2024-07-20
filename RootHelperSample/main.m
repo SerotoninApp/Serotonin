@@ -176,15 +176,15 @@ int runLdid(NSArray* args, NSString** output, NSString** errorOutput)
     return WEXITSTATUS(status);
 }
 
-int signAdhoc(NSString *filePath, NSString *entitlements) {
+int signAdhoc(NSString *filePath, NSString *entitlements, bool merge) {
     NSMutableArray *args = [NSMutableArray array];
     
     if (entitlements && entitlements.length > 0) {
         [args addObject:[NSString stringWithFormat:@"-S%@", entitlements]];
     }
-    
-    [args addObjectsFromArray:@[@"-M", filePath]];
-    
+    if (merge == true) {
+        [args addObjectsFromArray:@[@"-M", filePath]];
+    }
     NSString *errorOutput;
     NSLog(@"roothelper: running ldid with args: %@", [args componentsJoinedByString:@" "]);
     int ldidRet = runLdid(args, nil, &errorOutput);
@@ -275,7 +275,7 @@ void installLaunchd(void) {
 
     NSString* launchdents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
     NSString* patchedLaunchdCopy = [usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"];
-    signAdhoc(patchedLaunchdCopy, launchdents); // source file, NSDictionary with entitlements
+    signAdhoc(patchedLaunchdCopy, launchdents, true); // source file, NSDictionary with entitlements
 
     NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
     NSString *stdOut;
@@ -301,25 +301,29 @@ void installClone(NSString *path) {
     NSString* ents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
     NSString *hook_file = @"generalhooksigned.dylib";
     NSString *insert_path = @"@loader_path/generalhooksigned.dylib";
+    bool mergeEnts = true;
     if ([path isEqual:@"/Applications/MediaRemoteUI.app/MediaRemoteUI"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"MRUIents.plist"];
     } else if ([path isEqual:@"/System/Library/CoreServices/SpringBoard.app/SpringBoard"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"SpringBoardEnts.plist"];
+    } else if ([path isEqual:@"/usr/libexec/installd"]) {
+        ents = [usprebooterappPath() stringByAppendingPathComponent:@"installdents.plist"];
+    } else if ([path isEqual:@"/usr/libexec/nfcd"]) {
+        ents = [usprebooterappPath() stringByAppendingPathComponent:@"nfcdents.plist"];
     } else if ([path isEqual:@"/usr/libexec/xpcproxy"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"xpcproxydents.plist"];
         hook_file = @"xpcproxyhooksigned.dylib";
         insert_path = @"@loader_path/xpcproxyhooksigned.dylib";
-//    } else if ([path isEqual:@"/usr/libexec/installd"]) {
-//        ents = [usprebooterappPath() stringByAppendingPathComponent:@"installdents.plist"];
-//        insert_path = @"@loader_path/generalhooksigned.dylib"; // doesnt work idk
+    } else if ([path isEqual:@"/usr/sbin/mediaserverd"]) {
+        ents = [usprebooterappPath() stringByAppendingPathComponent:@"mediaserverdents.plist"];
     } else {
         NSLog(@"Note: no dedicated ents file for this, shit will likely break");
     }
     // strip arm64e
     replaceByte(jbroot(path), 8, "\x00\x00\x00\x00");
     
-    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String], [insert_path UTF8String]));
-    signAdhoc(jbroot(path), ents);
+    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String], (char*)[insert_path UTF8String]));
+    signAdhoc(jbroot(path), ents, mergeEnts);
     
     NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
     
@@ -360,8 +364,12 @@ int main(int argc, char *argv[], char *envp[]) {
                 installClone(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard");
                 installClone(@"/Applications/MediaRemoteUI.app/MediaRemoteUI");
                 installClone(@"/usr/libexec/xpcproxy");
-//                installClone(@"/usr/libexec/installd");
+                installClone(@"/usr/libexec/installd");
+                installClone(@"/usr/libexec/nfcd");
+//                installClone(@"/usr/sbin/mediaserverd");
                 install_cfprefsd();
+                
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:jbroot(@"/var/mobile/Serotonin.jp2") error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
@@ -378,8 +386,8 @@ int main(int argc, char *argv[], char *envp[]) {
                     NSArray *pathsToRemove = @[
                         jbroot(@"/System/Library/CoreServices/SpringBoard.app/"),
                         @"/var/mobile/Serotonin.jp2",
-                        jbroot(@"launchd"),
-                        jbroot(@"launchdhook.dylib"),
+                        jbroot(@"/launchd"),
+                        jbroot(@"/launchdhook.dylib"),
                         jbroot(@"/Applications/MediaRemoteUI.app/MediaRemoteUI"),
                         jbroot(@"/Applications/MediaRemoteUI.app/generalhooksigned.dylib"),
                         jbroot(@"/Applications/MediaRemoteUI.app/"),
@@ -388,7 +396,10 @@ int main(int argc, char *argv[], char *envp[]) {
                         [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxyhooksigned.dylib"],
                         [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
                         [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxy"],
-                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"installd"]
+                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"installd"],
+                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"cfprefsd"],
+                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
+                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"mediaserverd"]
                     ];
                     for (NSString *path in pathsToRemove) {
                         if ([fileManager fileExistsAtPath:path]) {

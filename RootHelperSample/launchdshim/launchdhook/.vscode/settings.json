@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "libbsm.h": "c",
+        "util.h": "c",
+        "xpc.h": "c",
+        "xpc_private.h": "c",
+        "exec_patch.h": "c",
+        "libproc.h": "c",
+        "kernel.h": "c",
+        "info.h": "c",
+        "jbclient_xpc.h": "c",
+        "sandbox.h": "c",
+        "libproc_private.h": "c",
+        "audit.h": "c",
+        "translation.h": "c"
+    }
+}
