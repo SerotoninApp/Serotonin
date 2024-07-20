@@ -90,6 +90,7 @@ extension JailbreakViewController: JBButtonDelegate {
             
             Logger.shared.log(logType: .success, subTitle: "Jailbreaking")
             
+//            go2()
             go(settingsManager.isBetaIos, "reinstall")
             Logger.shared.log(logType: .success, subTitle: "Installing...")
 

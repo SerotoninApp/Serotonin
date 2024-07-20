@@ -370,7 +370,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 install_cfprefsd();
                 
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
-                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:jbroot(@"/var/mobile/Serotonin.jp2") error:nil];
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
             NSLog(@"uninstalling");

@@ -101,3 +101,9 @@ int go(bool isBeta, NSString* argument) {
 //    codesignLaunchd();
     return ret;
 }
+
+//int go2(void) {
+//    NSLog(@"Attempting unsandbox2...");
+//    
+//    return 0;
+//}

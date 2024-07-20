@@ -48,16 +48,11 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
         size_t memory_to_hog = memory_avail > hog_headroom ? memory_avail - hog_headroom: 0;
         int32_t old_memory_limit = 0;
         memorystatus_memlimit_properties2_t mmprops;
-        // print_usize(memory_avail);
-        // print_usize(hog_headroom);
-        // print_usize(hog_headroom);
-        // print_usize(memory_to_hog);
-        // print_usize(memory_to_hog);
         if (hasEntitlement(CFSTR("com.apple.private.memorystatus"))) {
             uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
             int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, getpid(), 0, &mmprops, sizeof(mmprops));
             if (ret == 0) {
-                print_i32(mmprops.v1.memlimit_active);
+                // print_i32(mmprops.v1.memlimit_active);
                 old_memory_limit = mmprops.v1.memlimit_active;
                 ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, getpid(), new_memory_limit, NULL, 0);
                 if (ret == 0) {

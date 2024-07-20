@@ -53,7 +53,7 @@ void log_path(char* path, char* jbroot_path) {
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char * envp[restrict]) {
     if (strncmp(path, "/usr/sbin/cfprefsd", 18) == 0) {
-        log_path(path, jbroot(path));
+//        log_path(path, jbroot(path));
         path = jbroot("/usr/sbin/cfprefsd");
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
@@ -62,11 +62,11 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
 //        path = jbroot(mediaserverd);
 //        argv[0] = (char *)path;
 //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    } else if (!strncmp(path, installd, strlen(installd))) {
-        log_path(path, jbroot(path));
-        path = jbroot(installd);
-        argv[0] = (char *)path;
-        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+//    } else if (!strncmp(path, installd, strlen(installd))) {
+//        log_path(path, jbroot(path));
+//        path = jbroot(installd);
+//        argv[0] = (char *)path;
+//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
 //    } else if (!strncmp(path, nfcd, strlen(nfcd))) {
 //        log_path(path, jbroot(path));
 //        path = jbroot(nfcd);
@@ -77,13 +77,13 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv) {
-    FILE *file;
-    file = fopen("/var/mobile/xpcproxyhook.log", "w");
-    char output[128];
-    sprintf(output, "[xpcproxyhook] xpcproxyhook pid %d", getpid());
-    fputs(output, file);
-    fclose(file);
-    sync();
+//    FILE *file;
+//    file = fopen("/var/mobile/xpcproxyhook.log", "w");
+//    char output[128];
+//    sprintf(output, "[xpcproxyhook] xpcproxyhook pid %d", getpid());
+//    fputs(output, file);
+//    fclose(file);
+//    sync();
 
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
