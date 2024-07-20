@@ -54,11 +54,6 @@ jobs:
           path: ${{ github.workspace }}/theos
           key: ${{ env.upstream_heads }}
 
-      - name: 💾 Download ct_bypass to /usr/local/bin
-        run: |
-          curl -L -o /usr/local/bin/ct_bypass https://cdn.mineek.dev/serotonin/action_deps/ct_bypass
-          chmod +x /usr/local/bin/ct_bypass
-
       - name: 📦 Compile IPA
         run: gmake FINALPACKAGE=1
 
