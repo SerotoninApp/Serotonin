@@ -270,11 +270,11 @@ void crashreporter_catch_mach(exception_raise_request *request, exception_raise_
 
 	if (name) {
 		char msg[1000];
-		snprintf(msg, 1000, "Mach exception occured. A detailed report has been written to the file %s.", name);
+		snprintf(msg, 1000, "Mach exception occurred. A detailed report has been written to the file %s.", name);
 		abort_with_reason(7, 1, msg, 0);
 	}
 	else {
-		abort_with_reason(7, 1, "Mach exception occured. Failed to write the detailed report to a file.", 0);
+		abort_with_reason(7, 1, "Mach exception occurred. Failed to write the detailed report to a file.", 0);
 	}
 }
 
@@ -327,11 +327,11 @@ void crashreporter_catch_objc(NSException *e)
 		}
 		if (name) {
 			char msg[1000];
-			snprintf(msg, 1000, "Objective-C exception occured. A detailed report has been written to the file %s.", name);
+			snprintf(msg, 1000, "Objective-C exception occurred. A detailed report has been written to the file %s.", name);
 			abort_with_reason(7, 1, msg, 0);
 		}
 		else {
-			abort_with_reason(7, 1, "Objective-C exception occured. Failed to write the detailed report to a file.", 0);
+			abort_with_reason(7, 1, "Objective-C exception occurred. Failed to write the detailed report to a file.", 0);
 		}
 	}
 }

@@ -13,25 +13,33 @@
 #include <roothide.h>
 #include <signal.h>
 #include "crashreporter.h"
-#include "xpc_hook.h"
 #import "jbserver/exec_patch.h"
 #include "fun/krw.h"
 #include "jbserver/info.h"
-
-char HOOK_DYLIB_PATH[PATH_MAX] = {0};
-
-bool gInEarlyBoot = true;
-void abort_with_reason(uint32_t reason_namespace, uint64_t reason_code, const char *reason_string, uint64_t reason_flags);
-
+#include "jbserver/log.h"
 
 #define PT_DETACH 11    /* stop tracing a process */
 #define PT_ATTACHEXC 14 /* attach to running process with signal exception */
+#define __probable(x)   __builtin_expect(!!(x), 1)
+#define __improbable(x) __builtin_expect(!!(x), 0)
+
+int ptrace(int request, pid_t pid, caddr_t addr, int data);
+
+#define INSTALLD_PATH       "/usr/libexec/installd"
+#define NFCD_PATH           "/usr/libexec/nfcd"
+#define SPRINGBOARD_PATH    "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
+#define MRUI_PATH           "/Applications/MediaRemoteUI.app/MediaRemoteUI"
+#define XPCPROXY_PATH       "/usr/libexec/xpcproxy"
+#define MEDIASERVERD_PATH   "/usr/sbin/mediaserverd"
+
+void abort_with_reason(uint32_t reason_namespace, uint64_t reason_code, const char *reason_string, uint64_t reason_flags);
+
 #define MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT 6
 #define POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE 0x48
 #define POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE 0x4C
-int ptrace(int request, pid_t pid, caddr_t addr, int data);
 
 int posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
+int unsandbox2(const char* dir, const char* file);
 
 int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
 int (*orig_csops_audittoken)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
@@ -132,29 +140,18 @@ NSString* find_jbroot()
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, posix_spawnattr_t *attrp, char *argv[], char *const envp[]) {
     change_launchtype(attrp, path);
-        return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
-    }
-
-//const char *installd = "/usr/libexec/installd";
-//const char *nfcd = "/usr/libexec/nfcd";
-//const char *springboard = "/System/Library/CoreServices/SpringBoard.app/SpringBoard";
-//const char *mrui = "/Applications/MediaRemoteUI.app/MediaRemoteUI";
-//const char *xpcproxy = "/usr/libexec/xpcproxy";
-#define INSTALLD_PATH       "/usr/libexec/installd"
-#define NFCD_PATH           "/usr/libexec/nfcd"
-#define SPRINGBOARD_PATH    "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
-#define MRUI_PATH           "/Applications/MediaRemoteUI.app/MediaRemoteUI"
-#define XPCPROXY_PATH       "/usr/libexec/xpcproxy"
-#define MEDIASERVERD_PATH   "/usr/sbin/mediaserverd"
-
-void log_path(char* path, char* jbroot_path) {
-    FILE *file = fopen("/var/mobile/launchd.log", "a");
-    char output[256];
-    sprintf(output, "[launchd] changing path %s to %s\n", path, jbroot_path);
-    fputs(output, file);
-    fclose(file);
+    return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
 }
 
+// void log_path(char* path, char* jbroot_path) {
+//     FILE *file = fopen("/var/mobile/launchd.log", "a");
+//     char output[256];
+//     sprintf(output, "[launchd] changing path %s to %s\n", path, jbroot_path);
+//     fputs(output, file);
+//     fclose(file);
+// }
+char HOOK_DYLIB_PATH[PATH_MAX] = {0};
+bool shouldWeGamble = true;
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char *const envp[restrict]) {
     change_launchtype(attrp, path);
     if (!strncmp(path, SPRINGBOARD_PATH, strlen(SPRINGBOARD_PATH))) {
@@ -168,37 +165,41 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         path = jbroot(MRUI_PATH);
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    } else if (!strncmp(path, XPCPROXY_PATH, strlen(XPCPROXY_PATH))) {
-        // path = jbroot(XPCPROXY_PATH);
+    } else if (__probable(!strncmp(path, XPCPROXY_PATH, strlen(XPCPROXY_PATH)))) {
+        path = jbroot(XPCPROXY_PATH);
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    }
-//    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
-//        log_path(path, jbroot(MEDIASERVERD_PATH));
-//        path = jbroot(MEDIASERVERD_PATH);
-//        argv[0] = (char *)path;
-//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//    }
+        if(__improbable(shouldWeGamble))
+        {
+            uint64_t kfd = do_kopen(1024, 2, 1, 1, 1000, true);
+            customLog("successfully gambled with kfd!\n");
+            customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx, nchashtbl: 0x%llx, nchashmask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask(), gSystemInfo.kernelConstant.nchashtbl, gSystemInfo.kernelConstant.nchashmask);
+            // customLog("reading pid... %d, getpid ret %d", kread32(((struct kfd *)kfd)->info.kaddr.current_proc + 0x60), getpid());
+            // NSString* systemhookFilePath = [NSString stringWithFormat:@"%s/generalhooksigned.dylib", jbroot("/")];
+            
+            unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
+
+            //new "real path"
+            snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
+            do_kclose();
+            shouldWeGamble = false;
+        }
+    //    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
+    //        log_path(path, jbroot(MEDIASERVERD_PATH));
+    //        path = jbroot(MEDIASERVERD_PATH);
+    //        argv[0] = (char *)path;
+    //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    //    }
     //    } else if (!strncmp(path, installd, strlen(installd))) {
-    //                FILE *file = fopen("/var/mobile/launchd.log", "a");
-    //                char output[512];
-    //                sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
-    //                fputs(output, file);
     //        path = jbroot(installd);
-    //                fclose(file);
     //        argv[0] = (char *)path;
     //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    ////        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    //    }
     //    } else if (!strncmp(path, nfcd, strlen(nfcd))) {
-    //                FILE *file = fopen("/var/mobile/launchd.log", "a");
-    //                char output[512];
-    //                sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
-    //                fputs(output, file);
     //        path = jbroot(nfcd);
-    //                fclose(file);
     //        argv[0] = (char *)path;
     //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    ////        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 
@@ -228,6 +229,23 @@ xpc_object_t hook_xpc_dictionary_get_value(xpc_object_t dict, const char *key) {
     return retval;
 }
 
+//xpchook
+// int xpc_receive_mach_msg(void *a1, void *a2, void *a3, void *a4, xpc_object_t *xOut);
+// int (*xpc_receive_mach_msg_orig)(void *a1, void *a2, void *a3, void *a4, xpc_object_t *xOut);
+// int xpc_receive_mach_msg_hook(void *a1, void *a2, void *a3, void *a4, xpc_object_t *xOut)
+// {
+// 	int r = xpc_receive_mach_msg_orig(a1, a2, a3, a4, xOut);
+// 	if (r == 0) {
+// 		if (jbserver_received_xpc_message(&gGlobalServer, *xOut) == 0) {
+// 			// Returning non null here makes launchd disregard this message
+// 			// For jailbreak messages we have the logic to handle them
+// 			xpc_release(*xOut);
+// 			return 22;
+// 		}
+// 	}
+// 	return r;
+// }
+
 int memorystatus_control_hook(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize)
 {
     if (command == MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT) {
@@ -236,11 +254,10 @@ int memorystatus_control_hook(uint32_t command, int32_t pid, uint32_t flags, voi
     return memorystatus_control_orig(command, pid, flags, buffer, buffersize);
 }
 
-void initVerboseFramebuffer(void);
-int bootscreend_main();
 __attribute__((constructor)) static void init(int argc, char **argv) {
-    crashreporter_start();
-    // initVerboseFramebuffer();
+    // APPARENTLY for no reason, this crashreporter fuckin breaks ptrace in bootstrapd??
+    // crashreporter_start();
+    // customLog("launchdhook is running");
     if(gSystemInfo.jailbreakInfo.rootPath) free(gSystemInfo.jailbreakInfo.rootPath);
     
     NSString* jbroot_path = find_jbroot();
@@ -248,26 +265,22 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         gSystemInfo.jailbreakInfo.rootPath = strdup(jbroot_path.fileSystemRepresentation);
         gSystemInfo.jailbreakInfo.jbrand = jbrand();
     }
-    initXPCHooks();
+    // initXPCHooks();
 	setenv("DYLD_INSERT_LIBRARIES", jbroot("/launchdhook.dylib"), 1);
-    setenv("SEROTONIN_INITIALIZED", "1", 1);
-	// Set an identifier that uniquely identifies this userspace boot
-	// Part of rootless v2 spec
 	setenv("LAUNCHD_UUID", [NSUUID UUID].UUIDString.UTF8String, 1);
 
-    // bool verboseBoot = false;
-    // NSString *verboseBootPath = @"/var/mobile/.serotonin_verbose";
-
-    // if ([NSFileManager.defaultManager fileExistsAtPath:verboseBootPath]) {
-    //     verboseBoot = true;
-    // }
-
-    // if (verboseBoot) {
-    //     initVerboseFramebuffer();
-    // } else {
-    //     bootscreend_main();
-    // }
-//    bootscreend_main();
+    // If Dopamine was initialized before, we assume we're coming from a userspace reboot
+	// Stock bug: These prefs wipe themselves after a reboot (they contain a boot time and this is matched when they're loaded)
+	// But on userspace reboots, they apparently do not get wiped as boot time doesn't change
+	// We could try to change the boot time ourselves, but I'm worried of potential side effects
+	// So we just wipe the offending preferences ourselves
+	// In practice this fixes nano launch daemons not being loaded after the userspace reboot, resulting in certain apple watch features breaking
+	if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist", W_OK)) {
+		remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist");
+	}
+	if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist", W_OK)) {
+		remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist");
+	}
     struct rebinding rebindings[] = (struct rebinding[]){
         {"csops", hooked_csops, (void *)&orig_csops},
         {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
@@ -275,44 +288,7 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         {"xpc_dictionary_get_bool", hook_xpc_dictionary_get_bool, (void *)&xpc_dictionary_get_bool_orig},
         {"xpc_dictionary_get_value", hook_xpc_dictionary_get_value, (void *)&xpc_dictionary_get_value_orig},
         {"memorystatus_control", memorystatus_control_hook, (void *)&memorystatus_control_orig},
+        // {"xpc_receive_mach_msg", (void *)xpc_receive_mach_msg_hook, (void **)&xpc_receive_mach_msg_orig},
     };
     rebind_symbols(rebindings, sizeof(rebindings)/sizeof(struct rebinding));
-    	bool firstLoad = false;
-	if (getenv("SEROTONIN_INITIALIZED") != 0) {
-		// If Dopamine was initialized before, we assume we're coming from a userspace reboot
-
-		// Stock bug: These prefs wipe themselves after a reboot (they contain a boot time and this is matched when they're loaded)
-		// But on userspace reboots, they apparently do not get wiped as boot time doesn't change
-		// We could try to change the boot time ourselves, but I'm worried of potential side effects
-		// So we just wipe the offending preferences ourselves
-		// In practice this fixes nano launch daemons not being loaded after the userspace reboot, resulting in certain apple watch features breaking
-		if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist", W_OK)) {
-			remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist");
-		}
-		if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist", W_OK)) {
-			remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist");
-		}
-	}
-	else {
-        // first userspace reboot, not on the fly injection
-		firstLoad = true;
-	}
-    FILE *file = fopen("/var/mobile/launchd.log", "a");
-    char output[256];
-    sprintf(output, "[launchd] gambling with kfd\n");
-    fputs(output, file);
-    fclose(file);
-    sleep(10);
-    do_kopen(2048, 2, 1, 1, 500, true);
-    if(!firstLoad)
-	{
-		NSString* systemhookFilePath = [NSString stringWithFormat:@"%@/generalhooksigned.dylib", jbroot("/")];
-		
-		int unsandbox(const char* dir, const char* file);
-		unsandbox("/usr/lib", systemhookFilePath.fileSystemRepresentation);
-
-		//new "real path"
-		snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
-	}
-    do_kclose();
 }

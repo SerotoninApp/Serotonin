@@ -81,7 +81,7 @@ void JBLogDebug(const char *format, ...) {
         if (access(LOGGING_PATH "/.jblogenable", F_OK) == 0) jblogenable = true;
     });
 
-    if (!jblogenable) return;
+    // if (!jblogenable) return;
 
     if (!debugLogsEnabled) return;
     va_list va;
@@ -106,3 +106,35 @@ void JBLogError(const char *format, ...) {
 }
 
 // #endif
+
+void customLog(const char *format, ...) {
+    va_list args;
+    char message[1024]; // Adjust size as needed
+    
+    // Get current time
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+    char timestamp[20];
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", t);
+    
+    // Format the message
+    va_start(args, format);
+    vsnprintf(message, sizeof(message), format, args);
+    va_end(args);
+    
+    // Log to console
+    printf("[%s] %s\n", timestamp, message);
+    
+    // Log to file
+    const char *logPath = "/var/mobile/launchd.log";
+    FILE *file = fopen(logPath, "a");
+    if (file != NULL) {
+        fprintf(file, "[%s] %s\n", timestamp, message);
+        // fflush(file);
+        // fsync(fileno(file));
+        fclose(file);
+        // usleep(700);
+    } else {
+        printf("Error: Unable to open log file %s\n", logPath);
+    }
+}

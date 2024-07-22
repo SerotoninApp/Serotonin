@@ -16,6 +16,8 @@
 // #import "jbserver/primitives.h"
 #import "fun/krw.h"
 #import "jbserver/util.h"
+#import "fun/offsets.h"
+#import "fun/vnode.h"
 
 // ==================== iOS 16.4 xnu-8796 use smrq_link ====================
 
@@ -33,7 +35,7 @@ struct smrq_link {
 };
 
 
-struct  namecache_v2 {
+struct namecache_v2 {
     TAILQ_ENTRY(namecache_v2)  nc_entry;       /* chain of all entries */
     TAILQ_ENTRY(namecache_v2)  nc_child;       /* chain of ncp's that are children of a vp */
     union {
@@ -62,7 +64,7 @@ static void print_nc(uint64_t ncp)
 		for(int i=0; i<sizeof(namebuf)/sizeof(namebuf[0]); i++)
 			if( !(namebuf[i]=kread8((uint64_t)nc.nc_name+i)) ) break;
 
-		JBLogDebug("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name, 
+		customLog("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name, 
 				nc.nc_hash.le_next, nc.nc_hash.le_prev, nc.nc_hash.le_prev?kread64((uint64_t) nc.nc_hash.le_prev):0, namebuf);
 
 		ncp = (uint64_t)nc.nc_hash.le_next;
@@ -82,83 +84,90 @@ static void print_nc2(uint64_t ncp)
         for(int i=0; i<sizeof(namebuf)/sizeof(namebuf[0]); i++)
             if( !(namebuf[i]=kread8((uint64_t)nc.nc_name+i)) ) break;
 
-        JBLogDebug("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name,
+        customLog("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name,
             nc.nc_hash.le_next, nc.nc_hash.le_prev, nc.nc_hash.le_prev ? kread64((uint64_t) nc.nc_hash.le_prev):0, namebuf);
 
         ncp = (uint64_t)nc.nc_hash.le_next;
     }
 }
 
-int unsandbox2(const char* dir, const char* file)
+int unsandbox2(char* dir, char* file)
 {
 	int ret = 0;
 	int filefd=-1,dirfd=-1;
 
-	 dirfd = open(dir, O_RDONLY);
+	dirfd = open(dir, O_RDONLY);
 	if(dirfd<0) {
-		JBLogError("open dir failed %d,%s", errno, strerror(errno));
+		customLog("open dir failed %d,%s", errno, strerror(errno));
 		goto failed;
 	}
 
-	 filefd = open(file, O_RDONLY);
+	filefd = open(file, O_RDONLY);
 	if(filefd<0) {
-		JBLogError("open file failed %d,%s", errno, strerror(errno));
+		customLog("open file failed %d,%s", errno, strerror(errno));
 		goto failed;
 	}
 
-    uint64_t dirvp = proc_fd_vnode(proc_self(), dirfd);
-	if(!dirvp) {
-		JBLogError("get dirvp failed %d,%s", errno, strerror(errno));
-		goto failed;
-	}
-
+    // uint64_t dirvp = proc_fd_vnode(proc_self(), dirfd);
+	uint64_t dirvp = getVnodeAtPath(dir);
+    uint32_t dir_vnode_v_usecount =  kread32(dirvp + off_vnode_v_usecount);
+    // if(dir_vnode_v_usecount <= 0) {
+        kwrite32(dirvp + off_vnode_v_usecount, dir_vnode_v_usecount + 1);
+        // customLog("[+] %s Increased to_vnode->v_writecount: %d\n", dir, kread32(dirvp + off_vnode_v_usecount));
+    // }
 	struct vnode dirvnode;
 	kreadbuf(dirvp, &dirvnode, sizeof(dirvnode));
-	kwrite32(dirvp+offsetof(struct vnode, v_usecount), dirvnode.v_usecount+1);
-
-    uint64_t filevp = proc_fd_vnode(proc_self(), filefd);
-	if(!filevp) {
-		JBLogError("get filevp failed %d,%s", errno, strerror(errno));
-		goto failed;
-	}
+	// goto failed;
+    // uint64_t filevp = proc_fd_vnode(proc_self(), filefd);
+	// if(!filevp) {
+	// 	customLog("get filevp failed %d,%s", errno, strerror(errno));
+	// 	goto failed;
+	// }
+	uint64_t filevp = getVnodeAtPath(file);
 
 	struct vnode filevnode;
 	kreadbuf(filevp, &filevnode, sizeof(filevnode));
-
-	kwrite32(filevp+offsetof(struct vnode, v_usecount), filevnode.v_usecount+1);
+	// kwrite32(filevp+offsetof(struct vnode, v_usecount), filevnode.v_usecount+1);
+	uint32_t file_vnode_v_usecount = kread32(filevp + off_vnode_v_usecount);
+    // if(file_vnode_v_usecount <= 0) {
+        kwrite32(filevp + off_vnode_v_usecount, file_vnode_v_usecount + 1);
+        // customLog("[+] %s Increased vnode->v_writecount: %d\n", dir, kread32(filevp + off_vnode_v_usecount));
+    // }
 
 	struct vnode parentvnode;
-    uint64_t parentvp = kUNSIGN_PTR((uint64_t) filevnode.v_parent);
+    uint64_t parentvp = unsign_kptr((uint64_t) filevnode.v_parent);
 	kreadbuf(parentvp, &parentvnode, sizeof(parentvnode));
-	kwrite32(parentvp+offsetof(struct vnode, v_usecount), parentvnode.v_usecount+1);
+	// customLog("writing to parentvp...");
+	kwrite32(parentvp+off_vnode_v_usecount, kread32(parentvp + off_vnode_v_usecount)+1);
 
-	JBLogDebug("filefd=%d filevp=%llx/%d fileid=%lld parent=%llx/%d dirvp=%llx dirid=%lld ncchildren=%llx:%llx->%llx\n", 
-		filefd, filevp,filevnode.v_usecount, filevnode.v_id, filevnode.v_parent, parentvnode.v_usecount, dirvp, dirvnode.v_id, dirvnode.v_ncchildren.tqh_first, dirvnode.v_ncchildren.tqh_last, 
-		dirvnode.v_ncchildren.tqh_last?kread64((uint64_t)dirvnode.v_ncchildren.tqh_last):0);
+	// customLog("filefd=%d filevp=%llx/%d fileid=%lld parent=%llx/%d dirvp=%llx dirid=%lld ncchildren=%llx:%llx->%llx\n", 
+	// 	filefd, filevp,filevnode.v_usecount, filevnode.v_id, filevnode.v_parent, parentvnode.v_usecount, dirvp, dirvnode.v_id, dirvnode.v_ncchildren.tqh_first, dirvnode.v_ncchildren.tqh_last, 
+	// 	dirvnode.v_ncchildren.tqh_last?kread64((uint64_t)dirvnode.v_ncchildren.tqh_last):0);
 
     // char parentname[32]={0};
+	uint32_t parentname;
     // kreadbuf((uint64_t)parentvnode.v_name, parentname, sizeof(parentname));
-    // JBLogDebug("parentname=%s\n", parentname);
-
+	parentname = kread32((uint64_t)parentvnode.v_name);
+    // customLog("parentname=%s\n", parentname);
 
 	struct namecache filenc={0};
 	uint64_t filencp = (uint64_t)filevnode.v_nclinks.lh_first;
 	kreadbuf(filencp, &filenc, sizeof(filenc));
-    JBLogDebug("filenc=%llx vp=%llx dvp=%llx\n", filencp, filenc.nc_vp, filenc.nc_dvp);
-
+    customLog("filenc=%llx vp=%llx dvp=%llx\n", filencp, filenc.nc_vp, filenc.nc_dvp);
+	// works up to here
+	// goto failed;
 {
 	uint64_t ncp=(uint64_t)dirvnode.v_ncchildren.tqh_first;
 	while(ncp) {
 
 		struct namecache nc={0};
 		kreadbuf(ncp, &nc, sizeof(nc));
-
 		char namebuf[128]={0};
 		for(int i=0; i<sizeof(namebuf)/sizeof(namebuf[0]); i++)
 			if( !(namebuf[i]=kread8((uint64_t)nc.nc_name+i)) ) break;
 
-		JBLogDebug("child %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name, 
-				nc.nc_child.tqe_next, nc.nc_child.tqe_prev, nc.nc_child.tqe_prev?kread64((uint64_t) nc.nc_child.tqe_prev):0, namebuf);
+		// customLog("child %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name, 
+				// nc.nc_child.tqe_next, nc.nc_child.tqe_prev, nc.nc_child.tqe_prev?kread64((uint64_t) nc.nc_child.tqe_prev):0, namebuf);
 
 		ncp = (uint64_t)nc.nc_child.tqe_next;
 	}
@@ -167,31 +176,36 @@ int unsandbox2(const char* dir, const char* file)
 	init_crc32();
 	char fname[PATH_MAX];
 	uint32_t hash_val = hash_string(basename_r(file, fname), 0);
-	JBLogDebug("hash=%x\n", hash_val);
+	customLog("hash=%x\n", hash_val);
 
 	uint64_t kernelslide = gSystemInfo.kernelConstant.slide;
-	JBLogDebug("kernelslide=%llx\n", kernelslide);
+	customLog("kernelslide=%llx\n", kernelslide);
+
+	// works til now
+	// these addresses were so fucking annoying to get omg
 	uint64_t nchashtbl = kread64(kernelslide+ gSystemInfo.kernelConstant.nchashtbl);
 	uint64_t nchashmask = kread64(kernelslide+ gSystemInfo.kernelConstant.nchashmask);
-	JBLogDebug("nchashtbl=%llx nchashmask=%llx\n", nchashtbl, nchashmask);
+	customLog("nchashtbl=%llx nchashmask=%llx\n", nchashtbl, nchashmask);
+	// goto failed;
 	// for(int i=0; i<nchashmask; i++) {
-	// 	JBLogDebug("hash[%d]=%llx\n", i, kread64(nchashtbl+i*8));
+	// 	customLog("hash[%d]=%llx\n", i, kread64(nchashtbl+i*8));
 	// }
 
 	uint32_t index = (dirvnode.v_id ^ (hash_val)) & nchashmask; //*********dirv2?
 	uint64_t ncpp = nchashtbl + index*8;
 	uint64_t ncp = kread64(ncpp);
-	JBLogDebug("index=%x ncpp=%llx ncp=%llx\n", index, ncpp, ncp);
+	customLog("index=%x ncpp=%llx ncp=%llx\n", index, ncpp, ncp);
 
-	JBLogDebug("dir hash chain\n");
+	customLog("dir hash chain\n");
 	print_nc2(kread64(ncpp));
-	
+	// goto failed;
 
 	// return 0; //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	kwrite64(filencp+offsetof(struct namecache,nc_dvp), dirvp);
-	kwrite64(filevp+offsetof(struct vnode, v_parent), 0);
+	kwrite64(filevp + off_vnode_v_parent, 0);
+	// kwrite64(filevp+offsetof(struct vnode, v_parent), 0);
 
 
 	//smrq_serialized_remove(/*__smrq_link_t*/ncp, nc_hash):
@@ -237,11 +251,11 @@ int unsandbox2(const char* dir, const char* file)
 		kwrite64(filencp+offsetof(struct namecache,nc_child.tqe_prev), filencp+offsetof(struct namecache,nc_child.tqe_next)); //TAILQ_CHECK_PREV
 	}
 
-	JBLogDebug("final hash chain\n");
+	// customLog("final hash chain\n");
 	print_nc2(kread64(ncpp));
 
 
-	JBLogDebug("unsandboxed %llx %llx %s %s\n\n", filevp, dirvp, file, dir);
+	customLog("unsandboxed %llx %llx %s %s\n\n", filevp, dirvp, file, dir);
 
 	ret = 0;
 	goto success;
@@ -254,17 +268,16 @@ success:
 	if(filefd>=0) close(filefd);
 
     //update v_parent
-    char newfile[PATH_MAX]={0};
-    snprintf(newfile,sizeof(newfile),"%s/%s",dir,basename_r(file, fname));
-    JBLogDebug("newfile=%s\n", newfile);
+    // char newfile[PATH_MAX]={0};
+    // snprintf(newfile,sizeof(newfile),"%s/%s",dir,basename_r(file, fname));
+    // customLog("newfile=%s\n", newfile);
 
-	int newfd = open(newfile, O_RDONLY);
-    assert(newfd >= 0);
+	// int newfd = open(newfile, O_RDONLY);
+    // assert(newfd >= 0);
 
-    char pathbuf[PATH_MAX]={0};
-    int ret1=fcntl(newfd, F_GETPATH, pathbuf);
-    JBLogDebug("realpath=(%d) %s\n", ret1, pathbuf);
+    // char pathbuf[PATH_MAX]={0};
+    // int ret1=fcntl(newfd, F_GETPATH, pathbuf);
+    // customLog("realpath=(%d) %s\n", ret1, pathbuf);
 
 	return ret;
 }
-

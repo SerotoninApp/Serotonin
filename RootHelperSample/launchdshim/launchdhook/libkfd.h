@@ -10,7 +10,7 @@
  */
 #define CONFIG_ASSERT 1
 #define CONFIG_PRINT 1
-#define CONFIG_TIMER 1
+#define CONFIG_TIMER 0
 
 #include "libkfd/common.h"
 
