@@ -58,7 +58,7 @@
 #define CS_OPS_MARKRESTRICT	8	/* set RESTRICT flag (sticky) */
 #define CS_OPS_IDENTITY     11  /* get codesign identity */
 
-int csops(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
-int csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t usersize, audit_token_t * token);
+// int csops(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
+// int csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t usersize, audit_token_t * token);
 
 #endif

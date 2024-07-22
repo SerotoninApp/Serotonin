@@ -5,23 +5,34 @@
 #include <xpc/xpc.h>
 #include <stdio.h>
 //#include "fishhook.h"
-#include <libhooker/libhooker.h>
+// #include <libhooker/libhooker.h> no ellekit! because we may be in /usr/lib from unsandbox hax
 #include <spawn.h>
 #include <limits.h>
 #include <dirent.h>
 #include <stdbool.h>
 #include <errno.h>
 #include <dlfcn.h>
-#include <roothide.h>
+// #include <roothide.h>
 #include <signal.h>
 #include "utils.h"
+#include "codesign.h"
+#include "litehook.h"
+#include "jbroot.h"
+#include "sandbox.h"
+#include "../launchdhook/jbserver/jbclient_xpc.h"
 
 #define PT_DETACH 11    /* stop tracing a process */
 #define PT_ATTACHEXC 14 /* attach to running process with signal exception */
+#define SYSCALL_CSOPS 0xA9
+#define SYSCALL_CSOPS_AUDITTOKEN 0xAA
+
+bool gFullyDebugged = false;
 
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
 int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
 int (*orig_csops_audittoken)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
+int csops_audittoken(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
+int csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize);
 
 @interface NSBundle(private)
 - (id)_cfBundle;
@@ -83,24 +94,64 @@ static void overwriteMainNSBundle(NSBundle *newBundle) {
 //    assert(![NSBundle.mainBundle.executablePath isEqualToString:oldPath]);
 }
 
-int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
-int (*orig_csops_audittoken)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
-int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
-    int result = orig_csops(pid, ops, useraddr, usersize);
-    if (result != 0) return result;
-    if (ops == 0) {
-       *((uint32_t *)useraddr) |= 0x4000001;
-    }
-    return result;
+// int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
+//     int result = orig_csops(pid, ops, useraddr, usersize);
+//     if (result != 0) return result;
+//     if (ops == 0) {
+//        *((uint32_t *)useraddr) |= 0x4000001;
+//     }
+//     return result;
+// }
+
+// int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t usersize, audit_token_t * token) {
+//     int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
+//     if (result != 0) return result;
+//     if (ops == 0) {
+//        *((uint32_t *)useraddr) |= 0x4000001;
+//     }
+//     return result;
+// }
+
+// skidding from Dopamine
+// For the userland, there are multiple processes that will check CS_VALID for one reason or another
+// As we inject system wide (or at least almost system wide), we can just patch the source of the info though - csops itself
+// Additionally we also remove CS_DEBUGGED while we're at it, as on arm64e this also is not set and everything is fine
+// That way we have unified behaviour between both arm64 and arm64e
+
+int csops_hook(pid_t pid, unsigned int ops, void *useraddr, size_t usersize)
+{
+	int rv = syscall(SYSCALL_CSOPS, pid, ops, useraddr, usersize);
+	if (rv != 0) return rv;
+	if (ops == CS_OPS_STATUS) {
+		if (useraddr && usersize == sizeof(uint32_t)) {
+			uint32_t* csflag = (uint32_t *)useraddr;
+			*csflag |= CS_VALID;
+            *csflag |= CS_PLATFORM_BINARY;
+			// *csflag &= ~CS_DEBUGGED;
+			// if (pid == getpid() && gFullyDebugged) {
+			// 	*csflag |= CS_DEBUGGED;
+			// }
+		}
+	}
+	return rv;
 }
 
-int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t usersize, audit_token_t * token) {
-    int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
-    if (result != 0) return result;
-    if (ops == 0) {
-       *((uint32_t *)useraddr) |= 0x4000001;
-    }
-    return result;
+int csops_audittoken_hook(pid_t pid, unsigned int ops, void *useraddr, size_t usersize, audit_token_t *token)
+{
+	int rv = syscall(SYSCALL_CSOPS_AUDITTOKEN, pid, ops, useraddr, usersize, token);
+	if (rv != 0) return rv;
+	if (ops == CS_OPS_STATUS) {
+		if (useraddr && usersize == sizeof(uint32_t)) {
+			uint32_t* csflag = (uint32_t *)useraddr;
+			*csflag |= CS_VALID;
+            *csflag |= CS_PLATFORM_BINARY;
+			// *csflag &= ~CS_DEBUGGED;
+			// if (pid == getpid() && gFullyDebugged) {
+			// 	*csflag |= CS_DEBUGGED;
+			// }
+		}
+	}
+	return rv;
 }
 
 void setupAppBundle(const char *fullPath) {
@@ -117,8 +168,19 @@ void setupAppBundle(const char *fullPath) {
     *_CFGetProgname() = NSProcessInfo.processInfo.processName.UTF8String;
 }
 
-int csops_audittoken(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
-int csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize);
+static char *JB_SandboxExtensions = NULL;
+void applySandboxExtensions(void)
+{
+	if (JB_SandboxExtensions) {
+		char *JB_SandboxExtensions_dup = strdup(JB_SandboxExtensions);
+		char *extension = strtok(JB_SandboxExtensions_dup, "|");
+		while (extension != NULL) {
+			sandbox_extension_consume(extension);
+			extension = strtok(NULL, "|");
+		}
+		free(JB_SandboxExtensions_dup);
+	}
+}
 
 __attribute__((constructor)) static void init(int argc, char **argv, char *envp[]) {
     @autoreleasepool {
@@ -131,7 +193,7 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
             char *modified_argv[] = {argv[0], "--jit", NULL };
             int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
             if (ret == 0) {
-//                NSLog(@"generalhook - jitting 2");
+                NSLog(@"generalhook - jitting 2");
                 waitpid(pid, NULL, WUNTRACED);
                 ptrace(11, pid, 0, 0);
                 kill(pid, SIGTERM);
@@ -144,11 +206,13 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
 //        {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
 //    };
 //    rebind_symbols(rebindings, sizeof(rebindings)/sizeof(struct rebinding));... apparently fishhook doesnt fucking work?
-    const struct LHFunctionHook hooks[] = {
-        {(void *)csops, (void *)hooked_csops, (void *)&orig_csops, 0},
-        {(void *)csops_audittoken, (void *)hooked_csops_audittoken, (void *)&orig_csops_audittoken, 0}
-    };
-    LHHookFunctions(hooks, 2);
+    // const struct LHFunctionHook hooks[] = {
+    //     {(void *)csops, (void *)hooked_csops, (void *)&orig_csops, 0},
+    //     {(void *)csops_audittoken, (void *)hooked_csops_audittoken, (void *)&orig_csops_audittoken, 0}
+    // };
+    // LHHookFunctions(hooks, 2); no ellekit!!
+    litehook_hook_function(csops, csops_hook);
+	litehook_hook_function(csops_audittoken, csops_audittoken_hook);
 
     const char *appPaths[] = {
         "/System/Library/CoreServices/SpringBoard.app/SpringBoard",
@@ -165,6 +229,9 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
             break;
         }
     }
-    NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-    dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
+    // NSLog(@"generalhook - loading tweaks for pid %d", getpid());
+    // systemwide checkin
+    jbclient_process_checkin(NULL, NULL, &JB_SandboxExtensions, &gFullyDebugged);
+    applySandboxExtensions();
+    // dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
 }

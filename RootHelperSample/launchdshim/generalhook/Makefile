@@ -5,10 +5,10 @@ include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = generalhook
 
-generalhook_FILES = $(wildcard *.m) $(wildcard *.c) $(wildcard verbose/*.m)
-generalhook_CFLAGS = -fobjc-arc -isystem "../../../usprebooter/Private Headers I stole from the macOS SDK" -Wno-error
+generalhook_FILES = $(wildcard *.m) $(wildcard *.c) $(wildcard verbose/*.m) ../launchdhook/jbserver/jbclient_xpc.c
+generalhook_CFLAGS = -fobjc-arc -isystem "../../../usprebooter/Private Headers I stole from the macOS SDK" -Wno-error -O3
 generalhook_CODESIGN_FLAGS = -S../launchdentitlements.plist
-generalhook_LDFLAGS = -L./ -lbsm -L/Users/ibarahime/theos/vendor/lib/ -lhooker -I/Users/ibarahime/theos/vendor/include -dynamiclib
+generalhook_LDFLAGS = -L./ -lbsm
 #launchdhook_EXTRA_FRAMEWORKS += IOMobileFramebuffer IOSurface
 after-package::
 	echo "[*] Signing general hook"

@@ -172,13 +172,13 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         if(__improbable(shouldWeGamble))
         {
             uint64_t kfd = do_kopen(1024, 2, 1, 1, 1000, true);
-            customLog("successfully gambled with kfd!\n");
-            customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx, nchashtbl: 0x%llx, nchashmask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask(), gSystemInfo.kernelConstant.nchashtbl, gSystemInfo.kernelConstant.nchashmask);
+            // customLog("successfully gambled with kfd!\n");
+            // customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx, nchashtbl: 0x%llx, nchashmask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask(), gSystemInfo.kernelConstant.nchashtbl, gSystemInfo.kernelConstant.nchashmask);
             // customLog("reading pid... %d, getpid ret %d", kread32(((struct kfd *)kfd)->info.kaddr.current_proc + 0x60), getpid());
             // NSString* systemhookFilePath = [NSString stringWithFormat:@"%s/generalhooksigned.dylib", jbroot("/")];
-            
+            // unsandbox2("/usr/lib", systemhookFilePath.fileSystemRepresentation);
             unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
-
+            // unsandbox2("/usr/lib", jbroot("/usr/lib/libhooker.dylib"));
             //new "real path"
             snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
             do_kclose();
