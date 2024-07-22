@@ -134,8 +134,8 @@ int unsandbox1(const char* dir, const char* file)
 
 	uint64_t kernelslide = gSystemInfo.kernelConstant.slide;
 	JBLogDebug("kernelslide=%llx\n", kernelslide);
-	uint64_t nchashtbl = kread64(kernelslide+ gSystemInfo.kernelConstant.nchashtbl);
-	uint64_t nchashmask = kread64(kernelslide+ gSystemInfo.kernelConstant.nchashmask);
+	uint64_t nchashtbl = kread64(kernelslide + gSystemInfo.kernelConstant.nchashtbl);
+	uint64_t nchashmask = kread64(kernelslide + gSystemInfo.kernelConstant.nchashmask);
 	JBLogDebug("nchashtbl=%llx nchashmask=%llx\n", nchashtbl, nchashmask);
 	// for(int i=0; i<nchashmask; i++) {
 	// 	JBLogDebug("hash[%d]=%llx\n", i, kread64(nchashtbl+i*8));

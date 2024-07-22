@@ -173,11 +173,10 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         {
             uint64_t kfd = do_kopen(1024, 2, 1, 1, 1000, true);
             customLog("successfully gambled with kfd!\n");
-            customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask());
+            customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx, nchashtbl: 0x%llx, nchashmask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask(), gSystemInfo.kernelConstant.nchashtbl, gSystemInfo.kernelConstant.nchashmask);
             // customLog("reading pid... %d, getpid ret %d", kread32(((struct kfd *)kfd)->info.kaddr.current_proc + 0x60), getpid());
             // NSString* systemhookFilePath = [NSString stringWithFormat:@"%s/generalhooksigned.dylib", jbroot("/")];
             
-            // unsandbox2("/usr/lib", systemhookFilePath.fileSystemRepresentation);
             unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
 
             //new "real path"
@@ -185,33 +184,22 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
             do_kclose();
             shouldWeGamble = false;
         }
-    }
-//    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
-//        log_path(path, jbroot(MEDIASERVERD_PATH));
-//        path = jbroot(MEDIASERVERD_PATH);
-//        argv[0] = (char *)path;
-//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//    }
+    //    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
+    //        log_path(path, jbroot(MEDIASERVERD_PATH));
+    //        path = jbroot(MEDIASERVERD_PATH);
+    //        argv[0] = (char *)path;
+    //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    //    }
     //    } else if (!strncmp(path, installd, strlen(installd))) {
-    //                FILE *file = fopen("/var/mobile/launchd.log", "a");
-    //                char output[512];
-    //                sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
-    //                fputs(output, file);
     //        path = jbroot(installd);
-    //                fclose(file);
     //        argv[0] = (char *)path;
     //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    ////        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    //    }
     //    } else if (!strncmp(path, nfcd, strlen(nfcd))) {
-    //                FILE *file = fopen("/var/mobile/launchd.log", "a");
-    //                char output[512];
-    //                sprintf(output, "[launchd] changing path %s to %s\n", path, coolerMrui);
-    //                fputs(output, file);
     //        path = jbroot(nfcd);
-    //                fclose(file);
     //        argv[0] = (char *)path;
     //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    ////        return posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
+    }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 

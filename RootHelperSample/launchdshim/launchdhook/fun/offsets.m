@@ -109,10 +109,10 @@ uint32_t v_holdcount = 0xB4;
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 void _offsets_init(void) {
-    if (!(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"16.0") && SYSTEM_VERSION_LESS_THAN(@"16.7"))) {
-        printf("[-] Only supported offset for iOS 16.0-16.6.1\n");
-        exit(EXIT_FAILURE);
-    }
+    // if (!(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"16.0") && SYSTEM_VERSION_LESS_THAN(@"16.7"))) {
+    //     printf("[-] Only supported offset for iOS 16.0-16.6.1\n");
+    //     exit(EXIT_FAILURE);
+    // }
     
     //https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.41.9/bsd/sys/proc_ro.h#L59
     //should be same 16.0~16.6 (proof: xnu src; xnu-8792.41.9 vs xnu-8796.141.3)
@@ -239,8 +239,7 @@ void _offsets_init(void) {
     off_cs_blob_csb_validation_category = 0xb0; //_csblob_get_validation_category
     
     //https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.41.9/bsd/sys/namei.h#L243
-    off_namecache_nc_child_tqe_prev = 0x10; //should be same 16.0-16.6
-    
+    off_namecache_nc_child_tqe_prev = 0x10; //should be same 16.0-16.6    
     if (SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"16.3.1")) {
         printf("[i] offsets selected for iOS 16.0 - 16.3.1\n");
         //iPhone 14 Pro 16.0.2, 16.1.2 offsets

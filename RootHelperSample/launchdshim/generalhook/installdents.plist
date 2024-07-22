@@ -4,6 +4,8 @@
 <dict>
 	<key>com.apple.private.security.no-container</key>
 	<true/>
+    <key>com.apple.private.security.storage-exempt.heritable</key>
+    <true/>
 	<key>com.apple.private.security.storage.AppDataContainers</key>
 	<true/>
 	<key>get-task-allow</key>

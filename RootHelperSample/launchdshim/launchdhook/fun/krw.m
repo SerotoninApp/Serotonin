@@ -96,6 +96,11 @@ __attribute__ ((optnone)) uint64_t do_kopen(uint64_t puaf_pages, uint64_t puaf_m
     _offsets_init();
     // set gsystemInfo
     gSystemInfo.kernelConstant.slide = ((struct kfd *)_kfd)->perf.kernel_slide;
+    // https://github.com/roothide/Dopamine-roothide/blob/329c71d71059f362b3e0b7cf82432dc3df502e7c/Packages/KernelPatchfinder/Sources/KernelPatchfinder/KernelPatchfinder.swift#L49
+    // https://github.com/roothide/XPF/blob/cb71150f59fb4ee217baf77947d8986eafe682ca/src/common.c#L1050
+    // E9 B6 83 52 29 98 A0 72
+    gSystemInfo.kernelConstant.nchashtbl = 0xFFFFFFF00A4E5808;
+    gSystemInfo.kernelConstant.nchashmask = 0xFFFFFFF00A4E5810;
     return _kfd;
 }
 
@@ -286,24 +291,51 @@ uint64_t kread_ptr(uint64_t va)
 	return unsign_kptr(kread64(va));
 }
 
-int kreadbuf(uint64_t kaddr, void* output, size_t size)
-{
-    uint64_t endAddr = kaddr + size;
-    uint32_t outputOffset = 0;
-    unsigned char* outputBytes = (unsigned char*)output;
+// int kreadbuf(uint64_t kaddr, void* output, size_t size)
+// {
+//     uint64_t endAddr = kaddr + size;
+//     uint32_t outputOffset = 0;
+//     unsigned char* outputBytes = (unsigned char*)output;
     
-    for(uint64_t curAddr = kaddr; curAddr < endAddr; curAddr += 4)
-    {
-        uint32_t k = kread32(curAddr);
+//     for(uint64_t curAddr = kaddr; curAddr < endAddr; curAddr += 4)
+//     {
+//         uint32_t k = kread32(curAddr);
 
-        unsigned char* kb = (unsigned char*)&k;
-        for(int i = 0; i < 4; i++)
-        {
-            if(outputOffset == size) break;
-            outputBytes[outputOffset] = kb[i];
-            outputOffset++;
+//         unsigned char* kb = (unsigned char*)&k;
+//         for(int i = 0; i < 4; i++)
+//         {
+//             if(outputOffset == size) break;
+//             outputBytes[outputOffset] = kb[i];
+//             outputOffset++;
+//         }
+//         if(outputOffset == size) break;
+//     }
+//     return 0;
+// }
+
+int kreadbuf(uint64_t where, void *buf, size_t size)
+{
+    if (size == 1) {
+        *(uint8_t*)buf = kread8(where);
+    }
+    else if (size == 2) {
+        *(uint16_t*)buf = kread16(where);
+    }
+    else if (size == 4) {
+        *(uint32_t*)buf = kread32(where);
+    }
+    else {
+        if (size >= UINT16_MAX) {
+            for (uint64_t start = 0; start < size; start += UINT16_MAX) {
+                uint64_t sizeToUse = UINT16_MAX;
+                if (start + sizeToUse > size) {
+                    sizeToUse = (size - start);
+                }
+                kread(_kfd, where+start, ((uint8_t *)buf)+start, sizeToUse);
+            }
+        } else {
+            kread(_kfd, where, buf, size);
         }
-        if(outputOffset == size) break;
     }
     return 0;
 }

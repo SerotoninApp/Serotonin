@@ -366,7 +366,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 installClone(@"/usr/libexec/xpcproxy");
                 installClone(@"/usr/libexec/installd");
                 installClone(@"/usr/libexec/nfcd");
-//                installClone(@"/usr/sbin/mediaserverd");
+                installClone(@"/usr/sbin/mediaserverd");
                 install_cfprefsd();
                 
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
