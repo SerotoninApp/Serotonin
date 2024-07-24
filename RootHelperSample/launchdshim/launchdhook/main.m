@@ -17,6 +17,7 @@
 #include "fun/krw.h"
 #include "jbserver/info.h"
 #include "jbserver/log.h"
+#include "xpc_hook.h"
 
 #define PT_DETACH 11    /* stop tracing a process */
 #define PT_ATTACHEXC 14 /* attach to running process with signal exception */
@@ -140,7 +141,10 @@ NSString* find_jbroot()
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, posix_spawnattr_t *attrp, char *argv[], char *const envp[]) {
     change_launchtype(attrp, path);
-    return orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
+    // crashreporter_pause();
+    int r = orig_posix_spawn(pid, path, file_actions, attrp, argv, envp);
+    // crashreporter_resume();
+    return r;
 }
 
 // void log_path(char* path, char* jbroot_path) {
@@ -173,15 +177,13 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
         {
             uint64_t kfd = do_kopen(1024, 2, 1, 1, 1000, true);
             // customLog("successfully gambled with kfd!\n");
-            // customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx, nchashtbl: 0x%llx, nchashmask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask(), gSystemInfo.kernelConstant.nchashtbl, gSystemInfo.kernelConstant.nchashmask);
+            customLog("slide: 0x%llx\n, kernproc: 0x%llx\n, kerntask: 0x%llx, nchashtbl: 0x%llx, nchashmask: 0x%llx\n", get_kslide(), get_kernproc(), get_kerntask(), gSystemInfo.kernelConstant.nchashtbl, gSystemInfo.kernelConstant.nchashmask);
             // customLog("reading pid... %d, getpid ret %d", kread32(((struct kfd *)kfd)->info.kaddr.current_proc + 0x60), getpid());
-            // NSString* systemhookFilePath = [NSString stringWithFormat:@"%s/generalhooksigned.dylib", jbroot("/")];
-            // unsandbox2("/usr/lib", systemhookFilePath.fileSystemRepresentation);
-            unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
             // unsandbox2("/usr/lib", jbroot("/usr/lib/libhooker.dylib"));
+            unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
             //new "real path"
             snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
-            do_kclose();
+            // do_kclose();
             shouldWeGamble = false;
         }
     //    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
@@ -229,23 +231,6 @@ xpc_object_t hook_xpc_dictionary_get_value(xpc_object_t dict, const char *key) {
     return retval;
 }
 
-//xpchook
-// int xpc_receive_mach_msg(void *a1, void *a2, void *a3, void *a4, xpc_object_t *xOut);
-// int (*xpc_receive_mach_msg_orig)(void *a1, void *a2, void *a3, void *a4, xpc_object_t *xOut);
-// int xpc_receive_mach_msg_hook(void *a1, void *a2, void *a3, void *a4, xpc_object_t *xOut)
-// {
-// 	int r = xpc_receive_mach_msg_orig(a1, a2, a3, a4, xOut);
-// 	if (r == 0) {
-// 		if (jbserver_received_xpc_message(&gGlobalServer, *xOut) == 0) {
-// 			// Returning non null here makes launchd disregard this message
-// 			// For jailbreak messages we have the logic to handle them
-// 			xpc_release(*xOut);
-// 			return 22;
-// 		}
-// 	}
-// 	return r;
-// }
-
 int memorystatus_control_hook(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize)
 {
     if (command == MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT) {
@@ -265,7 +250,7 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         gSystemInfo.jailbreakInfo.rootPath = strdup(jbroot_path.fileSystemRepresentation);
         gSystemInfo.jailbreakInfo.jbrand = jbrand();
     }
-    // initXPCHooks();
+    initXPCHooks();
 	setenv("DYLD_INSERT_LIBRARIES", jbroot("/launchdhook.dylib"), 1);
 	setenv("LAUNCHD_UUID", [NSUUID UUID].UUIDString.UTF8String, 1);
 
@@ -288,7 +273,6 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
         {"xpc_dictionary_get_bool", hook_xpc_dictionary_get_bool, (void *)&xpc_dictionary_get_bool_orig},
         {"xpc_dictionary_get_value", hook_xpc_dictionary_get_value, (void *)&xpc_dictionary_get_value_orig},
         {"memorystatus_control", memorystatus_control_hook, (void *)&memorystatus_control_orig},
-        // {"xpc_receive_mach_msg", (void *)xpc_receive_mach_msg_hook, (void **)&xpc_receive_mach_msg_orig},
     };
     rebind_symbols(rebindings, sizeof(rebindings)/sizeof(struct rebinding));
 }

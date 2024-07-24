@@ -314,6 +314,8 @@ void installClone(NSString *path) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"xpcproxydents.plist"];
         hook_file = @"xpcproxyhooksigned.dylib";
         insert_path = @"@loader_path/xpcproxyhooksigned.dylib";
+        NSString *dylib_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:hook_file];
+        [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:hook_file] toPath:jbroot(dylib_path) error:nil];
     } else if ([path isEqual:@"/usr/sbin/mediaserverd"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"mediaserverdents.plist"];
     } else {
@@ -331,10 +333,10 @@ void installClone(NSString *path) {
     NSString *stdErr;
     spawnRoot(fastPathSignPath, @[@"-i", jbroot(path), @"-r", @"-o", jbroot(path)], &stdOut, &stdErr);
 
-    NSString *dylib_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:hook_file];
+
     NSString *symlink_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@".jbroot"];
     
-    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:hook_file] toPath:jbroot(dylib_path) error:nil];
+
 
     [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(symlink_path) withDestinationPath:jbroot(@"/") error:nil];
 }
@@ -370,6 +372,8 @@ int main(int argc, char *argv[], char *envp[]) {
                 install_cfprefsd();
                 
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitter"] toPath:jbroot(@"/jitter") error:nil];
+                
 //                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {

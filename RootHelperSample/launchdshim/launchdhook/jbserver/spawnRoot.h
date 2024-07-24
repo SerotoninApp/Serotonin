@@ -1,0 +1,1 @@
+int spawnRoot(const char* path, pid_t target_pid, char** std_out, char** std_err);

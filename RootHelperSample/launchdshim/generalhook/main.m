@@ -5,7 +5,7 @@
 #include <xpc/xpc.h>
 #include <stdio.h>
 //#include "fishhook.h"
-// #include <libhooker/libhooker.h> no ellekit! because we may be in /usr/lib from unsandbox hax
+// #include <libhooker/libhooker.h> // no ellekit! because we may be in /usr/lib from unsandbox hax
 #include <spawn.h>
 #include <limits.h>
 #include <dirent.h>
@@ -93,7 +93,7 @@ static void overwriteMainNSBundle(NSBundle *newBundle) {
 
 //    assert(![NSBundle.mainBundle.executablePath isEqualToString:oldPath]);
 }
-
+// mark: ellekit hooks
 // int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
 //     int result = orig_csops(pid, ops, useraddr, usersize);
 //     if (result != 0) return result;
@@ -127,7 +127,7 @@ int csops_hook(pid_t pid, unsigned int ops, void *useraddr, size_t usersize)
 			uint32_t* csflag = (uint32_t *)useraddr;
 			*csflag |= CS_VALID;
             *csflag |= CS_PLATFORM_BINARY;
-			// *csflag &= ~CS_DEBUGGED;
+			*csflag &= ~CS_DEBUGGED;
 			// if (pid == getpid() && gFullyDebugged) {
 			// 	*csflag |= CS_DEBUGGED;
 			// }
@@ -145,7 +145,7 @@ int csops_audittoken_hook(pid_t pid, unsigned int ops, void *useraddr, size_t us
 			uint32_t* csflag = (uint32_t *)useraddr;
 			*csflag |= CS_VALID;
             *csflag |= CS_PLATFORM_BINARY;
-			// *csflag &= ~CS_DEBUGGED;
+			*csflag &= ~CS_DEBUGGED;
 			// if (pid == getpid() && gFullyDebugged) {
 			// 	*csflag |= CS_DEBUGGED;
 			// }
@@ -175,44 +175,52 @@ void applySandboxExtensions(void)
 		char *JB_SandboxExtensions_dup = strdup(JB_SandboxExtensions);
 		char *extension = strtok(JB_SandboxExtensions_dup, "|");
 		while (extension != NULL) {
+            // NSLog(@"generalhook - consuming extension %s", extension);
 			sandbox_extension_consume(extension);
 			extension = strtok(NULL, "|");
 		}
 		free(JB_SandboxExtensions_dup);
-	}
+	} else {
+        NSLog(@"generalhook - no jb sandbox extensions?");
+    }
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv, char *envp[]) {
-    @autoreleasepool {
-        if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
-//            NSLog(@"generalhook - jitting");
-            ptrace(0, 0, 0, 0);
-            exit(0);
-        } else {
-            pid_t pid;
-            char *modified_argv[] = {argv[0], "--jit", NULL };
-            int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
-            if (ret == 0) {
-                NSLog(@"generalhook - jitting 2");
-                waitpid(pid, NULL, WUNTRACED);
-                ptrace(11, pid, 0, 0);
-                kill(pid, SIGTERM);
-                wait(NULL);
-            }
-        }
-    }
-//    struct rebinding rebindings[] = (struct rebinding[]){
-//        {"csops", hooked_csops, (void *)&orig_csops},
-//        {"csops_audittoken", hooked_csops_audittoken, (void *)&orig_csops_audittoken},
-//    };
-//    rebind_symbols(rebindings, sizeof(rebindings)/sizeof(struct rebinding));... apparently fishhook doesnt fucking work?
+    // @autoreleasepool {
+    //     if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
+    //        NSLog(@"generalhook - jitting");
+    //         ptrace(0, 0, 0, 0);
+    //         exit(0);
+    //     } else {
+    //         pid_t pid;
+    //         char *modified_argv[] = {argv[0], "--jit", NULL };
+    //         int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
+    //         if (ret == 0) {
+    //             NSLog(@"generalhook - jitting 2");
+    //             waitpid(pid, NULL, WUNTRACED);
+    //             ptrace(11, pid, 0, 0);
+    //             kill(pid, SIGTERM);
+    //             wait(NULL);
+    //         }
+    //     }
+    // }
+    // jits for me
+    int checkinret = jbclient_process_checkin(NULL, NULL, &JB_SandboxExtensions, &gFullyDebugged);
+    // if (checkinret == -1) {
+    //     NSLog(@"generalhook - jbserver no response?");
+    //     goto finish;
+    // } else {
+    //     NSLog(@"generalhook - checkin ret %d", checkinret);
+    // }
+    applySandboxExtensions();
+    // crashes here unless you ptrace yourself?!
+    litehook_hook_function(csops, csops_hook);
+	litehook_hook_function(csops_audittoken, csops_audittoken_hook);
     // const struct LHFunctionHook hooks[] = {
     //     {(void *)csops, (void *)hooked_csops, (void *)&orig_csops, 0},
     //     {(void *)csops_audittoken, (void *)hooked_csops_audittoken, (void *)&orig_csops_audittoken, 0}
     // };
-    // LHHookFunctions(hooks, 2); no ellekit!!
-    litehook_hook_function(csops, csops_hook);
-	litehook_hook_function(csops_audittoken, csops_audittoken_hook);
+    // LHHookFunctions(hooks, 2); // no ellekit!!
 
     const char *appPaths[] = {
         "/System/Library/CoreServices/SpringBoard.app/SpringBoard",
@@ -221,7 +229,8 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
         "/Applications/MediaRemoteUI.app/MediaRemoteUI",
         "/Applications/MobilePhone.app/MobilePhone",
         "/Applications/SharingViewService.app/SharingViewService",
-        "/Applications/InCallService.app/InCallService"
+        "/Applications/InCallService.app/InCallService",
+        "/usr/libexec/installd",
     };
     for (int i = 0; i < sizeof(appPaths) / sizeof(appPaths[0]); i++) {
         if (strcmp(argv[0], appPaths[i]) == 0) {
@@ -230,8 +239,5 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
         }
     }
     // NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-    // systemwide checkin
-    jbclient_process_checkin(NULL, NULL, &JB_SandboxExtensions, &gFullyDebugged);
-    applySandboxExtensions();
-    // dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
+    dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
 }

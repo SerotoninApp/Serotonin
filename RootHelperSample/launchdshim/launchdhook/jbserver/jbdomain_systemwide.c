@@ -15,6 +15,20 @@
 #include "exec_patch.h"
 #include "log.h"
 #include "../fun/krw.h"
+#include "spawnRoot.h"
+#include <roothide.h>
+#define PT_DETACH       11      /* stop tracing a process */
+#define PT_ATTACHEXC    14      /* attach to running process with signal exception */
+int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
+
+#include <signal.h>
+
+int enableJIT(pid_t pid)
+{
+	int ret = spawnRoot(jbroot("/jitter"), pid, NULL, NULL);
+	return ret;
+}
+
 // extern bool stringStartsWith(const char *str, const char* prefix);
 // extern bool stringEndsWith(const char* str, const char* suffix);
 bool stringStartsWith(const char *str, const char* prefix)
@@ -131,7 +145,6 @@ char* generate_sandbox_extensions(audit_token_t *processToken, bool writable)
 	if (readExtension2) free(readExtension2);
 	return sandboxExtensionsOut;
 }
-
 static int systemwide_process_checkin(audit_token_t *processToken, char **rootPathOut, char **bootUUIDOut, char **sandboxExtensionsOut, bool *fullyDebuggedOut)
 {
 	// Fetch process info
@@ -140,12 +153,11 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 	if (proc_pidpath(pid, procPath, sizeof(procPath)) <= 0) {
 		return -1;
 	}
-
 	// Find proc in kernelspace
-	uint64_t proc = proc_find(pid);
-	if (!proc) {
-		return -1;
-	}
+	// uint64_t proc = proc_find(pid);
+	// if (!proc) {
+	// 	return -1;
+	// }
 
 	// Get jbroot and boot uuid
 	systemwide_get_jbroot(rootPathOut);
@@ -158,49 +170,52 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 	// Generate sandbox extensions for the requesting process
 	*sandboxExtensionsOut = generate_sandbox_extensions(processToken, isPlatformProcess);
 
-	bool fullyDebugged = false;
-	if (is_app_path(procPath) || is_sub_path(JBRootPath("/Applications"), procPath)) {
-		// This is an app, enable CS_DEBUGGED based on user preference
-		if (jbsetting(markAppsAsDebugged)) {
-			fullyDebugged = true;
-		}
-	}
-	*fullyDebuggedOut = fullyDebugged;
+	// Allow invalid pages with ptrace instead :trol:
+	enableJIT(pid);
+	
+	// bool fullyDebugged = true;
+	// if (is_app_path(procPath) || is_sub_path(JBRootPath("/Applications"), procPath)) {
+	// 	// This is an app, enable CS_DEBUGGED based on user preference
+	// 	if (jbsetting(markAppsAsDebugged)) {
+	// 		fullyDebugged = true;
+	// 	}
+	// }
+	// *fullyDebuggedOut = fullyDebugged;
 	
 	// Allow invalid pages
-	cs_allow_invalid(proc, fullyDebugged);
+	// cs_allow_invalid(proc, fullyDebugged);
 
 	// Fix setuid
-	struct stat sb;
-	if (stat(procPath, &sb) == 0) {
-		if (S_ISREG(sb.st_mode) && (sb.st_mode & (S_ISUID | S_ISGID))) {
-			uint64_t ucred = proc_ucred(proc);
-			if ((sb.st_mode & (S_ISUID))) {
-				kwrite32(proc + koffsetof(proc, svuid), sb.st_uid);
-				kwrite32(ucred + koffsetof(ucred, svuid), sb.st_uid);
-				kwrite32(ucred + koffsetof(ucred, uid), sb.st_uid);
-			}
-			if ((sb.st_mode & (S_ISGID))) {
-				kwrite32(proc + koffsetof(proc, svgid), sb.st_gid);
-				kwrite32(ucred + koffsetof(ucred, svgid), sb.st_gid);
-				kwrite32(ucred + koffsetof(ucred, groups), sb.st_gid);
-			}
-			uint32_t flag = kread32(proc + koffsetof(proc, flag));
-			if ((flag & P_SUGID) != 0) {
-				flag &= ~P_SUGID;
-				kwrite32(proc + koffsetof(proc, flag), flag);
-			}
-		}
-	}
+	// struct stat sb;
+	// if (stat(procPath, &sb) == 0) {
+	// 	if (S_ISREG(sb.st_mode) && (sb.st_mode & (S_ISUID | S_ISGID))) {
+	// 		uint64_t ucred = proc_ucred(proc);
+	// 		if ((sb.st_mode & (S_ISUID))) {
+	// 			kwrite32(proc + koffsetof(proc, svuid), sb.st_uid);
+	// 			kwrite32(ucred + koffsetof(ucred, svuid), sb.st_uid);
+	// 			kwrite32(ucred + koffsetof(ucred, uid), sb.st_uid);
+	// 		}
+	// 		if ((sb.st_mode & (S_ISGID))) {
+	// 			kwrite32(proc + koffsetof(proc, svgid), sb.st_gid);
+	// 			kwrite32(ucred + koffsetof(ucred, svgid), sb.st_gid);
+	// 			kwrite32(ucred + koffsetof(ucred, groups), sb.st_gid);
+	// 		}
+	// 		uint32_t flag = kread32(proc + koffsetof(proc, flag));
+	// 		if ((flag & P_SUGID) != 0) {
+	// 			flag &= ~P_SUGID;
+	// 			kwrite32(proc + koffsetof(proc, flag), flag);
+	// 		}
+	// 	}
+	// }
 
 	// In iOS 16+ there is a super annoying security feature called Protobox
 	// Amongst other things, it allows for a process to have a syscall mask
 	// If a process calls a syscall it's not allowed to call, it immediately crashes
 	// Because for tweaks and hooking this is unacceptable, we update these masks to be 1 for all syscalls on all processes
 	// That will at least get rid of the syscall mask part of Protobox
-	if (__builtin_available(iOS 16.0, *)) {
-		proc_allow_all_syscalls(proc);
-	}
+	// if (__builtin_available(iOS 16.0, *)) {
+	// 	proc_allow_all_syscalls(proc);
+	// }
 
 	// For whatever reason after SpringBoard has restarted, AutoFill and other stuff stops working
 	// The fix is to always also restart the kbd daemon alongside SpringBoard
@@ -238,7 +253,7 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 	// 	}
 	// }
 
-	proc_rele(proc);
+	// proc_rele(proc);
 	return 0;
 }
 
@@ -289,7 +304,7 @@ struct jbserver_domain gSystemwideDomain = {
 				{ .name = "root-path", .type = JBS_TYPE_STRING, .out = true },
 				{ .name = "boot-uuid", .type = JBS_TYPE_STRING, .out = true },
 				{ .name = "sandbox-extensions", .type = JBS_TYPE_STRING, .out = true },
-				// { .name = "fully-debugged", .type = JBS_TYPE_BOOL, .out = true },
+				{ .name = "fully-debugged", .type = JBS_TYPE_BOOL, .out = true },
 				{ 0 },
 			},
 		},

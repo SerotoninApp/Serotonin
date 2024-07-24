@@ -40,11 +40,14 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	
 	echo "[*] Building xpcproxyhook"
 	$(MAKE) -C RootHelperSample/launchdshim/xpcproxyhook
-	# ./RootHelperSample/launchdshim/xpcproxyhook/build.sh
 
 	echo "[*] Signing xpcproxyhook"
 	$(LDID) -SRootHelperSample/launchdshim/xpcproxyhook/.theos/obj/debug/xpcproxyhook.dylib
 	$(CTBYPASS) -i RootHelperSample/launchdshim/xpcproxyhook/.theos/obj/debug/xpcproxyhook.dylib -r -o RootHelperSample/launchdshim/xpcproxyhook/xpcproxyhook.dylib
+
+	echo "[*] Building jitter"
+	$(MAKE) -C RootHelperSample/launchdshim/launchdhook/jitter
+	$(CTBYPASS) -i RootHelperSample/launchdshim/launchdhook/jitter/.theos/obj/debug/jitter -r -o RootHelperSample/launchdshim/launchdhook/jitter/jitter
 
 	# jank workaround at best, can someone else please fix this weird file dependency? – bomberfish
 	echo "[*] Copying fastPathSign"
@@ -64,6 +67,7 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	install -m755 RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib Payload/Serotonin.app/launchdhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/generalhook/generalhook.dylib Payload/Serotonin.app/generalhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/xpcproxyhook/xpcproxyhook.dylib Payload/Serotonin.app/xpcproxyhooksigned.dylib
+	install -m755 RootHelperSample/launchdshim/launchdhook/jitter/jitter Payload/Serotonin.app/jitter
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/Serotonin.app/{fastPathSign,ldid,serotoninroothelper}
 	$(LDID) -Sent.plist -Cadhoc Payload/Serotonin.app/Serotonin
 	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"

@@ -26,11 +26,11 @@ uint64_t xpaci(uint64_t a)
 	if ((a & 0xFFFFFF0000000000) == 0xFFFFFF0000000000) {
 		return a;
 	}
-#ifdef __arm64e__
+// #ifdef __arm64e__
 	return __xpaci(a);
-#else
-    return a;
-#endif
+// #else
+    // return a;
+// #endif
 }
 
 uint32_t movk(uint8_t x, uint16_t val, uint16_t lsl)
