@@ -29,8 +29,6 @@
 bool gFullyDebugged = false;
 
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
-int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
-int (*orig_csops_audittoken)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
 int csops_audittoken(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize, audit_token_t * token);
 int csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize);
 
@@ -93,24 +91,6 @@ static void overwriteMainNSBundle(NSBundle *newBundle) {
 
 //    assert(![NSBundle.mainBundle.executablePath isEqualToString:oldPath]);
 }
-// mark: ellekit hooks
-// int hooked_csops(pid_t pid, unsigned int ops, void *useraddr, size_t usersize) {
-//     int result = orig_csops(pid, ops, useraddr, usersize);
-//     if (result != 0) return result;
-//     if (ops == 0) {
-//        *((uint32_t *)useraddr) |= 0x4000001;
-//     }
-//     return result;
-// }
-
-// int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t usersize, audit_token_t * token) {
-//     int result = orig_csops_audittoken(pid, ops, useraddr, usersize, token);
-//     if (result != 0) return result;
-//     if (ops == 0) {
-//        *((uint32_t *)useraddr) |= 0x4000001;
-//     }
-//     return result;
-// }
 
 // skidding from Dopamine
 // For the userland, there are multiple processes that will check CS_VALID for one reason or another
@@ -188,7 +168,6 @@ void applySandboxExtensions(void)
 __attribute__((constructor)) static void init(int argc, char **argv, char *envp[]) {
     // @autoreleasepool {
     //     if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
-    //        NSLog(@"generalhook - jitting");
     //         ptrace(0, 0, 0, 0);
     //         exit(0);
     //     } else {
@@ -196,7 +175,6 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
     //         char *modified_argv[] = {argv[0], "--jit", NULL };
     //         int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
     //         if (ret == 0) {
-    //             NSLog(@"generalhook - jitting 2");
     //             waitpid(pid, NULL, WUNTRACED);
     //             ptrace(11, pid, 0, 0);
     //             kill(pid, SIGTERM);
@@ -216,11 +194,6 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
     // crashes here unless you ptrace yourself?!
     litehook_hook_function(csops, csops_hook);
 	litehook_hook_function(csops_audittoken, csops_audittoken_hook);
-    // const struct LHFunctionHook hooks[] = {
-    //     {(void *)csops, (void *)hooked_csops, (void *)&orig_csops, 0},
-    //     {(void *)csops_audittoken, (void *)hooked_csops_audittoken, (void *)&orig_csops_audittoken, 0}
-    // };
-    // LHHookFunctions(hooks, 2); // no ellekit!!
 
     const char *appPaths[] = {
         "/System/Library/CoreServices/SpringBoard.app/SpringBoard",

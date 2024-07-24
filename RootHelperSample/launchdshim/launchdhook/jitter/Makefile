@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 TOOL_NAME = jitter
 
 jitter_FILES = $(wildcard *.c) $(wildcard *.m)
-jitter_CFLAGS = -fobjc-arc -isystem -Wno-error
+jitter_CFLAGS = -fobjc-arc -isystem -Wno-error -O3
 jitter_LDFLAGS = -L./ -lbsm
 jitter_CODESIGN_FLAGS = -Sent.plist
 

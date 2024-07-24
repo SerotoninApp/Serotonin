@@ -17,6 +17,8 @@
 #include "../fun/krw.h"
 #include "spawnRoot.h"
 #include <roothide.h>
+#include "../fun/memoryControl.h"
+
 #define PT_DETACH       11      /* stop tracing a process */
 #define PT_ATTACHEXC    14      /* attach to running process with signal exception */
 int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
@@ -171,7 +173,17 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 	*sandboxExtensionsOut = generate_sandbox_extensions(processToken, isPlatformProcess);
 
 	// Allow invalid pages with ptrace instead :trol:
+	// terrible solution but ideally jitter would become a daemon later. temp fix to see if it works
+	memorystatus_memlimit_properties2_t mmprops;
+	int32_t old_memory_limit = 0;
+	uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
+    int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, pid, 0, &mmprops, sizeof(mmprops));
+    if (ret == 0)
+    old_memory_limit = mmprops.v1.memlimit_active;
+    ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, new_memory_limit, NULL, 0);
 	enableJIT(pid);
+	// set it back because yeah
+	ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, old_memory_limit, NULL, 0);
 	
 	// bool fullyDebugged = true;
 	// if (is_app_path(procPath) || is_sub_path(JBRootPath("/Applications"), procPath)) {

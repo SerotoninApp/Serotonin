@@ -183,24 +183,17 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
             unsandbox2("/usr/lib", jbroot("/generalhooksigned.dylib"));
             //new "real path"
             snprintf(HOOK_DYLIB_PATH, sizeof(HOOK_DYLIB_PATH), "/usr/lib/generalhooksigned.dylib");
-            // do_kclose();
+            do_kclose();
             shouldWeGamble = false;
         }
-    //    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
-    //        log_path(path, jbroot(MEDIASERVERD_PATH));
-    //        path = jbroot(MEDIASERVERD_PATH);
-    //        argv[0] = (char *)path;
-    //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    //    }
-    //    } else if (!strncmp(path, installd, strlen(installd))) {
-    //        path = jbroot(installd);
-    //        argv[0] = (char *)path;
-    //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    //    }
-    //    } else if (!strncmp(path, nfcd, strlen(nfcd))) {
-    //        path = jbroot(nfcd);
-    //        argv[0] = (char *)path;
-    //        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
+        path = jbroot(MEDIASERVERD_PATH);
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    } else if (!strncmp(path, NFCD_PATH, strlen(NFCD_PATH))) {
+        path = jbroot(NFCD_PATH);
+        argv[0] = (char *)path;
+        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
     }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
