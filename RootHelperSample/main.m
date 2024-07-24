@@ -300,7 +300,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 install_cfprefsd();
                 
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
-                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitter"] toPath:jbroot(@"/jitter") error:nil];
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd"] toPath:jbroot(@"/jitterd") error:nil];
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd.plist"] toPath:jbroot(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist") error:nil];
 
 //                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
@@ -335,6 +335,9 @@ int main(int argc, char *argv[], char *envp[]) {
                         [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"mediaserverd"],
                         jbroot(@"/generalhooksigned.dylib"),
                         jbroot(@"/var/mobile/Serotonin.jp2"),
+                        jbroot(@"/jitter"),
+                        jbroot(@"/jitterd"),
+                        jbroot(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist"),
                     ];
                     for (NSString *path in pathsToRemove) {
                         if ([fileManager fileExistsAtPath:path]) {

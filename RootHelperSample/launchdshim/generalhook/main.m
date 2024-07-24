@@ -211,6 +211,12 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
             break;
         }
     }
-    // NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-    dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
+    NSLog(@"generalhook - loading tweaks for pid %d", getpid());
+    // dlopen([jbroot(@"/usr/lib/roothideinit.dylib") UTF8String], RTLD_NOW);
+    // dlopen([jbroot(@"/usr/lib/roothidepatch.dylib") UTF8String], RTLD_NOW);
+	const char* oldJBROOT = getenv("JBROOT");
+	setenv("JBROOT", [jbroot(@"/") UTF8String], 1);
+	dlopen([jbroot(@"/usr/lib/TweakLoader.dylib") UTF8String], RTLD_NOW);
+	if(oldJBROOT) setenv("JBROOT", oldJBROOT, 1); else unsetenv("JBROOT");
+    // dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
 }

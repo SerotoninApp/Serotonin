@@ -19,22 +19,14 @@
 #include "jbserver/log.h"
 #include "xpc_hook.h"
 
-#define PT_DETACH 11    /* stop tracing a process */
-#define PT_ATTACHEXC 14 /* attach to running process with signal exception */
 #define __probable(x)   __builtin_expect(!!(x), 1)
 #define __improbable(x) __builtin_expect(!!(x), 0)
-
-int ptrace(int request, pid_t pid, caddr_t addr, int data);
-
 #define INSTALLD_PATH       "/usr/libexec/installd"
 #define NFCD_PATH           "/usr/libexec/nfcd"
+#define MEDIASERVERD_PATH   "/usr/sbin/mediaserverd"
 #define SPRINGBOARD_PATH    "/System/Library/CoreServices/SpringBoard.app/SpringBoard"
 #define MRUI_PATH           "/Applications/MediaRemoteUI.app/MediaRemoteUI"
 #define XPCPROXY_PATH       "/usr/libexec/xpcproxy"
-#define MEDIASERVERD_PATH   "/usr/sbin/mediaserverd"
-
-void abort_with_reason(uint32_t reason_namespace, uint64_t reason_code, const char *reason_string, uint64_t reason_flags);
-
 #define MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT 6
 #define POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE 0x48
 #define POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE 0x4C
@@ -157,7 +149,6 @@ int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_acti
 char HOOK_DYLIB_PATH[PATH_MAX] = {0};
 bool shouldWeGamble = true;
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char *const envp[restrict]) {
-    change_launchtype(attrp, path);
     if (!strncmp(path, SPRINGBOARD_PATH, strlen(SPRINGBOARD_PATH))) {
         // log_path(path, jbroot(SPRINGBOARD_PATH));
         path = jbroot(SPRINGBOARD_PATH);
@@ -186,15 +177,16 @@ int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const po
             do_kclose();
             shouldWeGamble = false;
         }
-    } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
-        path = jbroot(MEDIASERVERD_PATH);
-        argv[0] = (char *)path;
-        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    } else if (!strncmp(path, NFCD_PATH, strlen(NFCD_PATH))) {
-        path = jbroot(NFCD_PATH);
-        argv[0] = (char *)path;
-        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
     }
+    // } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
+    //     path = jbroot(MEDIASERVERD_PATH);
+    //     argv[0] = (char *)path;
+    //     posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    // } else if (!strncmp(path, NFCD_PATH, strlen(NFCD_PATH))) {
+    //     path = jbroot(NFCD_PATH);
+    //     argv[0] = (char *)path;
+    //     posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    // }
     return orig_posix_spawnp(pid, path, file_actions, (posix_spawnattr_t *)attrp, argv, envp);
 }
 
@@ -203,6 +195,22 @@ bool (*xpc_dictionary_get_bool_orig)(xpc_object_t dictionary, const char *key);
 bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
     if (!strcmp(key, "LogPerformanceStatistics")) return true;
     else return xpc_dictionary_get_bool_orig(dictionary, key);
+}
+bool jbrootUpdated = false;
+void patchJbrootLaunchDaemonPlist(NSString *plistPath)
+{
+	NSMutableDictionary *plistDict = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
+	if (plistDict) {
+		NSMutableArray *programArguments = ((NSArray *)plistDict[@"ProgramArguments"]).mutableCopy;
+		if (programArguments.count >= 1) {
+			NSString *pathBefore = programArguments[0];
+			if (![pathBefore hasPrefix:@"/var/containers/Bundle"]) {
+                programArguments[0] = jbroot(pathBefore);
+                plistDict[@"ProgramArguments"] = [programArguments copy];
+                [plistDict writeToFile:plistPath atomically:YES];
+            }
+		}
+	}
 }
 
 xpc_object_t hook_xpc_dictionary_get_value(xpc_object_t dict, const char *key) {
@@ -241,11 +249,13 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
     // crashreporter_start();
     // customLog("launchdhook is running");
     if(gSystemInfo.jailbreakInfo.rootPath) free(gSystemInfo.jailbreakInfo.rootPath);
-    
     NSString* jbroot_path = find_jbroot();
-    if(jbroot_path) {
-        gSystemInfo.jailbreakInfo.rootPath = strdup(jbroot_path.fileSystemRepresentation);
-        gSystemInfo.jailbreakInfo.jbrand = jbrand();
+    gSystemInfo.jailbreakInfo.rootPath = strdup(jbroot_path.fileSystemRepresentation);
+    gSystemInfo.jailbreakInfo.jbrand = jbrand();
+
+    if (__improbable(!jbrootUpdated)) {
+        patchJbrootLaunchDaemonPlist([NSString stringWithUTF8String:jbroot("/Library/LaunchDaemons/com.hrtowii.jitterd.plist")]);
+        jbrootUpdated = true;
     }
     initXPCHooks();
 	setenv("DYLD_INSERT_LIBRARIES", jbroot("/launchdhook.dylib"), 1);
@@ -257,10 +267,10 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
 	// We could try to change the boot time ourselves, but I'm worried of potential side effects
 	// So we just wipe the offending preferences ourselves
 	// In practice this fixes nano launch daemons not being loaded after the userspace reboot, resulting in certain apple watch features breaking
-	if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist", W_OK)) {
+	if (__probable(!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist", W_OK))) {
 		remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist");
 	}
-	if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist", W_OK)) {
+	if (__probable(!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist", W_OK))) {
 		remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist");
 	}
     struct rebinding rebindings[] = (struct rebinding[]){

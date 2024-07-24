@@ -1,9 +1,0 @@
-Package: ca.bomberfish.fbwrite
-Name: FBWrite
-Version: 0.0.1
-Architecture: iphoneos-arm
-Description: Write to the framebuffer with style.
-Maintainer: BomberFish Industries
-Author: BomberFish Industries
-Section: System
-Tag: role::hacker
