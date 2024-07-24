@@ -3,7 +3,7 @@
 #import <Foundation/Foundation.h>
 #import <spawn.h>
 #import <sys/sysctl.h>
-#include <IOKit/IOKitLib.h>
+#import "jbroot.h"
 
 @interface PSAppDataUsagePolicyCache : NSObject
 + (instancetype)sharedInstance;
@@ -214,55 +214,4 @@ void respring(void)
 {
 	killall(@"SpringBoard");
 	exit(0);
-}
-
-int get_boot_manifest_hash(char hash[97])
-{
-  const UInt8 *bytes;
-  CFIndex length;
-  io_registry_entry_t chosen = IORegistryEntryFromPath(0, "IODeviceTree:/chosen");
-  if (!MACH_PORT_VALID(chosen)) return 1;
-  CFDataRef manifestHash = (CFDataRef)IORegistryEntryCreateCFProperty(chosen, CFSTR("boot-manifest-hash"), kCFAllocatorDefault, 0);
-  IOObjectRelease(chosen);
-  if (manifestHash == NULL || CFGetTypeID(manifestHash) != CFDataGetTypeID())
-  {
-    if (manifestHash != NULL) CFRelease(manifestHash);
-    return 1;
-  }
-  length = CFDataGetLength(manifestHash);
-  bytes = CFDataGetBytePtr(manifestHash);
-  for (int i = 0; i < length; i++)
-  {
-    snprintf(&hash[i * 2], 3, "%02X", bytes[i]);
-  }
-  CFRelease(manifestHash);
-  return 0;
-}
-
-char* return_boot_manifest_hash_main(void) {
-  static char hash[97];
-  int ret = get_boot_manifest_hash(hash);
-  if (ret != 0) {
-    fprintf(stderr, "could not get boot manifest hash\n");
-    return "lmao";
-  }
-    static char result[115];
-    sprintf(result, "/private/preboot/%s", hash);
-    return result;
-}
-
-char* getPatchedLaunchdCopy(void) {
-    char* prebootpath = return_boot_manifest_hash_main();
-    static char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    NSLog(@"patchedlaunchd: %s", originallaunchd);
-    return originallaunchd;
-}
-
-char* getOriginalLaunchdCopy(void) {
-    char* prebootpath = return_boot_manifest_hash_main();
-    static char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    NSLog(@"patchedlaunchd: %s", originallaunchd);
-    return originallaunchd;
 }

@@ -18,17 +18,31 @@
 #include "spawnRoot.h"
 #include <roothide.h>
 #include "../fun/memoryControl.h"
-
+#include "jbclient_xpc.h"
+#define JBD_MSG_PROC_SET_DEBUGGED 23
 #define PT_DETACH       11      /* stop tracing a process */
 #define PT_ATTACHEXC    14      /* attach to running process with signal exception */
 int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
 
 #include <signal.h>
 
-int enableJIT(pid_t pid)
+// int enableJIT(pid_t pid)
+// {
+// 	int ret = spawnRoot(jbroot("/jitter"), pid, NULL, NULL);
+// 	return ret;
+// }
+int64_t jitterd(pid_t pid)
 {
-	int ret = spawnRoot(jbroot("/jitter"), pid, NULL, NULL);
-	return ret;
+	xpc_object_t message = xpc_dictionary_create_empty();
+	xpc_dictionary_set_int64(message, "id", JBD_MSG_PROC_SET_DEBUGGED);
+	xpc_dictionary_set_int64(message, "pid", pid);
+	xpc_object_t reply = sendjitterdMessageSystemWide(message);
+	int64_t result = -1;
+	if (reply) {
+		result  = xpc_dictionary_get_int64(reply, "result");
+		xpc_release(reply);
+	}
+	return result;
 }
 
 // extern bool stringStartsWith(const char *str, const char* prefix);
@@ -171,19 +185,18 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 
 	// Generate sandbox extensions for the requesting process
 	*sandboxExtensionsOut = generate_sandbox_extensions(processToken, isPlatformProcess);
-
+	jitterd(pid);
 	// Allow invalid pages with ptrace instead :trol:
 	// terrible solution but ideally jitter would become a daemon later. temp fix to see if it works
-	memorystatus_memlimit_properties2_t mmprops;
-	int32_t old_memory_limit = 0;
-	uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
-    int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, pid, 0, &mmprops, sizeof(mmprops));
-    if (ret == 0)
-    old_memory_limit = mmprops.v1.memlimit_active;
-    ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, new_memory_limit, NULL, 0);
-	enableJIT(pid);
-	// set it back because yeah
-	ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, old_memory_limit, NULL, 0);
+	// memorystatus_memlimit_properties2_t mmprops;
+	// int32_t old_memory_limit = 0;
+	// uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
+    // int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, pid, 0, &mmprops, sizeof(mmprops));
+    // if (ret == 0)
+    // old_memory_limit = mmprops.v1.memlimit_active;
+    // ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, new_memory_limit, NULL, 0);
+	// enableJIT(pid);
+	// ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, old_memory_limit, NULL, 0);
 	
 	// bool fullyDebugged = true;
 	// if (is_app_path(procPath) || is_sub_path(JBRootPath("/Applications"), procPath)) {

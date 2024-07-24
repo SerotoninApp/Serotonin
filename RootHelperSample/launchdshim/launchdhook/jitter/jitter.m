@@ -12,11 +12,12 @@
 #include <mach/mach_init.h>
 #include "../fun/memoryControl.h"
 #include "../jbserver/bsm/audit.h"
+#include "../jbserver/xpc_private.h"
 
 #define PT_DETACH       11      /* stop tracing a process */
 #define PT_ATTACHEXC    14      /* attach to running process with signal exception */
 #define MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK 5
-#define JBD_MSG_DEBUG_ME 24
+#define JBD_MSG_PROC_SET_DEBUGGED 23
 
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
 // void JBLogError(const char *format, ...);
@@ -58,8 +59,8 @@ void jitterd_received_message(mach_port_t machPort, bool systemwide)
         if (messageType == XPC_TYPE_DICTIONARY) {
             audit_token_t auditToken = {};
             xpc_dictionary_get_audit_token(message, &auditToken);
-            uid_t clientUid = audit_token_to_euid(auditToken);
-            pid_t clientPid = audit_token_to_pid(auditToken);
+            // uid_t clientUid = audit_token_to_euid(auditToken);
+            // pid_t clientPid = audit_token_to_pid(auditToken);
             msgId = xpc_dictionary_get_int64(message, "id");
             char *description = xpc_copy_description(message);
             free(description);

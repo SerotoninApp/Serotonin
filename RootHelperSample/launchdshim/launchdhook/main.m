@@ -208,7 +208,7 @@ bool hook_xpc_dictionary_get_bool(xpc_object_t dictionary, const char *key) {
 xpc_object_t hook_xpc_dictionary_get_value(xpc_object_t dict, const char *key) {
     xpc_object_t retval = xpc_dictionary_get_value_orig(dict, key);
 
-    if (strcmp(key, "Paths") == 0) {
+    if (!strcmp(key, "Paths")) {
         const char *paths[] = {
             jbroot("/Library/LaunchDaemons"),
             jbroot("/System/Library/LaunchDaemons"),
@@ -219,7 +219,11 @@ xpc_object_t hook_xpc_dictionary_get_value(xpc_object_t dict, const char *key) {
         for (size_t i = 0; i < sizeof(paths) / sizeof(paths[0]); ++i) {
             xpc_array_append_value(retval, xpc_string_create(paths[i]));
         }
-    }
+		if (xpc_get_type(retval) == XPC_TYPE_ARRAY) {
+			xpc_array_set_string(retval, XPC_ARRAY_APPEND, jbroot("/Library/LaunchDaemons")); // todo: copy jitterd daemon plist to serotonin app, roothelper copy from app to library/launchdaemons in jbroot
+		}
+	}
+    
 
     return retval;
 }

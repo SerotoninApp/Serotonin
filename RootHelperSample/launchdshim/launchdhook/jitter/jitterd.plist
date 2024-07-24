@@ -16,10 +16,10 @@
 		<key>com.hrtowii.jitterd.systemwide</key>
 		<true/>
 	</dict>
-	<!-- <key>ProgramArguments</key>
+	<key>ProgramArguments</key>
 	<array>
-		<string>basebin/jailbreakd</string>
-	</array> -->
+		<string>jitterd</string>
+	</array>
 	<key>UserName</key>
 	<string>root</string>
 	<key>RunAtLoad</key>

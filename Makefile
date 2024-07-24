@@ -67,7 +67,7 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	install -m755 RootHelperSample/launchdshim/launchdhook/launchdhooksigned.dylib Payload/Serotonin.app/launchdhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/generalhook/generalhook.dylib Payload/Serotonin.app/generalhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/xpcproxyhook/xpcproxyhook.dylib Payload/Serotonin.app/xpcproxyhooksigned.dylib
-	install -m755 RootHelperSample/launchdshim/launchdhook/jitter/jitter Payload/Serotonin.app/jitter
+	install -m755 RootHelperSample/launchdshim/launchdhook/jitter/jitter Payload/Serotonin.app/jitterd
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/Serotonin.app/{fastPathSign,ldid,serotoninroothelper}
 	$(LDID) -Sent.plist -Cadhoc Payload/Serotonin.app/Serotonin
 	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"
