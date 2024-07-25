@@ -21,7 +21,7 @@ jobs:
         run: brew install ldid-procursus make
 
       - name: 🔍 Check cache
-        run: echo upstream_heads=`git ls-remote https://github.com/roothide/theos | head -n 1 | cut -f 1`-`git ls-remote https://github.com/theos/sdks | head -n 1 | cut -f 1` >> $GITHUB_ENV
+        run: echo upstream_heads=`git ls-remote https://github.com/theos/theos | head -n 1 | cut -f 1`-`git ls-remote https://github.com/theos/sdks | head -n 1 | cut -f 1` >> $GITHUB_ENV
 
       - name: ♻️ Restore cache if available
         id: cache
@@ -34,7 +34,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
-          repository: roothide/theos
+          repository: theos/theos
           path: theos
           submodules: recursive
 
@@ -53,6 +53,11 @@ jobs:
         with:
           path: ${{ github.workspace }}/theos
           key: ${{ env.upstream_heads }}
+
+      - name: 💾 Download ct_bypass to /usr/local/bin
+        run: |
+          curl -L -o /usr/local/bin/ct_bypass https://cdn.mineek.dev/serotonin/action_deps/ct_bypass
+          chmod +x /usr/local/bin/ct_bypass
 
       - name: 📦 Compile IPA
         run: gmake FINALPACKAGE=1
