@@ -16,9 +16,30 @@
 #include "log.h"
 #include "../fun/krw.h"
 #include "spawnRoot.h"
-#include <roothide.h>
+// #include <roothide.h>
+// #include "../../../jbroot.h"
 #include "../fun/memoryControl.h"
 #include "jbclient_xpc.h"
+char *jbrootC(char* path) {
+    // char* boot_manifest_hash = return_boot_manifest_hash_main();
+    // if (strcmp(boot_manifest_hash, "lmao") == 0) {
+    //     return NULL;
+    // }
+    // size_t result_len = strlen("/private/preboot/") + strlen(boot_manifest_hash) + strlen(path) + 2; // +2 for '/' and null terminator
+    // char* result = (char*)malloc(result_len);
+    // if (result == NULL) {
+    //     return NULL;
+    // }
+    // snprintf(result, result_len, "/private/preboot/%s/%s", boot_manifest_hash, path);
+    size_t result_len = strlen("/var/jb") + strlen(path) + 2; // +2 for '/' and null terminator
+    char* result = (char*)malloc(result_len);
+    if (result == NULL) {
+        return NULL;
+    }
+    snprintf(result, result_len, "/var/jb%s/", path);
+    return result;
+}
+
 #define JBD_MSG_PROC_SET_DEBUGGED 23
 #define PT_DETACH       11      /* stop tracing a process */
 #define PT_ATTACHEXC    14      /* attach to running process with signal exception */
@@ -28,7 +49,7 @@ int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
 
 // int enableJIT(pid_t pid)
 // {
-// 	int ret = spawnRoot(jbroot("/jitter"), pid, NULL, NULL);
+// 	int ret = spawnRoot(jbrootC("/jitter"), pid, NULL, NULL);
 // 	return ret;
 // }
 int64_t jitterd(pid_t pid)
@@ -137,16 +158,19 @@ static int systemwide_get_boot_uuid(char **bootUUIDOut)
 char* generate_sandbox_extensions(audit_token_t *processToken, bool writable)
 {
 	char* sandboxExtensionsOut=NULL;
-	char jbrootbase[PATH_MAX];
-	char jbrootsecondary[PATH_MAX];
-	snprintf(jbrootbase, sizeof(jbrootbase), "/private/var/containers/Bundle/Application/.jbroot-%016llX/", jbinfo(jbrand));
-	snprintf(jbrootsecondary, sizeof(jbrootsecondary), "/private/var/mobile/Containers/Shared/AppGroup/.jbroot-%016llX/", jbinfo(jbrand));
+	// char jbrootbase[PATH_MAX];
+	// char jbrootsecondary[PATH_MAX];
+	// snprintf(jbrootbase, sizeof(jbrootbase), "/private/var/containers/Bundle/Application/.jbroot-%016llX/", jbinfo(jbrand));
+	// snprintf(jbrootsecondary, sizeof(jbrootsecondary), "/private/var/mobile/Containers/Shared/AppGroup/.jbroot-%016llX/", jbinfo(jbrand));
 
-	char* fileclass = writable ? "com.apple.app-sandbox.read-write" : "com.apple.app-sandbox.read";
+	// char* fileclass = writable ? "com.apple.app-sandbox.read-write" : "com.apple.app-sandbox.read";
 
-	char *readExtension = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read", jbrootbase, 0, *processToken);
-	char *execExtension = sandbox_extension_issue_file_to_process("com.apple.sandbox.executable", jbrootbase, 0, *processToken);
-	char *readExtension2 = sandbox_extension_issue_file_to_process(fileclass, jbrootsecondary, 0, *processToken);
+	// char *readExtension = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read", jbrootbase, 0, *processToken);
+	char *readExtension = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read", jbrootC("/"), 0, *processToken);
+	// char *execExtension = sandbox_extension_issue_file_to_process("com.apple.sandbox.executable", jbrootbase, 0, *processToken);
+	char *execExtension = sandbox_extension_issue_file_to_process("com.apple.sandbox.executable", jbrootC("/"), 0, *processToken);
+	char *readExtension2 = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read-write", jbrootC("/var/mobile"), 0, *processToken);
+	// char *readExtension2 = sandbox_extension_issue_file_to_process(fileclass, jbrootsecondary, 0, *processToken);
 	if (readExtension && execExtension && readExtension2) {
 		char extensionBuf[strlen(readExtension) + 1 + strlen(execExtension) + strlen(readExtension2) + 1];
 		strcat(extensionBuf, readExtension);

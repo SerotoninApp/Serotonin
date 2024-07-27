@@ -10,7 +10,8 @@
 #include <dirent.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <roothide.h>
+// #include <roothide.h>
+#include "../../jbroot.h"
 #include <signal.h>
 
 int posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);

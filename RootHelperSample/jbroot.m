@@ -1,73 +1,23 @@
-#import <stdio.h>
+#include <stdio.h>
 #include <sys/types.h>
-#import <Foundation/Foundation.h>
-
-#define JB_ROOT_PREFIX ".jbroot-"
-#define JB_RAND_LENGTH  (sizeof(uint64_t)*sizeof(char)*2)
-
-int is_jbrand_value(uint64_t value)
+#include <Foundation/Foundation.h>
+NSString *jbrootobjc(NSString *path)
 {
-   uint8_t check = value>>8 ^ value >> 16 ^ value>>24 ^ value>>32 ^ value>>40 ^ value>>48 ^ value>>56;
-   return check == (uint8_t)value;
-}
-
-int is_jbroot_name(const char* name)
-{
-    if(strlen(name) != (sizeof(JB_ROOT_PREFIX)-1+JB_RAND_LENGTH))
-        return 0;
-    
-    if(strncmp(name, JB_ROOT_PREFIX, sizeof(JB_ROOT_PREFIX)-1) != 0)
-        return 0;
-    
-    char* endp=NULL;
-    uint64_t value = strtoull(name+sizeof(JB_ROOT_PREFIX)-1, &endp, 16);
-    if(!endp || *endp!='\0')
-        return 0;
-    
-    if(!is_jbrand_value(value))
-        return 0;
-    
-    return 1;
-}
-
-uint64_t resolve_jbrand_value(const char* name)
-{
-    if(strlen(name) != (sizeof(JB_ROOT_PREFIX)-1+JB_RAND_LENGTH))
-        return 0;
-    
-    if(strncmp(name, JB_ROOT_PREFIX, sizeof(JB_ROOT_PREFIX)-1) != 0)
-        return 0;
-    
-    char* endp=NULL;
-    uint64_t value = strtoull(name+sizeof(JB_ROOT_PREFIX)-1, &endp, 16);
-    if(!endp || *endp!='\0')
-        return 0;
-    
-    if(!is_jbrand_value(value))
-        return 0;
-    
-    return value;
-}
-
-
-NSString* find_jbroot()
-{
-    //jbroot path may change when re-randomize it
-    NSString * jbroot = nil;
-    NSArray *subItems = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:@"/var/containers/Bundle/Application/" error:nil];
-    for (NSString *subItem in subItems) {
-        if (is_jbroot_name(subItem.UTF8String))
-        {
-            NSString* path = [@"/var/containers/Bundle/Application/" stringByAppendingPathComponent:subItem];
-            jbroot = path;
-            break;
-        }
-    }
-    return jbroot;
-}
-
-NSString *jbroot(NSString *path)
-{
-    NSString* jbroot = find_jbroot();
+    NSString* jbroot = @"/var/jb";
     return [jbroot stringByAppendingPathComponent:path];
+}
+
+char* jbroot(const char* path) {
+    static char result[1024];
+    const char* jb_root = "/var/jb";
+    result[0] = '\0';
+    strncpy(result, jb_root, sizeof(result) - 1);
+    result[sizeof(result) - 1] = '\0';
+    size_t remaining = sizeof(result) - strlen(result) - 1;
+    if (path[0] != '/' && remaining > 0) {
+        strncat(result, "/", remaining);
+        remaining--;
+    }
+    strncat(result, path, remaining);
+    return result;
 }

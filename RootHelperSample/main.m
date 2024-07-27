@@ -214,9 +214,9 @@ void installLaunchd(void) {
     NSString *stdErr;
     spawnRoot(fastPathSignPath, @[@"-i", patchedLaunchdCopy, @"-r", @"-o", patchedLaunchdCopy], &stdOut, &stdErr);
 
-    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbroot(@"launchd") error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] toPath:jbrootobjc(@"launchd") error:nil];
 
-    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbroot(@"launchdhook.dylib") error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"launchdhooksigned.dylib"] toPath:jbrootobjc(@"launchdhook.dylib") error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"workinglaunchd"] error:nil];
 }
 
@@ -226,13 +226,13 @@ void installClone(NSString *path) {
         [[NSFileManager defaultManager] removeItemAtPath:[path stringByDeletingLastPathComponent] error:nil];
     }
     
-    [[NSFileManager defaultManager] copyItemAtPath:[path stringByDeletingLastPathComponent] toPath:jbroot([path stringByDeletingLastPathComponent]) error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[path stringByDeletingLastPathComponent] toPath:jbrootobjc([path stringByDeletingLastPathComponent]) error:nil];
     
-    [[NSFileManager defaultManager] copyItemAtPath:path toPath:jbroot(path) error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:path toPath:jbrootobjc(path) error:nil];
     
     NSString* ents = [usprebooterappPath() stringByAppendingPathComponent:@"launchdentitlements.plist"];
     NSString *hook_file = @"generalhooksigned.dylib";
-    NSString *insert_path = @"@loader_path/generalhooksigned.dylib";
+    NSString *insert_path = @"/generalhooksigned.dylib";
     bool mergeEnts = true;
     if ([path isEqual:@"/Applications/MediaRemoteUI.app/MediaRemoteUI"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"MRUIents.plist"];
@@ -247,36 +247,112 @@ void installClone(NSString *path) {
         hook_file = @"xpcproxyhooksigned.dylib";
         insert_path = @"@loader_path/xpcproxyhooksigned.dylib";
         NSString *dylib_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:hook_file];
-        [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:hook_file] toPath:jbroot(dylib_path) error:nil];
+        [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:hook_file] toPath:jbrootobjc(dylib_path) error:nil];
     } else if ([path isEqual:@"/usr/sbin/mediaserverd"]) {
         ents = [usprebooterappPath() stringByAppendingPathComponent:@"mediaserverdents.plist"];
     } else {
         NSLog(@"Note: no dedicated ents file for this, shit will likely break");
     }
     // strip arm64e
-    replaceByte(jbroot(path), 8, "\x00\x00\x00\x00");
-    
-    NSLog(@"insert dylib ret %d", patch_app_exe([jbroot(path) UTF8String], (char*)[insert_path UTF8String]));
-    signAdhoc(jbroot(path), ents, mergeEnts);
+    replaceByte(jbrootobjc(path), 8, "\x00\x00\x00\x00");
+    NSLog(@"insert dylib ret %d", patch_app_exe([jbrootobjc(path) UTF8String], (char*)[insert_path UTF8String]));
+    signAdhoc(jbrootobjc(path), ents, mergeEnts);
     
     NSString *fastPathSignPath = [usprebooterappPath() stringByAppendingPathComponent:@"fastPathSign"];
     
     NSString *stdOut;
     NSString *stdErr;
-    spawnRoot(fastPathSignPath, @[@"-i", jbroot(path), @"-r", @"-o", jbroot(path)], &stdOut, &stdErr);
+    spawnRoot(fastPathSignPath, @[@"-i", jbrootobjc(path), @"-r", @"-o", jbrootobjc(path)], &stdOut, &stdErr);
 
     NSString *symlink_path = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@".jbroot"];
-    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(symlink_path) withDestinationPath:jbroot(@"/") error:nil];
+    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbrootobjc(symlink_path) withDestinationPath:jbrootobjc(@"/") error:nil];
 }
 
 void install_cfprefsd(void) {
-    [[NSFileManager defaultManager] createDirectoryAtPath: jbroot(@"/usr/sbin/") withIntermediateDirectories:YES attributes:nil error:nil];
+    [[NSFileManager defaultManager] createDirectoryAtPath: jbrootobjc(@"/usr/sbin/") withIntermediateDirectories:YES attributes:nil error:nil];
 
-    [[NSFileManager defaultManager] removeItemAtPath:jbroot(@"/usr/sbin/cfprefsd") error:nil];
-    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"cfprefsdshimsignedinjected"] toPath:jbroot(@"/usr/sbin/cfprefsd") error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:jbrootobjc(@"/usr/sbin/cfprefsd") error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"cfprefsdshimsignedinjected"] toPath:jbrootobjc(@"/usr/sbin/cfprefsd") error:nil];
      
     // 8. create a symlink to jbroot named .jbroot
-    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbroot(@"/usr/sbin/.jbroot") withDestinationPath:jbroot(@"/") error:nil];
+    [[NSFileManager defaultManager] createSymbolicLinkAtPath:jbrootobjc(@"/usr/sbin/.jbroot") withDestinationPath:jbrootobjc(@"/") error:nil];
+}
+
+void setOwnershipForFolder(NSString *folderPath) {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+
+    NSError *error;
+    NSDictionary *attributes = @{
+        NSFileOwnerAccountID: @(501),
+        NSFileGroupOwnerAccountID: @(501)
+    };
+
+    if ([fileManager setAttributes:attributes ofItemAtPath:folderPath error:&error]) {
+        NSLog(@"Ownership changed successfully for %@", folderPath);
+
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:folderPath error:nil];
+        for (NSString *item in contents) {
+            NSString *itemPath = [folderPath stringByAppendingPathComponent:item];
+            setOwnershipForFolder(itemPath);
+        }
+    } else {
+        NSLog(@"Error changing ownership for %@: %@", folderPath, [error localizedDescription]);
+    }
+}
+
+// void createSymlink(NSString *originalPath, NSString *symlinkPath) {
+//     NSFileManager *fileManager = [NSFileManager defaultManager];
+//     NSError *error = nil;
+//     BOOL success = [fileManager createSymbolicLinkAtPath:symlinkPath withDestinationPath:originalPath error:&error];
+    
+//     if (success) {
+//         NSLog(@"Symlink created successfully at %@", symlinkPath);
+//     } else {
+//         NSLog(@"Failed to create symlink: %@", [error localizedDescription]);
+//     }
+// }
+
+int installBootstrap(char *envp[]) {
+    // code skidded from Nathan
+    NSLog(@"%@", [NSString stringWithFormat:@"%s%@", return_boot_manifest_hash_main(), @"/jb"]);
+    [[NSFileManager defaultManager] createSymbolicLinkAtPath:@"/var/jb" withDestinationPath: [NSString stringWithFormat:@"%s%@", return_boot_manifest_hash_main(), @"/jb"] error: nil];
+    NSMutableArray* args = [NSMutableArray new];
+    NSString *binaryPath = [usprebooterappPath() stringByAppendingPathComponent:@"unzip"];
+    [args addObject:[usprebooterappPath() stringByAppendingString:@"/jb.zip"]];
+    [args addObject:@"-d"];
+    [args addObject:[NSString stringWithFormat:@"%s", return_boot_manifest_hash_main()]];
+    spawnRoot(binaryPath, args, nil, nil);
+    
+    NSString *defaultSources = @"Types: deb\n"
+        @"URIs: https://repo.chariz.com/\n"
+        @"Suites: ./\n"
+        @"Components:\n"
+        @"\n"
+        @"Types: deb\n"
+        @"URIs: https://havoc.app/\n"
+        @"Suites: ./\n"
+        @"Components:\n"
+        @"\n"
+        @"Types: deb\n"
+        @"URIs: http://apt.thebigboss.org/repofiles/cydia/\n"
+        @"Suites: stable\n"
+        @"Components: main\n"
+        @"\n"
+        @"Types: deb\n"
+        @"URIs: https://ellekit.space/\n"
+        @"Suites: ./\n"
+        @"Components:\n";
+    [defaultSources writeToFile:@"/var/jb/etc/apt/sources.list.d/default.sources" atomically:NO encoding:NSUTF8StringEncoding error:nil];
+    pid_t pid2;
+    int status2 = -200;
+    setOwnershipForFolder(@"/var/jb/var/mobile");
+    
+    char *prep_argv[] = {"/var/jb/bin/sh", "/var/jb/prep_bootstrap.sh", NULL };
+    posix_spawnp(&pid2, "/var/jb/bin/sh", NULL, NULL, prep_argv, envp);
+    waitpid(pid2, &status2, 0);
+    NSString *emptyFileDopamine = @"";
+    [emptyFileDopamine writeToFile:@"/var/jb/.installed_dopamine" atomically:NO encoding:NSUTF8StringEncoding error:nil];
+    return 0;
 }
 
 int main(int argc, char *argv[], char *envp[]) {
@@ -286,64 +362,62 @@ int main(int argc, char *argv[], char *envp[]) {
         NSString* action = [NSString stringWithUTF8String:argv[1]];
         NSString* source = [NSString stringWithUTF8String:argv[2]];
         if ([action isEqual: @"install"]) {
-            NSLog(@"installing");
-            if (!jbroot(@"/")) {
-                NSLog(@"jbroot not found...");
-            } else {
+            bool bootstrapInstalled = false;
+            if (access(jbroot("/"), F_OK == -1)) {
+                NSLog(@"installing bootstrap...");
+                installBootstrap(envp);
+                bootstrapInstalled = true;
+            }
+            if (bootstrapInstalled == true || access(jbroot("/"), F_OK == 0)) {
                 installLaunchd();
                 installClone(@"/System/Library/CoreServices/SpringBoard.app/SpringBoard");
                 installClone(@"/Applications/MediaRemoteUI.app/MediaRemoteUI");
                 installClone(@"/usr/libexec/xpcproxy");
                 installClone(@"/usr/libexec/installd");
                 installClone(@"/usr/libexec/nfcd");
+                installClone(@"/usr/libexec/lsd");
                 installClone(@"/usr/sbin/mediaserverd");
                 install_cfprefsd();
-                
-                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbroot(@"/generalhooksigned.dylib") error:nil];
-                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd"] toPath:jbroot(@"/jitterd") error:nil];
-                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd.plist"] toPath:jbroot(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist") error:nil];
-
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbrootobjc(@"/generalhooksigned.dylib") error:nil];
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd"] toPath:jbrootobjc(@"/jitterd") error:nil];
+                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd.plist"] toPath:jbrootobjc(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist") error:nil];
 //                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
             NSLog(@"uninstalling");
-            if (!jbroot(@"/")) {
+            if (access(jbroot("/"), F_OK == -1)) {
                 NSLog(@"jbroot not found...");
             } else {
-                if (!jbroot(@"launchd")) {
-                    NSLog(@"not continuing, launchd wasn't found to remove");
-                    return -1;
-                } else {
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error = nil;
-                    NSArray *pathsToRemove = @[
-                        jbroot(@"/System/Library/CoreServices/SpringBoard.app/"),
-                        @"/var/mobile/Serotonin.jp2",
-                        jbroot(@"/launchd"),
-                        jbroot(@"/launchdhook.dylib"),
-                        jbroot(@"/Applications/MediaRemoteUI.app/MediaRemoteUI"),
-                        jbroot(@"/Applications/MediaRemoteUI.app/generalhooksigned.dylib"),
-                        jbroot(@"/Applications/MediaRemoteUI.app/"),
-                        [jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"],
-                        [jbroot(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"],
-                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxyhooksigned.dylib"],
-                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
-                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxy"],
-                        [jbroot(@"/usr/libexec/") stringByAppendingPathComponent:@"installd"],
-                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"cfprefsd"],
-                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
-                        [jbroot(@"/usr/sbin/") stringByAppendingPathComponent:@"mediaserverd"],
-                        jbroot(@"/generalhooksigned.dylib"),
-                        jbroot(@"/var/mobile/Serotonin.jp2"),
-                        jbroot(@"/jitter"),
-                        jbroot(@"/jitterd"),
-                        jbroot(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist"),
-                    ];
-                    for (NSString *path in pathsToRemove) {
-                        if ([fileManager fileExistsAtPath:path]) {
-                            if (![fileManager removeItemAtPath:path error:&error]) {
-                                NSLog(@"Error removing item at %@: %@", path, error.localizedDescription);
-                            }
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSError *error = nil;
+                NSLog(@"%@", [NSString stringWithFormat:@"%s%@", return_boot_manifest_hash_main(), @"/jb"]);
+                NSArray *pathsToRemove = @[
+                    jbrootobjc(@"/System/Library/CoreServices/SpringBoard.app/"),
+                    @"/var/mobile/Serotonin.jp2",
+                    jbrootobjc(@"/launchd"),
+                    jbrootobjc(@"/launchdhook.dylib"),
+                    jbrootobjc(@"/Applications/MediaRemoteUI.app/MediaRemoteUI"),
+                    jbrootobjc(@"/Applications/MediaRemoteUI.app/generalhooksigned.dylib"),
+                    jbrootobjc(@"/Applications/MediaRemoteUI.app/"),
+                    [jbrootobjc(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.plist"],
+                    [jbrootobjc(@"/usr/lib/TweakInject") stringByAppendingPathComponent:@"hideconfidentialtext.dylib"],
+                    [jbrootobjc(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxyhooksigned.dylib"],
+                    [jbrootobjc(@"/usr/libexec/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
+                    [jbrootobjc(@"/usr/libexec/") stringByAppendingPathComponent:@"xpcproxy"],
+                    [jbrootobjc(@"/usr/libexec/") stringByAppendingPathComponent:@"installd"],
+                    [jbrootobjc(@"/usr/sbin/") stringByAppendingPathComponent:@"cfprefsd"],
+                    [jbrootobjc(@"/usr/sbin/") stringByAppendingPathComponent:@"generalhooksigned.dylib"],
+                    [jbrootobjc(@"/usr/sbin/") stringByAppendingPathComponent:@"mediaserverd"],
+                    jbrootobjc(@"/generalhooksigned.dylib"),
+                    jbrootobjc(@"/var/mobile/Serotonin.jp2"),
+                    jbrootobjc(@"/jitterd"),
+                    jbrootobjc(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist"),
+                    @"/var/jb",
+                ];
+                for (NSString *path in pathsToRemove) {
+                    if ([fileManager fileExistsAtPath:path]) {
+                        if (![fileManager removeItemAtPath:path error:&error]) {
+                            NSLog(@"Error removing item at %@: %@", path, error.localizedDescription);
                         }
                     }
                 }

@@ -1,14 +1,14 @@
 TARGET := iphone:clang:latest:15.0
 ARCHS = arm64
-THEOS_PACKAGE_SCHEME = roothide
+THEOS_PACKAGE_SCHEME = rootless
 include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = generalhook
 
-generalhook_FILES = $(wildcard *.m) $(wildcard *.c) $(wildcard verbose/*.m) ../launchdhook/jbserver/jbclient_xpc.c
-generalhook_CFLAGS = -fobjc-arc -isystem "../../../usprebooter/Private Headers I stole from the macOS SDK" -Wno-error -O3
-generalhook_CODESIGN_FLAGS = -S../launchdentitlements.plist
-generalhook_LDFLAGS = -L./ -lbsm
+$(LIBRARY_NAME)_FILES = $(wildcard *.m) $(wildcard *.c) $(wildcard verbose/*.m) ../launchdhook/jbserver/jbclient_xpc.c ../../jbroot.m
+$(LIBRARY_NAME)_CFLAGS = -fobjc-arc -isystem "../../../usprebooter/Private Headers I stole from the macOS SDK" -Wno-error -O3
+$(LIBRARY_NAME)_CODESIGN_FLAGS = -S../launchdentitlements.plist
+$(LIBRARY_NAME)_LDFLAGS = -L./ -lbsm
 #launchdhook_EXTRA_FRAMEWORKS += IOMobileFramebuffer IOSurface
 after-package::
 	echo "[*] Signing general hook"

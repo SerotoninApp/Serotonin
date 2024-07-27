@@ -17,7 +17,7 @@
 #include "utils.h"
 #include "codesign.h"
 #include "litehook.h"
-#include "jbroot.h"
+#include "../../jbroot.h"
 #include "sandbox.h"
 #include "../launchdhook/jbserver/jbclient_xpc.h"
 
@@ -191,10 +191,8 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
     //     NSLog(@"generalhook - checkin ret %d", checkinret);
     // }
     applySandboxExtensions();
-    // crashes here unless you ptrace yourself?!
     litehook_hook_function(csops, csops_hook);
 	litehook_hook_function(csops_audittoken, csops_audittoken_hook);
-
     const char *appPaths[] = {
         "/System/Library/CoreServices/SpringBoard.app/SpringBoard",
         "/Applications/CarPlayWallpaper.app/CarPlayWallpaper",
@@ -212,11 +210,8 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
         }
     }
     NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-    // dlopen([jbroot(@"/usr/lib/roothideinit.dylib") UTF8String], RTLD_NOW);
-    // dlopen([jbroot(@"/usr/lib/roothidepatch.dylib") UTF8String], RTLD_NOW);
 	const char* oldJBROOT = getenv("JBROOT");
-	setenv("JBROOT", [jbroot(@"/") UTF8String], 1);
-	dlopen([jbroot(@"/usr/lib/TweakLoader.dylib") UTF8String], RTLD_NOW);
+	setenv("JBROOT", jbroot("/"), 1);
+	dlopen(jbroot("/usr/lib/TweakLoader.dylib"), RTLD_NOW);
 	if(oldJBROOT) setenv("JBROOT", oldJBROOT, 1); else unsetenv("JBROOT");
-    // dlopen(jbroot(@"/basebin/bootstrap.dylib").UTF8String, RTLD_GLOBAL | RTLD_NOW);
 }

@@ -10,7 +10,7 @@
 #import "fun/vnode.h"
 
 NSString* getLaunchd(void) {
-    return jbroot(@"launchd");
+    return jbroot(@"/launchd");
 }
 
 #define SYSTEM_VERSION_LOWER_THAN(v)                ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)

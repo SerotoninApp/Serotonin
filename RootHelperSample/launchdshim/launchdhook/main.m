@@ -10,7 +10,7 @@
 #include <dirent.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <roothide.h>
+// #include <roothide.h>
 #include <signal.h>
 #include "crashreporter.h"
 #import "jbserver/exec_patch.h"
@@ -18,6 +18,7 @@
 #include "jbserver/info.h"
 #include "jbserver/log.h"
 #include "xpc_hook.h"
+#include "../../jbroot.h"
 
 #define __probable(x)   __builtin_expect(!!(x), 1)
 #define __improbable(x) __builtin_expect(!!(x), 0)
@@ -67,7 +68,7 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
 void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path) {
     const char *prefixes[] = {
         "/private/preboot",
-        jbroot(@"/").UTF8String,
+        jbrootobjc(@"/").UTF8String,
     };
 
     if (__builtin_available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)) {
@@ -86,49 +87,6 @@ void change_launchtype(const posix_spawnattr_t *attrp, const char *restrict path
             }
         }
     }
-}
-
-#define JB_ROOT_PREFIX ".jbroot-"
-#define JB_RAND_LENGTH  (sizeof(uint64_t)*sizeof(char)*2)
-int is_jbrand_value(uint64_t value)
-{
-   uint8_t check = value>>8 ^ value >> 16 ^ value>>24 ^ value>>32 ^ value>>40 ^ value>>48 ^ value>>56;
-   return check == (uint8_t)value;
-}
-
-int is_jbroot_name(const char* name)
-{
-    if(strlen(name) != (sizeof(JB_ROOT_PREFIX)-1+JB_RAND_LENGTH))
-        return 0;
-    
-    if(strncmp(name, JB_ROOT_PREFIX, sizeof(JB_ROOT_PREFIX)-1) != 0)
-        return 0;
-    
-    char* endp=NULL;
-    uint64_t value = strtoull(name+sizeof(JB_ROOT_PREFIX)-1, &endp, 16);
-    if(!endp || *endp!='\0')
-        return 0;
-    
-    if(!is_jbrand_value(value))
-        return 0;
-    
-    return 1;
-}
-
-NSString* find_jbroot()
-{
-    //jbroot path may change when re-randomize it
-    NSString * jbroot = nil;
-    NSArray *subItems = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:@"/var/containers/Bundle/Application/" error:nil];
-    for (NSString *subItem in subItems) {
-        if (is_jbroot_name(subItem.UTF8String))
-        {
-            NSString* path = [@"/var/containers/Bundle/Application/" stringByAppendingPathComponent:subItem];
-            jbroot = path;
-            break;
-        }
-    }
-    return jbroot;
 }
 
 int hooked_posix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, posix_spawnattr_t *attrp, char *argv[], char *const envp[]) {
@@ -204,8 +162,8 @@ void patchJbrootLaunchDaemonPlist(NSString *plistPath)
 		NSMutableArray *programArguments = ((NSArray *)plistDict[@"ProgramArguments"]).mutableCopy;
 		if (programArguments.count >= 1) {
 			NSString *pathBefore = programArguments[0];
-			if (![pathBefore hasPrefix:@"/var/containers/Bundle"]) {
-                programArguments[0] = jbroot(pathBefore);
+			if (![pathBefore hasPrefix:@"/private/preboot"]) {
+                programArguments[0] = jbrootobjc(pathBefore);
                 plistDict[@"ProgramArguments"] = [programArguments copy];
                 [plistDict writeToFile:plistPath atomically:YES];
             }
@@ -249,9 +207,8 @@ __attribute__((constructor)) static void init(int argc, char **argv) {
     // crashreporter_start();
     // customLog("launchdhook is running");
     if(gSystemInfo.jailbreakInfo.rootPath) free(gSystemInfo.jailbreakInfo.rootPath);
-    NSString* jbroot_path = find_jbroot();
+    NSString* jbroot_path = @"/var/jb";
     gSystemInfo.jailbreakInfo.rootPath = strdup(jbroot_path.fileSystemRepresentation);
-    gSystemInfo.jailbreakInfo.jbrand = jbrand();
 
     if (__improbable(!jbrootUpdated)) {
         patchJbrootLaunchDaemonPlist([NSString stringWithUTF8String:jbroot("/Library/LaunchDaemons/com.hrtowii.jitterd.plist")]);

@@ -1,2 +1,3 @@
 #include <Foundation/Foundation.h>
-NSString *jbroot(NSString *path);
+char *jbroot(char* path);
+NSString *jbrootobjc(NSString *path);

@@ -68,6 +68,8 @@ Serotonin.tipa: $(wildcard **/*.c **/*.m **/*.swift **/*.plist **/*.xml)
 	install -m755 RootHelperSample/launchdshim/generalhook/generalhook.dylib Payload/Serotonin.app/generalhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/xpcproxyhook/xpcproxyhook.dylib Payload/Serotonin.app/xpcproxyhooksigned.dylib
 	install -m755 RootHelperSample/launchdshim/launchdhook/jitter/jitter Payload/Serotonin.app/jitterd
+	cp usprebooter/unzip Payload/Serotonin.app/unzip
+	cp Bootstrap/jb.zip Payload/Serotonin.app/jb.zip
 	$(LDID) -S./RootHelperSample/entitlements.plist -Cadhoc Payload/Serotonin.app/{fastPathSign,ldid,serotoninroothelper}
 	$(LDID) -Sent.plist -Cadhoc Payload/Serotonin.app/Serotonin
 	zip -vr9 Serotonin.tipa Payload/ -x "*.DS_Store"
@@ -103,6 +105,6 @@ apple-include:
 	gsed -i -E s/'__API_UNAVAILABLE\(.*\)'// apple-include/IOKit/IOKitLib.h
 
 clean:
-	rm -rf Payload build RootHelperSample/.theos apple-include RootHelperSample/build FUCK.tipa Serotonin.tipa
+	rm -rf Payload build RootHelperSample/.theos RootHelperSample/launchdshim/cfprefsdshim/.theos RootHelperSample/launchdshim/generalhook/.theos RootHelperSample/launchdshim/launchdhook/.theos RootHelperSample/launchdshim/xpcproxyhook/.theos RootHelperSample/build apple-include FUCK.tipa Serotonin.tipa
 
 .PHONY: all clean Serotonin.tipa
