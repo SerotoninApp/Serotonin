@@ -414,6 +414,18 @@ int main(int argc, char *argv[], char *envp[]) {
                     jbrootobjc(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist"),
                     @"/var/jb",
                 ];
+                if ([fileManager fileExistsAtPath:@"/var/jb/"]) {
+                    NSDirectoryEnumerator *dirEnum = [fileManager enumeratorAtPath:@"/var/jb/"];
+                    NSString *documentsName;
+                    while (documentsName = [dirEnum nextObject]) {
+                        NSString *filePath = [@"/var/jb/" stringByAppendingString:documentsName];
+                        BOOL isFileDeleted = [fileManager removeItemAtPath:filePath error:nil];
+                        if(isFileDeleted == NO) {
+                            NSLog(@"All Contents not removed");
+                            break;
+                        }
+                    }
+                }
                 for (NSString *path in pathsToRemove) {
                     if ([fileManager fileExistsAtPath:path]) {
                         if (![fileManager removeItemAtPath:path error:&error]) {

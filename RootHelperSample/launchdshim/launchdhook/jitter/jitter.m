@@ -13,12 +13,12 @@
 #include "../fun/memoryControl.h"
 #include "../jbserver/bsm/audit.h"
 #include "../jbserver/xpc_private.h"
-
+#include <spawn.h>
 #define PT_DETACH       11      /* stop tracing a process */
 #define PT_ATTACHEXC    14      /* attach to running process with signal exception */
 #define MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK 5
 #define JBD_MSG_PROC_SET_DEBUGGED 23
-
+bool shouldUiCache = true;
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
 // void JBLogError(const char *format, ...);
 // void JBLogDebug(const char *format, ...);
@@ -94,7 +94,13 @@ int main(int argc, char* argv[])
 {
     @autoreleasepool {
         setJetsamEnabled(true);
-
+        if (shouldUiCache == true) {
+            pid_t pid;
+            extern char **environ;
+            char *argv[] = {"/var/jb/usr/bin/uicache", "-a", NULL};
+            posix_spawn(&pid, argv[0], NULL, NULL, argv, environ);
+            shouldUiCache = false;
+        }
         mach_port_t machPort = 0;
         kern_return_t kr = bootstrap_check_in(bootstrap_port, "com.hrtowii.jitterd", &machPort);
         if (kr != KERN_SUCCESS) {
@@ -122,7 +128,6 @@ int main(int argc, char* argv[])
             jitterd_received_message(lMachPort, true);
         });
         dispatch_resume(sourceSystemWide);
-
         dispatch_main();
         return 0;
     }
