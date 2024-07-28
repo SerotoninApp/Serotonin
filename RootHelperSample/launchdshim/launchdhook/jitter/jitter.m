@@ -89,18 +89,17 @@ void jitterd_received_message(mach_port_t machPort, bool systemwide)
         }
     }
 }
-
+extern char **environ;
 int main(int argc, char* argv[])
 {
     @autoreleasepool {
         setJetsamEnabled(true);
         if (shouldUiCache == true) {
             pid_t pid;
-            extern char **environ;
-            char *argv[] = {"/var/jb/usr/bin/uicache", "-a", NULL};
+            char *argv[] = {"/var/jb/usr/bin/uicache", "-p", "/var/jb/Applications/Sileo.app", NULL};
             posix_spawn(&pid, argv[0], NULL, NULL, argv, environ);
             shouldUiCache = false;
-        }
+        }   
         mach_port_t machPort = 0;
         kern_return_t kr = bootstrap_check_in(bootstrap_port, "com.hrtowii.jitterd", &machPort);
         if (kr != KERN_SUCCESS) {
