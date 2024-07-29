@@ -253,6 +253,21 @@ int jbclient_process_checkin(char **rootPathOut, char **bootUUIDOut, char **sand
 	return -1;
 }
 
+#define JBD_MSG_PROC_SET_DEBUGGED 23
+int64_t jitterd(pid_t pid)
+{
+	xpc_object_t message = xpc_dictionary_create_empty();
+	xpc_dictionary_set_int64(message, "id", JBD_MSG_PROC_SET_DEBUGGED);
+	xpc_dictionary_set_int64(message, "pid", pid);
+	xpc_object_t reply = sendjitterdMessageSystemWide(message);
+	int64_t result = -1;
+	if (reply) {
+		result  = xpc_dictionary_get_int64(reply, "result");
+		xpc_release(reply);
+	}
+	return result;
+}
+
 extern char **environ;
 kern_return_t bootstrap_look_up(mach_port_t port, const char *service, mach_port_t *server_port);
 

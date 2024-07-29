@@ -25,7 +25,8 @@
 #define PT_ATTACHEXC 14 /* attach to running process with signal exception */
 #define SYSCALL_CSOPS 0xA9
 #define SYSCALL_CSOPS_AUDITTOKEN 0xAA
-
+#define __probable(x)   __builtin_expect(!!(x), 1)
+#define __improbable(x) __builtin_expect(!!(x), 0)
 bool gFullyDebugged = false;
 
 int ptrace(int request, pid_t pid, caddr_t addr, int data);
@@ -107,7 +108,7 @@ int csops_hook(pid_t pid, unsigned int ops, void *useraddr, size_t usersize)
 			uint32_t* csflag = (uint32_t *)useraddr;
 			*csflag |= CS_VALID;
             *csflag |= CS_PLATFORM_BINARY;
-			*csflag &= ~CS_DEBUGGED;
+			// *csflag &= ~CS_DEBUGGED;
 			// if (pid == getpid() && gFullyDebugged) {
 			// 	*csflag |= CS_DEBUGGED;
 			// }
@@ -125,7 +126,7 @@ int csops_audittoken_hook(pid_t pid, unsigned int ops, void *useraddr, size_t us
 			uint32_t* csflag = (uint32_t *)useraddr;
 			*csflag |= CS_VALID;
             *csflag |= CS_PLATFORM_BINARY;
-			*csflag &= ~CS_DEBUGGED;
+			// *csflag &= ~CS_DEBUGGED;
 			// if (pid == getpid() && gFullyDebugged) {
 			// 	*csflag |= CS_DEBUGGED;
 			// }
@@ -166,30 +167,25 @@ void applySandboxExtensions(void)
 }
 
 __attribute__((constructor)) static void init(int argc, char **argv, char *envp[]) {
-    // @autoreleasepool {
-    //     if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
-    //         ptrace(0, 0, 0, 0);
-    //         exit(0);
-    //     } else {
-    //         pid_t pid;
-    //         char *modified_argv[] = {argv[0], "--jit", NULL };
-    //         int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
-    //         if (ret == 0) {
-    //             waitpid(pid, NULL, WUNTRACED);
-    //             ptrace(11, pid, 0, 0);
-    //             kill(pid, SIGTERM);
-    //             wait(NULL);
-    //         }
-    //     }
-    // }
-    // jits for me
+    if (argc > 1 && strcmp(argv[1], "--jit") == 0) {
+        ptrace(0, 0, 0, 0);
+        exit(0);
+    } else {
+        if (strstr(argv[0], "/usr/libexec/")) {
+            jitterd(getpid());
+        } else {
+            pid_t pid;
+            char *modified_argv[] = {argv[0], "--jit", NULL };
+            int ret = posix_spawnp(&pid, argv[0], NULL, NULL, modified_argv, envp);
+            if (ret == 0) {
+                waitpid(pid, NULL, WUNTRACED);
+                ptrace(11, pid, 0, 0);
+                kill(pid, SIGTERM);
+                wait(NULL);
+            }
+        }
+    }
     int checkinret = jbclient_process_checkin(NULL, NULL, &JB_SandboxExtensions, &gFullyDebugged);
-    // if (checkinret == -1) {
-    //     NSLog(@"generalhook - jbserver no response?");
-    //     goto finish;
-    // } else {
-    //     NSLog(@"generalhook - checkin ret %d", checkinret);
-    // }
     applySandboxExtensions();
     litehook_hook_function(csops, csops_hook);
 	litehook_hook_function(csops_audittoken, csops_audittoken_hook);
@@ -204,14 +200,11 @@ __attribute__((constructor)) static void init(int argc, char **argv, char *envp[
         "/usr/libexec/installd",
     };
     for (int i = 0; i < sizeof(appPaths) / sizeof(appPaths[0]); i++) {
-        if (strcmp(argv[0], appPaths[i]) == 0) {
+        if (__improbable(strcmp(argv[0], appPaths[i]) == 0)) {
             setupAppBundle(appPaths[i]);
             break;
         }
     }
     NSLog(@"generalhook - loading tweaks for pid %d", getpid());
-	const char* oldJBROOT = getenv("JBROOT");
-	setenv("JBROOT", jbroot("/"), 1);
 	dlopen(jbroot("/usr/lib/TweakLoader.dylib"), RTLD_NOW);
-	if(oldJBROOT) setenv("JBROOT", oldJBROOT, 1); else unsetenv("JBROOT");
 }

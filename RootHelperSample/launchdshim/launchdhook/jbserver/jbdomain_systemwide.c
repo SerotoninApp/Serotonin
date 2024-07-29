@@ -40,7 +40,6 @@ char *jbrootC(char* path) {
     return result;
 }
 
-#define JBD_MSG_PROC_SET_DEBUGGED 23
 #define PT_DETACH       11      /* stop tracing a process */
 #define PT_ATTACHEXC    14      /* attach to running process with signal exception */
 int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
@@ -52,19 +51,19 @@ int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
 // 	int ret = spawnRoot(jbrootC("/jitter"), pid, NULL, NULL);
 // 	return ret;
 // }
-int64_t jitterd(pid_t pid)
-{
-	xpc_object_t message = xpc_dictionary_create_empty();
-	xpc_dictionary_set_int64(message, "id", JBD_MSG_PROC_SET_DEBUGGED);
-	xpc_dictionary_set_int64(message, "pid", pid);
-	xpc_object_t reply = sendjitterdMessageSystemWide(message);
-	int64_t result = -1;
-	if (reply) {
-		result  = xpc_dictionary_get_int64(reply, "result");
-		xpc_release(reply);
-	}
-	return result;
-}
+// int64_t jitterd(pid_t pid)
+// {
+// 	xpc_object_t message = xpc_dictionary_create_empty();
+// 	xpc_dictionary_set_int64(message, "id", JBD_MSG_PROC_SET_DEBUGGED);
+// 	xpc_dictionary_set_int64(message, "pid", pid);
+// 	xpc_object_t reply = sendjitterdMessageSystemWide(message);
+// 	int64_t result = -1;
+// 	if (reply) {
+// 		result  = xpc_dictionary_get_int64(reply, "result");
+// 		xpc_release(reply);
+// 	}
+// 	return result;
+// }
 
 // extern bool stringStartsWith(const char *str, const char* prefix);
 // extern bool stringEndsWith(const char* str, const char* suffix);
@@ -193,79 +192,11 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 	if (proc_pidpath(pid, procPath, sizeof(procPath)) <= 0) {
 		return -1;
 	}
-	// Find proc in kernelspace
-	// uint64_t proc = proc_find(pid);
-	// if (!proc) {
-	// 	return -1;
-	// }
-
-	// Get jbroot and boot uuid
 	systemwide_get_jbroot(rootPathOut);
 	systemwide_get_boot_uuid(bootUUIDOut);
-
-
 	struct statfs fs;
 	bool isPlatformProcess = statfs(procPath, &fs)==0 && strcmp(fs.f_mntonname, "/private/var") != 0;
-
-	// Generate sandbox extensions for the requesting process
 	*sandboxExtensionsOut = generate_sandbox_extensions(processToken, isPlatformProcess);
-	jitterd(pid);
-	// Allow invalid pages with ptrace instead :trol:
-	// terrible solution but ideally jitter would become a daemon later. temp fix to see if it works
-	// memorystatus_memlimit_properties2_t mmprops;
-	// int32_t old_memory_limit = 0;
-	// uint32_t new_memory_limit = (uint32_t)(getPhysicalMemorySize() / UINT64_C(1048576)) * 2;
-    // int ret = memorystatus_control(MEMORYSTATUS_CMD_GET_MEMLIMIT_PROPERTIES, pid, 0, &mmprops, sizeof(mmprops));
-    // if (ret == 0)
-    // old_memory_limit = mmprops.v1.memlimit_active;
-    // ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, new_memory_limit, NULL, 0);
-	// enableJIT(pid);
-	// ret = memorystatus_control(MEMORYSTATUS_CMD_SET_JETSAM_TASK_LIMIT, pid, old_memory_limit, NULL, 0);
-	
-	// bool fullyDebugged = true;
-	// if (is_app_path(procPath) || is_sub_path(JBRootPath("/Applications"), procPath)) {
-	// 	// This is an app, enable CS_DEBUGGED based on user preference
-	// 	if (jbsetting(markAppsAsDebugged)) {
-	// 		fullyDebugged = true;
-	// 	}
-	// }
-	// *fullyDebuggedOut = fullyDebugged;
-	
-	// Allow invalid pages
-	// cs_allow_invalid(proc, fullyDebugged);
-
-	// Fix setuid
-	// struct stat sb;
-	// if (stat(procPath, &sb) == 0) {
-	// 	if (S_ISREG(sb.st_mode) && (sb.st_mode & (S_ISUID | S_ISGID))) {
-	// 		uint64_t ucred = proc_ucred(proc);
-	// 		if ((sb.st_mode & (S_ISUID))) {
-	// 			kwrite32(proc + koffsetof(proc, svuid), sb.st_uid);
-	// 			kwrite32(ucred + koffsetof(ucred, svuid), sb.st_uid);
-	// 			kwrite32(ucred + koffsetof(ucred, uid), sb.st_uid);
-	// 		}
-	// 		if ((sb.st_mode & (S_ISGID))) {
-	// 			kwrite32(proc + koffsetof(proc, svgid), sb.st_gid);
-	// 			kwrite32(ucred + koffsetof(ucred, svgid), sb.st_gid);
-	// 			kwrite32(ucred + koffsetof(ucred, groups), sb.st_gid);
-	// 		}
-	// 		uint32_t flag = kread32(proc + koffsetof(proc, flag));
-	// 		if ((flag & P_SUGID) != 0) {
-	// 			flag &= ~P_SUGID;
-	// 			kwrite32(proc + koffsetof(proc, flag), flag);
-	// 		}
-	// 	}
-	// }
-
-	// In iOS 16+ there is a super annoying security feature called Protobox
-	// Amongst other things, it allows for a process to have a syscall mask
-	// If a process calls a syscall it's not allowed to call, it immediately crashes
-	// Because for tweaks and hooking this is unacceptable, we update these masks to be 1 for all syscalls on all processes
-	// That will at least get rid of the syscall mask part of Protobox
-	// if (__builtin_available(iOS 16.0, *)) {
-	// 	proc_allow_all_syscalls(proc);
-	// }
-
 	// For whatever reason after SpringBoard has restarted, AutoFill and other stuff stops working
 	// The fix is to always also restart the kbd daemon alongside SpringBoard
 	// Seems to be something sandbox related where kbd doesn't have the right extensions until restarted
@@ -282,27 +213,6 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 			});
 		}
 	}
-	// For the Dopamine app itself we want to give it a saved uid/gid of 0, unsandbox it and give it CS_PLATFORM_BINARY
-	// This is so that the buttons inside it can work when jailbroken, even if the app was not installed by TrollStore
-	// else if (stringEndsWith(procPath, "/Dopamine.app/Dopamine")) {
-	// 	char roothidefile[PATH_MAX];
-	// 	snprintf(roothidefile, sizeof(roothidefile), "%s.roothide",procPath);
-	// 	if(access(roothidefile, F_OK)==0) {
-	// 		// svuid = 0, svgid = 0
-	// 		uint64_t ucred = proc_ucred(proc);
-	// 		kwrite32(proc + koffsetof(proc, svuid), 0);
-	// 		kwrite32(ucred + koffsetof(ucred, svuid), 0);
-	// 		kwrite32(proc + koffsetof(proc, svgid), 0);
-	// 		kwrite32(ucred + koffsetof(ucred, svgid), 0);
-
-	// 		// platformize
-	// 		proc_csflags_set(proc, CS_PLATFORM_BINARY);
-	// 	} else {
-	// 		kill(pid, SIGKILL);
-	// 	}
-	// }
-
-	// proc_rele(proc);
 	return 0;
 }
 

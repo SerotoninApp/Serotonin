@@ -22,6 +22,7 @@ int jbclient_patch_spawn(int pid, bool resume);
 int jbclient_patch_exec_add(const char* exec_path, bool resume);
 int jbclient_patch_exec_del(const char* exec_path);
 xpc_object_t sendjitterdMessageSystemWide(xpc_object_t xdict);
+int64_t jitterd(pid_t pid);
 // int jbclient_platform_set_process_debugged(uint64_t pid, bool fullyDebugged);
 // int jbclient_platform_stage_jailbreak_update(const char *updateTar);
 // int jbclient_platform_jbsettings_get(const char *key, xpc_object_t *valueOut);

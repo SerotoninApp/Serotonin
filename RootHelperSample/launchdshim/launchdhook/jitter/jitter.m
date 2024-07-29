@@ -96,10 +96,10 @@ int main(int argc, char* argv[])
         setJetsamEnabled(true);
         if (shouldUiCache == true) {
             pid_t pid;
-            char *argv[] = {"/var/jb/usr/bin/uicache", "-p", "/var/jb/Applications/Sileo.app", NULL};
+            char *argv[] = {"/var/jb/usr/bin/uicache", "-a", NULL};
             posix_spawn(&pid, argv[0], NULL, NULL, argv, environ);
             shouldUiCache = false;
-        }   
+        }
         mach_port_t machPort = 0;
         kern_return_t kr = bootstrap_check_in(bootstrap_port, "com.hrtowii.jitterd", &machPort);
         if (kr != KERN_SUCCESS) {

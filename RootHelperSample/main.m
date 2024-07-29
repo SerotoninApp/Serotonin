@@ -381,7 +381,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"generalhooksigned.dylib"] toPath:jbrootobjc(@"/generalhooksigned.dylib") error:nil];
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd"] toPath:jbrootobjc(@"/jitterd") error:nil];
                 [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"jitterd.plist"] toPath:jbrootobjc(@"/Library/LaunchDaemons/com.hrtowii.jitterd.plist") error:nil];
-                spawnRoot(@"/var/jb/usr/bin/uicache", @[@"-p", @"/var/jb/Applications/Sileo.app"], nil, nil);
+                spawnRoot(@"/var/jb/usr/bin/uicache", @[@"-a"], nil, nil);
 //                [[NSFileManager defaultManager] copyItemAtPath:[usprebooterappPath() stringByAppendingPathComponent:@"Serotonin.jp2"] toPath:@"/var/mobile/Serotonin.jp2" error:nil];
             }
         } else if ([action isEqual: @"uninstall"]) {
