@@ -2,42 +2,63 @@ name: Build Serotonin
 
 on:
   push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-13
+    name: Build Serotonin
+    runs-on: macos-latest
+    env:
+      THEOS: ${{ github.workspace }}/theos
 
     steps:
-    - uses: actions/checkout@v3
+      - name: 🚚 Check out the Repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          submodules: true
 
-    - name: Update submodules
-      run: git submodule update --init --recursive
-      
-    - name: Switch to Xcode 15
-      run: sudo xcode-select -s /Applications/Xcode_15.0.app
+      - name: 💾 Install System Dependencies
+        run: brew install ldid-procursus make
 
-    - name: Install theos
-      run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+      - name: 🔍 Check cache
+        run: echo upstream_heads=`git ls-remote https://github.com/roothide/theos | head -n 1 | cut -f 1`-`git ls-remote https://github.com/theos/sdks | head -n 1 | cut -f 1` >> $GITHUB_ENV
 
-    - name: Download ct_bypass to /usr/local/bin
-      run: |
-        curl -L -o /usr/local/bin/ct_bypass https://cdn.mineek.dev/serotonin/action_deps/ct_bypass
-        chmod +x /usr/local/bin/ct_bypass
+      - name: ♻️ Restore cache if available
+        id: cache
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: ${{ github.workspace }}/theos
+          key: ${{ env.upstream_heads }}
 
-    - name: Install ldid
-      run: |
-        brew unlink ldid
-        brew install ldid-procursus
+      - name: ⚙️ Setup Theos
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          repository: roothide/theos
+          path: theos
+          submodules: recursive
 
-    - name: Compile IPA
-      run: |
-        export THEOS=/Users/runner/theos
-        make
+      - name: ⚙️ Setup iOS SDK
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          repository: theos/sdks
+          path: theos/sdks
+          sparse-checkout: "iPhoneOS16.5.sdk"
+          sparse-checkout-cone-mode: false
 
-    - name: Upload IPA
-      uses: actions/upload-artifact@v2
-      with:
-        name: Serotonin.tipa
-        path: Serotonin.tipa
+      - name: ♻️ Save cache if needed
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: ${{ github.workspace }}/theos
+          key: ${{ env.upstream_heads }}
+
+      - name: 📦 Compile IPA
+        run: gmake FINALPACKAGE=1
+
+      - name: 🚀 Upload IPA
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: Serotonin CI Build
+          path: Serotonin.tipa
