@@ -13,6 +13,9 @@
         "libproc_private.h": "c",
         "audit.h": "c",
         "translation.h": "c",
-        "log.h": "c"
+        "log.h": "c",
+        "xpc_hook.h": "c",
+        "tsutil.h": "c",
+        "*.m": "c"
     }
 }

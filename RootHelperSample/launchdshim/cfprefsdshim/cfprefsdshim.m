@@ -15,7 +15,8 @@
 #include <objc/runtime.h>
 #include <sys/param.h>
 #include <libgen.h>
-#include <roothide.h>
+#include "../../jbroot.h"
+// #include <roothide.h>
 // from nathanlr - thanks nathan
 
 int (*orig_csops)(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
@@ -43,7 +44,7 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
 
 BOOL preferencePlistNeedsRedirection(NSString *plistPath)
 {
-    if ([plistPath hasPrefix:@"/private/var/mobile/Containers"] || [plistPath hasPrefix:@"/var/db"] || [plistPath hasPrefix:jbroot(@"/")]) return NO;
+    if ([plistPath hasPrefix:@"/private/var/mobile/Containers"] || [plistPath hasPrefix:@"/var/db"] || [plistPath hasPrefix:jbrootobjc(@"/")]) return NO;
 
     NSString *plistName = plistPath.lastPathComponent;
 

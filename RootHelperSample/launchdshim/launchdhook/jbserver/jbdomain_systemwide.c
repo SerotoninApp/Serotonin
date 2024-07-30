@@ -15,6 +15,56 @@
 #include "exec_patch.h"
 #include "log.h"
 #include "../fun/krw.h"
+#include "spawnRoot.h"
+// #include <roothide.h>
+// #include "../../../jbroot.h"
+#include "../fun/memoryControl.h"
+#include "jbclient_xpc.h"
+char *jbrootC(char* path) {
+    // char* boot_manifest_hash = return_boot_manifest_hash_main();
+    // if (strcmp(boot_manifest_hash, "lmao") == 0) {
+    //     return NULL;
+    // }
+    // size_t result_len = strlen("/private/preboot/") + strlen(boot_manifest_hash) + strlen(path) + 2; // +2 for '/' and null terminator
+    // char* result = (char*)malloc(result_len);
+    // if (result == NULL) {
+    //     return NULL;
+    // }
+    // snprintf(result, result_len, "/private/preboot/%s/%s", boot_manifest_hash, path);
+    size_t result_len = strlen("/var/jb") + strlen(path) + 2; // +2 for '/' and null terminator
+    char* result = (char*)malloc(result_len);
+    if (result == NULL) {
+        return NULL;
+    }
+    snprintf(result, result_len, "/var/jb%s/", path);
+    return result;
+}
+
+#define PT_DETACH       11      /* stop tracing a process */
+#define PT_ATTACHEXC    14      /* attach to running process with signal exception */
+int ptrace(int _request, pid_t _pid, caddr_t _addr, int _data);
+
+#include <signal.h>
+
+// int enableJIT(pid_t pid)
+// {
+// 	int ret = spawnRoot(jbrootC("/jitter"), pid, NULL, NULL);
+// 	return ret;
+// }
+// int64_t jitterd(pid_t pid)
+// {
+// 	xpc_object_t message = xpc_dictionary_create_empty();
+// 	xpc_dictionary_set_int64(message, "id", JBD_MSG_PROC_SET_DEBUGGED);
+// 	xpc_dictionary_set_int64(message, "pid", pid);
+// 	xpc_object_t reply = sendjitterdMessageSystemWide(message);
+// 	int64_t result = -1;
+// 	if (reply) {
+// 		result  = xpc_dictionary_get_int64(reply, "result");
+// 		xpc_release(reply);
+// 	}
+// 	return result;
+// }
+
 // extern bool stringStartsWith(const char *str, const char* prefix);
 // extern bool stringEndsWith(const char* str, const char* suffix);
 bool stringStartsWith(const char *str, const char* prefix)
@@ -107,16 +157,19 @@ static int systemwide_get_boot_uuid(char **bootUUIDOut)
 char* generate_sandbox_extensions(audit_token_t *processToken, bool writable)
 {
 	char* sandboxExtensionsOut=NULL;
-	char jbrootbase[PATH_MAX];
-	char jbrootsecondary[PATH_MAX];
-	snprintf(jbrootbase, sizeof(jbrootbase), "/private/var/containers/Bundle/Application/.jbroot-%016llX/", jbinfo(jbrand));
-	snprintf(jbrootsecondary, sizeof(jbrootsecondary), "/private/var/mobile/Containers/Shared/AppGroup/.jbroot-%016llX/", jbinfo(jbrand));
+	// char jbrootbase[PATH_MAX];
+	// char jbrootsecondary[PATH_MAX];
+	// snprintf(jbrootbase, sizeof(jbrootbase), "/private/var/containers/Bundle/Application/.jbroot-%016llX/", jbinfo(jbrand));
+	// snprintf(jbrootsecondary, sizeof(jbrootsecondary), "/private/var/mobile/Containers/Shared/AppGroup/.jbroot-%016llX/", jbinfo(jbrand));
 
-	char* fileclass = writable ? "com.apple.app-sandbox.read-write" : "com.apple.app-sandbox.read";
+	// char* fileclass = writable ? "com.apple.app-sandbox.read-write" : "com.apple.app-sandbox.read";
 
-	char *readExtension = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read", jbrootbase, 0, *processToken);
-	char *execExtension = sandbox_extension_issue_file_to_process("com.apple.sandbox.executable", jbrootbase, 0, *processToken);
-	char *readExtension2 = sandbox_extension_issue_file_to_process(fileclass, jbrootsecondary, 0, *processToken);
+	// char *readExtension = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read", jbrootbase, 0, *processToken);
+	char *readExtension = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read", jbrootC("/"), 0, *processToken);
+	// char *execExtension = sandbox_extension_issue_file_to_process("com.apple.sandbox.executable", jbrootbase, 0, *processToken);
+	char *execExtension = sandbox_extension_issue_file_to_process("com.apple.sandbox.executable", jbrootC("/"), 0, *processToken);
+	char *readExtension2 = sandbox_extension_issue_file_to_process("com.apple.app-sandbox.read-write", jbrootC("/var/mobile"), 0, *processToken);
+	// char *readExtension2 = sandbox_extension_issue_file_to_process(fileclass, jbrootsecondary, 0, *processToken);
 	if (readExtension && execExtension && readExtension2) {
 		char extensionBuf[strlen(readExtension) + 1 + strlen(execExtension) + strlen(readExtension2) + 1];
 		strcat(extensionBuf, readExtension);
@@ -131,7 +184,6 @@ char* generate_sandbox_extensions(audit_token_t *processToken, bool writable)
 	if (readExtension2) free(readExtension2);
 	return sandboxExtensionsOut;
 }
-
 static int systemwide_process_checkin(audit_token_t *processToken, char **rootPathOut, char **bootUUIDOut, char **sandboxExtensionsOut, bool *fullyDebuggedOut)
 {
 	// Fetch process info
@@ -140,68 +192,11 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 	if (proc_pidpath(pid, procPath, sizeof(procPath)) <= 0) {
 		return -1;
 	}
-
-	// Find proc in kernelspace
-	uint64_t proc = proc_find(pid);
-	if (!proc) {
-		return -1;
-	}
-
-	// Get jbroot and boot uuid
 	systemwide_get_jbroot(rootPathOut);
 	systemwide_get_boot_uuid(bootUUIDOut);
-
-
 	struct statfs fs;
 	bool isPlatformProcess = statfs(procPath, &fs)==0 && strcmp(fs.f_mntonname, "/private/var") != 0;
-
-	// Generate sandbox extensions for the requesting process
 	*sandboxExtensionsOut = generate_sandbox_extensions(processToken, isPlatformProcess);
-
-	bool fullyDebugged = false;
-	if (is_app_path(procPath) || is_sub_path(JBRootPath("/Applications"), procPath)) {
-		// This is an app, enable CS_DEBUGGED based on user preference
-		if (jbsetting(markAppsAsDebugged)) {
-			fullyDebugged = true;
-		}
-	}
-	*fullyDebuggedOut = fullyDebugged;
-	
-	// Allow invalid pages
-	cs_allow_invalid(proc, fullyDebugged);
-
-	// Fix setuid
-	struct stat sb;
-	if (stat(procPath, &sb) == 0) {
-		if (S_ISREG(sb.st_mode) && (sb.st_mode & (S_ISUID | S_ISGID))) {
-			uint64_t ucred = proc_ucred(proc);
-			if ((sb.st_mode & (S_ISUID))) {
-				kwrite32(proc + koffsetof(proc, svuid), sb.st_uid);
-				kwrite32(ucred + koffsetof(ucred, svuid), sb.st_uid);
-				kwrite32(ucred + koffsetof(ucred, uid), sb.st_uid);
-			}
-			if ((sb.st_mode & (S_ISGID))) {
-				kwrite32(proc + koffsetof(proc, svgid), sb.st_gid);
-				kwrite32(ucred + koffsetof(ucred, svgid), sb.st_gid);
-				kwrite32(ucred + koffsetof(ucred, groups), sb.st_gid);
-			}
-			uint32_t flag = kread32(proc + koffsetof(proc, flag));
-			if ((flag & P_SUGID) != 0) {
-				flag &= ~P_SUGID;
-				kwrite32(proc + koffsetof(proc, flag), flag);
-			}
-		}
-	}
-
-	// In iOS 16+ there is a super annoying security feature called Protobox
-	// Amongst other things, it allows for a process to have a syscall mask
-	// If a process calls a syscall it's not allowed to call, it immediately crashes
-	// Because for tweaks and hooking this is unacceptable, we update these masks to be 1 for all syscalls on all processes
-	// That will at least get rid of the syscall mask part of Protobox
-	if (__builtin_available(iOS 16.0, *)) {
-		proc_allow_all_syscalls(proc);
-	}
-
 	// For whatever reason after SpringBoard has restarted, AutoFill and other stuff stops working
 	// The fix is to always also restart the kbd daemon alongside SpringBoard
 	// Seems to be something sandbox related where kbd doesn't have the right extensions until restarted
@@ -218,27 +213,6 @@ static int systemwide_process_checkin(audit_token_t *processToken, char **rootPa
 			});
 		}
 	}
-	// For the Dopamine app itself we want to give it a saved uid/gid of 0, unsandbox it and give it CS_PLATFORM_BINARY
-	// This is so that the buttons inside it can work when jailbroken, even if the app was not installed by TrollStore
-	// else if (stringEndsWith(procPath, "/Dopamine.app/Dopamine")) {
-	// 	char roothidefile[PATH_MAX];
-	// 	snprintf(roothidefile, sizeof(roothidefile), "%s.roothide",procPath);
-	// 	if(access(roothidefile, F_OK)==0) {
-	// 		// svuid = 0, svgid = 0
-	// 		uint64_t ucred = proc_ucred(proc);
-	// 		kwrite32(proc + koffsetof(proc, svuid), 0);
-	// 		kwrite32(ucred + koffsetof(ucred, svuid), 0);
-	// 		kwrite32(proc + koffsetof(proc, svgid), 0);
-	// 		kwrite32(ucred + koffsetof(ucred, svgid), 0);
-
-	// 		// platformize
-	// 		proc_csflags_set(proc, CS_PLATFORM_BINARY);
-	// 	} else {
-	// 		kill(pid, SIGKILL);
-	// 	}
-	// }
-
-	proc_rele(proc);
 	return 0;
 }
 
@@ -289,7 +263,7 @@ struct jbserver_domain gSystemwideDomain = {
 				{ .name = "root-path", .type = JBS_TYPE_STRING, .out = true },
 				{ .name = "boot-uuid", .type = JBS_TYPE_STRING, .out = true },
 				{ .name = "sandbox-extensions", .type = JBS_TYPE_STRING, .out = true },
-				// { .name = "fully-debugged", .type = JBS_TYPE_BOOL, .out = true },
+				{ .name = "fully-debugged", .type = JBS_TYPE_BOOL, .out = true },
 				{ 0 },
 			},
 		},

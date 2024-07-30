@@ -13,3 +13,4 @@ extern int spawnRoot(NSString* path, NSArray* args, NSString** stdOut, NSString*
 extern void killall(NSString* processName);
 extern void respring(void);
 char* getPatchedLaunchdCopy(void);
+char* return_boot_manifest_hash_main(void);

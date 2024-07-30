@@ -10,7 +10,8 @@
 #include <dirent.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <roothide.h>
+// #include <roothide.h>
+#include "../../jbroot.h"
 #include <signal.h>
 
 int posix_spawnattr_set_launch_type_np(posix_spawnattr_t *attr, uint8_t launch_type);
@@ -39,28 +40,27 @@ int hooked_csops_audittoken(pid_t pid, unsigned int ops, void * useraddr, size_t
     }
     return result;
 }
-const char *installd = "/usr/libexec/installd";
-const char *nfcd = "/usr/libexec/nfcd";
-const char *mediaserverd = "/usr/sbin/mediaserverd";
+#define INSTALLD_PATH       "/usr/libexec/installd"
+#define NFCD_PATH           "/usr/libexec/nfcd"
+#define MEDIASERVERD_PATH   "/usr/sbin/mediaserverd"
 
 int hooked_posix_spawnp(pid_t *restrict pid, const char *restrict path, const posix_spawn_file_actions_t *restrict file_actions, posix_spawnattr_t *attrp, char *argv[restrict], char * envp[restrict]) {
     if (strncmp(path, "/usr/sbin/cfprefsd", 18) == 0) {
         path = jbroot("/usr/sbin/cfprefsd");
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//    } else if (!strncmp(path, mediaserverd, strlen(mediaserverd))) {
-//        path = jbroot(mediaserverd);
-//        argv[0] = (char *)path;
-//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-    } else if (!strncmp(path, installd, strlen(installd))) {
-        path = jbroot(installd);
+    // } else if (!strncmp(path, MEDIASERVERD_PATH, strlen(MEDIASERVERD_PATH))) {
+    //    path = jbroot(MEDIASERVERD_PATH);
+    //    argv[0] = (char *)path;
+    //    posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    } else if (!strncmp(path, INSTALLD_PATH, strlen(INSTALLD_PATH))) {
+        path = jbroot(INSTALLD_PATH);
         argv[0] = (char *)path;
         posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
-//    } else if (!strncmp(path, nfcd, strlen(nfcd))) {
-//        log_path(path, jbroot(path));
-//        path = jbroot(nfcd);
-//        argv[0] = (char *)path;
-//        posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
+    } else if (!strncmp(path, NFCD_PATH, strlen(NFCD_PATH))) {
+       path = jbroot(NFCD_PATH);
+       argv[0] = (char *)path;
+       posix_spawnattr_set_launch_type_np((posix_spawnattr_t *)attrp, 0);
     }
     return orig_posix_spawnp(pid, path, file_actions, attrp, argv, envp);
 }

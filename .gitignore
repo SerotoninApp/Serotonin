@@ -16,3 +16,6 @@ RootHelperSample/launchdshim/SpringBoardShim/SpringBoardHook/hideConfidentialTex
 apple-include
 ChOma_host
 *.dylib
+RootHelperSample/launchdshim/launchdhook/jitter/jitter
+Bootstrap/jb
+.stamp

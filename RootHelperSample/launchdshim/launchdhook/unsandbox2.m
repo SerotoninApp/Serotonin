@@ -64,8 +64,8 @@ static void print_nc(uint64_t ncp)
 		for(int i=0; i<sizeof(namebuf)/sizeof(namebuf[0]); i++)
 			if( !(namebuf[i]=kread8((uint64_t)nc.nc_name+i)) ) break;
 
-		customLog("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name, 
-				nc.nc_hash.le_next, nc.nc_hash.le_prev, nc.nc_hash.le_prev?kread64((uint64_t) nc.nc_hash.le_prev):0, namebuf);
+		// customLog("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name, 
+				// nc.nc_hash.le_next, nc.nc_hash.le_prev, nc.nc_hash.le_prev?kread64((uint64_t) nc.nc_hash.le_prev):0, namebuf);
 
 		ncp = (uint64_t)nc.nc_hash.le_next;
 	}
@@ -84,8 +84,8 @@ static void print_nc2(uint64_t ncp)
         for(int i=0; i<sizeof(namebuf)/sizeof(namebuf[0]); i++)
             if( !(namebuf[i]=kread8((uint64_t)nc.nc_name+i)) ) break;
 
-        customLog("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name,
-            nc.nc_hash.le_next, nc.nc_hash.le_prev, nc.nc_hash.le_prev ? kread64((uint64_t) nc.nc_hash.le_prev):0, namebuf);
+        // customLog("nc %llx hashval=%08x vp=%16llx dvp=%llx name=%llx next=%16llx prev=%llx,%llx %s\n", ncp, nc.nc_hashval, nc.nc_vp, nc.nc_dvp, nc.nc_name,
+            // nc.nc_hash.le_next, nc.nc_hash.le_prev, nc.nc_hash.le_prev ? kread64((uint64_t) nc.nc_hash.le_prev):0, namebuf);
 
         ncp = (uint64_t)nc.nc_hash.le_next;
     }
@@ -153,7 +153,7 @@ int unsandbox2(char* dir, char* file)
 	struct namecache filenc={0};
 	uint64_t filencp = (uint64_t)filevnode.v_nclinks.lh_first;
 	kreadbuf(filencp, &filenc, sizeof(filenc));
-    customLog("filenc=%llx vp=%llx dvp=%llx\n", filencp, filenc.nc_vp, filenc.nc_dvp);
+    // customLog("filenc=%llx vp=%llx dvp=%llx\n", filencp, filenc.nc_vp, filenc.nc_dvp);
 	// works up to here
 	// goto failed;
 {
@@ -176,10 +176,10 @@ int unsandbox2(char* dir, char* file)
 	init_crc32();
 	char fname[PATH_MAX];
 	uint32_t hash_val = hash_string(basename_r(file, fname), 0);
-	customLog("hash=%x\n", hash_val);
+	// customLog("hash=%x\n", hash_val);
 
 	uint64_t kernelslide = gSystemInfo.kernelConstant.slide;
-	customLog("kernelslide=%llx\n", kernelslide);
+	// customLog("kernelslide=%llx\n", kernelslide);
 
 	// works til now
 	// these addresses were so fucking annoying to get omg
@@ -194,10 +194,10 @@ int unsandbox2(char* dir, char* file)
 	uint32_t index = (dirvnode.v_id ^ (hash_val)) & nchashmask; //*********dirv2?
 	uint64_t ncpp = nchashtbl + index*8;
 	uint64_t ncp = kread64(ncpp);
-	customLog("index=%x ncpp=%llx ncp=%llx\n", index, ncpp, ncp);
+	// customLog("index=%x ncpp=%llx ncp=%llx\n", index, ncpp, ncp);
 
-	customLog("dir hash chain\n");
-	print_nc2(kread64(ncpp));
+	// customLog("dir hash chain\n");
+	// print_nc2(kread64(ncpp));
 	// goto failed;
 
 	// return 0; //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -252,7 +252,7 @@ int unsandbox2(char* dir, char* file)
 	}
 
 	// customLog("final hash chain\n");
-	print_nc2(kread64(ncpp));
+	// print_nc2(kread64(ncpp));
 
 
 	customLog("unsandboxed %llx %llx %s %s\n\n", filevp, dirvp, file, dir);
@@ -268,15 +268,15 @@ success:
 	if(filefd>=0) close(filefd);
 
     //update v_parent
-    // char newfile[PATH_MAX]={0};
-    // snprintf(newfile,sizeof(newfile),"%s/%s",dir,basename_r(file, fname));
+    char newfile[PATH_MAX]={0};
+    snprintf(newfile,sizeof(newfile),"%s/%s",dir,basename_r(file, fname));
     // customLog("newfile=%s\n", newfile);
 
-	// int newfd = open(newfile, O_RDONLY);
-    // assert(newfd >= 0);
+	int newfd = open(newfile, O_RDONLY);
+    assert(newfd >= 0);
 
-    // char pathbuf[PATH_MAX]={0};
-    // int ret1=fcntl(newfd, F_GETPATH, pathbuf);
+    char pathbuf[PATH_MAX]={0};
+    int ret1=fcntl(newfd, F_GETPATH, pathbuf);
     // customLog("realpath=(%d) %s\n", ret1, pathbuf);
 
 	return ret;

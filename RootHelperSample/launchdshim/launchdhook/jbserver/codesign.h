@@ -1,7 +1,7 @@
 #ifndef LJB_CODESIGN_H
 #define LJB_CODESIGN_H
 
-#include <choma/CodeDirectory.h>
+// #include <choma/CodeDirectory.h>
 
 /* code signing attributes of a process */
 #define CS_VALID                    0x00000001  /* dynamically valid */

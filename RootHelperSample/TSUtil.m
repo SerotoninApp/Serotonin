@@ -3,7 +3,6 @@
 #import <Foundation/Foundation.h>
 #import <spawn.h>
 #import <sys/sysctl.h>
-#include <IOKit/IOKitLib.h>
 
 @interface PSAppDataUsagePolicyCache : NSObject
 + (instancetype)sharedInstance;
@@ -216,6 +215,8 @@ void respring(void)
 	exit(0);
 }
 
+#include <IOKit/IOKitLib.h>
+
 int get_boot_manifest_hash(char hash[97])
 {
   const UInt8 *bytes;
@@ -249,20 +250,4 @@ char* return_boot_manifest_hash_main(void) {
     static char result[115];
     sprintf(result, "/private/preboot/%s", hash);
     return result;
-}
-
-char* getPatchedLaunchdCopy(void) {
-    char* prebootpath = return_boot_manifest_hash_main();
-    static char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    NSLog(@"patchedlaunchd: %s", originallaunchd);
-    return originallaunchd;
-}
-
-char* getOriginalLaunchdCopy(void) {
-    char* prebootpath = return_boot_manifest_hash_main();
-    static char originallaunchd[256];
-    sprintf(originallaunchd, "%s/%s", prebootpath, "patchedlaunchd");
-    NSLog(@"patchedlaunchd: %s", originallaunchd);
-    return originallaunchd;
 }
